@@ -14,7 +14,6 @@ return ArrayHelper::merge(include __DIR__ . '/common.php', [
             'cookieValidationKey' => '3w66MKhVzvJxAGtim81qmqaRCSRIQr4a',
         ],
         'urlManager' => [
-            'baseUrl' => '/backend/',
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [

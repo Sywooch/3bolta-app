@@ -12,8 +12,8 @@ $config = ArrayHelper::merge([
     'bootstrap' => ['log'],
     'aliases' => [
         '@' => dirname(__DIR__),
-        '@backendUrl' => '/backend',
-        '@frontendUrl' => '/',
+        '@backendUrl' => APP_BACKEND_ABSOLUTE_URL,
+        '@frontendUrl' => APP_FRONTEND_ABSOLUTE_URL,
     ],
     'components' => [
         'i18n' => [
