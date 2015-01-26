@@ -6,6 +6,8 @@
 
 use yii\helpers\ArrayHelper;
 
+require_once __DIR__ . '/env.local.php';
+
 $config = ArrayHelper::merge([
     'basePath' => dirname(__DIR__),
     'language' => 'ru',

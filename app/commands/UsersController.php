@@ -51,13 +51,11 @@ class UsersController extends Controller
 
         $user = new User();
 
-        $password = $module->getPasswordHash($this->password);
-
         $user->setAttributes([
             'email' => $this->email,
             'first_name' => $this->firstName,
             'last_name' => $this->lastName,
-            'password' => $password,
+            'new_password' => $this->password,
             'status' => User::STATUS_ACTIVE
         ]);
 
