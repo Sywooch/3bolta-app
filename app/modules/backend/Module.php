@@ -45,7 +45,7 @@ class Module extends \yii\base\Module
                 'icon' => '',
                 'url' => ['/advert/category-backend/index'],
                 'visible' => $user->can('backendViewAdvertCategory'),
-                'options'=>['class'=>'treeview'],
+                'options'=>[],
                 'active' => !empty(Yii::$app->controller->module) && Yii::$app->controller->module->id == 'advert' && Yii::$app->controller->id == 'category-backend',
             ],
         ];
