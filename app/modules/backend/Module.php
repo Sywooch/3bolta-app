@@ -20,7 +20,6 @@ class Module extends \yii\base\Module
             [
                 'label' => Yii::t('backend', 'Users'),
                 'icon' => '',
-                'url' => ['/user/userBackend/index'],
                 'visible' => $user->can('backendViewUser') || $user->can('backendRoleAdmin'),
                 'options'=>['class'=>'treeview'],
                 'active' => !empty(Yii::$app->controller->module) && Yii::$app->controller->module->id == 'user',
@@ -40,6 +39,14 @@ class Module extends \yii\base\Module
                         'active' => Yii::$app->controller->id == 'role-backend',
                     ]
                 ]
+            ],
+            [
+                'label' => Yii::t('backend', 'Advert categories'),
+                'icon' => '',
+                'url' => ['/advert/category-backend/index'],
+                'visible' => $user->can('backendViewAdvertCategory'),
+                'options'=>['class'=>'treeview'],
+                'active' => !empty(Yii::$app->controller->module) && Yii::$app->controller->module->id == 'advert' && Yii::$app->controller->id == 'category-backend',
             ],
         ];
     }

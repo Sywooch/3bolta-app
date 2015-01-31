@@ -28,6 +28,10 @@ return ArrayHelper::merge(include __DIR__ . '/common.php', [
                 // users actions
                 '/user/<action:(delete|update)>/<id:(\w+)>' => '/user/user-backend/<action>',
                 '/user/<action:(\w+)>' => '/user/user-backend/<action>',
+
+                // categories actions
+                '/advert/categories/<action:(delete|update)>/<id:(\w+)>' => '/advert/category-backend/<action>',
+                '/advert/categories/<action:(\w+)>' => '/advert/category-backend/<action>',
             ],
         ],
         'assetManager' => [

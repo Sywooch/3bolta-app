@@ -1,9 +1,9 @@
 <?php
-namespace app\modules\user\controllers;
+namespace app\modules\advert\controllers;
 
 use Yii;
-use app\modules\user\forms\UserSearch;
-use app\modules\user\models\User;
+use app\modules\advert\forms\CategorySearch;
+use app\modules\advert\models\Category;
 use yii\web\Response;
 use yii\widgets\ActiveForm;
 use Exception;
@@ -11,9 +11,9 @@ use yii\web\NotFoundHttpException;
 use yii\web\ServerErrorHttpException;
 
 /**
- * Управление пользователями
+ * Управление категориями
  */
-class UserBackendController extends \app\modules\backend\components\BaseBackendController
+class CategoryBackendController extends \app\modules\backend\components\BaseBackendController
 {
     public function behaviors()
     {
@@ -24,19 +24,19 @@ class UserBackendController extends \app\modules\backend\components\BaseBackendC
                         'actions' => ['index', 'update'],
                         'allow' => true,
                         'verbs' => ['GET'],
-                        'roles' => ['backendViewUser'],
+                        'roles' => ['backendViewAdvertCategory'],
                     ],
                     [
                         'actions' => ['update', 'delete'],
                         'allow' => true,
                         'verbs' => ['GET', 'POST'],
-                        'roles' => ['backendUpdateUser'],
+                        'roles' => ['backendUpdateAdvertCategory'],
                     ],
                     [
                         'actions' => ['create'],
                         'allow' => true,
                         'verbs' => ['GET', 'POST'],
-                        'roles' => ['backendCreateUser'],
+                        'roles' => ['backendCreateAdvertCategory'],
                     ]
                 ],
             ],
@@ -50,11 +50,11 @@ class UserBackendController extends \app\modules\backend\components\BaseBackendC
     }
 
     /**
-     * Создание пользователя
+     * Создание категории
      */
     public function actionCreate()
     {
-        $model = new User();
+        $model = new Category();
 
         if (Yii::$app->request->isAjax && $model->load($_POST)) {
             Yii::$app->response->format = Response::FORMAT_JSON;
@@ -69,13 +69,9 @@ class UserBackendController extends \app\modules\backend\components\BaseBackendC
                     throw new Exception();
                 }
 
-                if (!$model->updateRoles()) {
-                    throw new Exception();
-                }
-
                 $transaction->commit();
 
-                Yii::$app->serviceMessage->setMessage('success', Yii::t('backend/user', 'Success create user'));
+                Yii::$app->serviceMessage->setMessage('success', Yii::t('backend/advert', 'Success create category'));
 
                 if (isset($_POST['apply'])) {
                     return $this->redirect(['update', 'id' => $model->id]);
@@ -87,7 +83,7 @@ class UserBackendController extends \app\modules\backend\components\BaseBackendC
             catch (Exception $ex) {
                 $transaction->rollback();
 
-                Yii::$app->serviceMessage->setMessage('danger', Yii::t('backend/user', 'Error create a user'));
+                Yii::$app->serviceMessage->setMessage('danger', Yii::t('backend/advert', 'Error create a category'));
             }
         }
 
@@ -97,7 +93,7 @@ class UserBackendController extends \app\modules\backend\components\BaseBackendC
     }
 
     /**
-     * Редактирование пользователя
+     * Редактирование категории
      */
     public function actionUpdate($id)
     {
@@ -116,13 +112,9 @@ class UserBackendController extends \app\modules\backend\components\BaseBackendC
                     throw new Exception();
                 }
 
-                if (!$model->updateRoles()) {
-                    throw new Exception();
-                }
-
                 $transaction->commit();
 
-                Yii::$app->serviceMessage->setMessage('success', Yii::t('backend/user', 'Success update user'));
+                Yii::$app->serviceMessage->setMessage('success', Yii::t('backend/advert', 'Success update category'));
 
                 if (isset($_POST['apply'])) {
                     return $this->refresh();
@@ -134,7 +126,7 @@ class UserBackendController extends \app\modules\backend\components\BaseBackendC
             catch (Exception $ex) {
                 $transaction->rollback();
 
-                Yii::$app->serviceMessage->setMessage('danger', Yii::t('backend/user', 'Error update a user'));
+                Yii::$app->serviceMessage->setMessage('danger', Yii::t('backend/advert', 'Error update a category'));
             }
         }
 
@@ -144,7 +136,7 @@ class UserBackendController extends \app\modules\backend\components\BaseBackendC
     }
 
     /**
-     * Удаление пользователя
+     * Удаление категорий
      */
     public function actionDelete($id)
     {
@@ -160,11 +152,11 @@ class UserBackendController extends \app\modules\backend\components\BaseBackendC
     }
 
     /**
-     * Список пользователей
+     * Список категорий
      */
     public function actionIndex()
     {
-        $searchModel = new UserSearch();
+        $searchModel = new CategorySearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -181,7 +173,7 @@ class UserBackendController extends \app\modules\backend\components\BaseBackendC
      */
     protected function findModel($id)
     {
-        $model = User::find()->where(['id' => $id])->one();
+        $model = Category::find()->where(['id' => $id])->one();
 
         if (empty($model)) {
             throw new NotFoundHttpException();

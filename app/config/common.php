@@ -35,7 +35,7 @@ $config = ArrayHelper::merge([
         'db' => [
             'class' => 'yii\db\Connection',
             'charset' => 'utf8',
-            'tablePrefix' => 'yii_',
+            'tablePrefix' => 'app_',
         ],
         'mailer' => [
             'class' => 'yii\swiftmailer\Mailer',
@@ -61,6 +61,9 @@ $config = ArrayHelper::merge([
     'modules' => [
         'user' => [
             'class' => 'app\modules\user\Module',
+        ],
+        'advert' => [
+            'class' => 'app\modules\advert\Module',
         ],
     ],
     'params' => [

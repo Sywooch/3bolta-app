@@ -18,6 +18,8 @@ return [
     'Users' => 'Пользователи',
     'Users list' => 'Список пользователей',
     'Roles list' => 'Список ролей',
+    'Advert categories' => 'Категории объявлений',
+    'Advert categories list' => 'Список категорий объявлений',
 
     'Incorrect username or password.' => 'Неверный логин или пароль.',
     'Toggle navigation' => 'Переключить',

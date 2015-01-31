@@ -3,9 +3,9 @@
 /* @var $model \app\modules\user\models\User */
 
 $this->title = Yii::t('backend', 'Create {modelClass}', [
-    'modelClass' => Yii::t('backend/user', 'User'),
+    'modelClass' => Yii::t('backend/advert', 'Category'),
 ]);
-$this->params['breadcrumbs'][] = ['label' => Yii::t('backend', 'Users list'), 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => Yii::t('backend', 'Advert categories list'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="page-update">
