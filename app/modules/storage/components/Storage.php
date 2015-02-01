@@ -3,6 +3,7 @@ namespace app\modules\storage\components;
 
 use yii\base\Component;
 use app\modules\storage\models\File;
+use yii\web\UploadedFile;
 
 /**
  * Компонент файлого хранилища.
@@ -76,7 +77,9 @@ class Storage extends Component
      */
     public function getPath($name)
     {
-        return rtrim($this->baseUrl, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . ltrim($name, DIRECTORY_SEPARATOR);
+        $path = rtrim($this->basePath, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . ltrim($name, DIRECTORY_SEPARATOR);
+        $this->checkDirs($path);
+        return $path;
     }
 
     /**
@@ -110,5 +113,10 @@ class Storage extends Component
         if (!is_dir($dir)) {
             @mkdir($dir, 0755, true);
         }
+    }
+
+    public function __toString()
+    {
+        return $this->code;
     }
 }

@@ -48,6 +48,14 @@ class Module extends \yii\base\Module
                 'options'=>[],
                 'active' => !empty(Yii::$app->controller->module) && Yii::$app->controller->module->id == 'advert' && Yii::$app->controller->id == 'category-backend',
             ],
+            [
+                'label' => Yii::t('backend', 'File storage'),
+                'icon' => '',
+                'url' => ['/storage/storage-backend/index'],
+                'visible' => $user->can('backendViewFile'),
+                'options'=>[],
+                'active' => !empty(Yii::$app->controller->module) && Yii::$app->controller->module->id == 'advert' && Yii::$app->controller->id == 'category-backend',
+            ],
         ];
     }
 }

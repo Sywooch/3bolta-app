@@ -3,6 +3,8 @@ namespace app\modules\storage\models;
 
 use Yii;
 use yii\base\Exception;
+use app\modules\storage\components\Storage;
+use yii\web\UploadedFile;
 
 class File extends \yii\db\ActiveRecord
 {
@@ -10,7 +12,7 @@ class File extends \yii\db\ActiveRecord
      * Название таблицы
      * @return string
      */
-    public function tableName()
+    public static function tableName()
     {
         return '{{%storage}}';
     }
@@ -23,7 +25,7 @@ class File extends \yii\db\ActiveRecord
     {
         return [
             [['repository', 'real_name', 'file_path', 'mime_type', 'uploader_addr', 'size'], 'required'],
-            [['uploader_addr'], 'match', 'pattern' => '^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$'],
+            [['uploader_addr'], 'match', 'pattern' => '#^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$#'],
             [['is_image'], 'boolean'],
             [['width', 'height'], 'integer', 'skipOnEmpty' => true],
             [['size'], 'integer'],
@@ -51,54 +53,58 @@ class File extends \yii\db\ActiveRecord
     }
 
     /**
-     * Создать файл из существующего.
-     *
-     * @param \app\modules\storage\components\Storage $repository
-     * @param string $existsFile
-     * @param string $realName
-     * @param string $path
+     * Определить и установить IP-адрес с которого загружаем
+     * @param \app\modules\storage\models\File $file
      */
-    public static function createFromExists($repository, $existsFile, $realName, $path)
+    protected static function setUploadedAddr(File $file)
     {
-        $ret = null;
+        $userAddress = \Yii::$app->request->getUserIP();
+        if (empty($userAddress)) {
+            $userAddress = '127.0.0.1';
+        }
+        $file->setAttribute('uploader_addr', $userAddress);
+    }
 
-        $file = new self();
-        $file->setAttributes([
-            'repository' => $repository->code,
-            'real_name' => $realName,
-            'file_path' => $path,
-            'size' => @filesize($existsFile),
-        ]);
-
+    /**
+     * Получить размеры изображения, если файл является изображением.
+     * Иначе - устанавливает только mime.
+     *
+     * @param string $filePath абсолютный путь к файл
+     * @param \app\modules\storage\models\File $file файл, в который сохраняем изображение
+     */
+    protected static function setImageSize($existsFile, File $file)
+    {
         try {
             // определить тип
             $info = getimagesize($existsFile);
             if (!empty($info['mime']) &&
                 in_array($info['mime'], ['image/gif', 'image/jpeg', 'image/png', 'image/bmp']) &&
-                !empty($info['width']) && !empty($info['height'])) {
+                !empty($info[0]) && !empty($info[1])) {
                 // в случае изображения сохраняем размеры
                 $file->setAttributes([
                     'is_image' => true,
-                    'width' => $info['width'],
-                    'height' => $info['height'],
+                    'width' => $info[0],
+                    'height' => $info[1],
                 ]);
             }
             if (!empty($info['mime'])) {
                 $file->setAttribute('mime_type', $info['mime']);
             }
         } catch (Exception $ex) { }
+    }
 
-        // определить адрес загрузки
-        $userAddress = \Yii::$app->request->getUserIP();
-        if (empty($userAddress)) {
-            $userAddress = '127.0.0.1';
-        }
-        $file->setAttribute('uploader_addr', $userAddress);
-
-        // реальный путь к файлу
-        $realPath = $repository->getPath($path);
-
-        $transaction = $this->getDb()->beginTransaction();
+    /**
+     * Скопировать файл $existsFile в $realPath и запомнить его в $file.
+     * В случае ошибки генерирует Exception.
+     *
+     * @param \app\modules\storage\models\File $file
+     * @param string $existsFile путь к файлу, который необходимо скопировать
+     * @param string $realPath путь к вновь создаваемому файлу
+     * @throws yii\base\Exception
+     */
+    protected static function createFile(File $file, $existsFile, $realPath)
+    {
+        $transaction = Yii::$app->db->beginTransaction();
 
         try {
             if (!$file->save()) {
@@ -110,8 +116,6 @@ class File extends \yii\db\ActiveRecord
             }
 
             $transaction->commit();
-
-            $ret = $file;
         } catch (Exception $ex) {
             $transaction->rollBack();
 
@@ -119,6 +123,97 @@ class File extends \yii\db\ActiveRecord
             if (is_file($realPath)) {
                 @unlink($realPath);
             }
+
+            throw $ex;
+        }
+    }
+
+    public function beforeSave($insert)
+    {
+        if (is_null($this->created)) {
+            $this->created = date('Y-m-d H:i:s');
+        }
+        return parent::beforeSave($insert);
+    }
+
+    /**
+     * Загрузить файл.
+     *
+     * @param Storage $repository
+     * @param UploadedFile $uploadedFile
+     * @return File|null
+     */
+    public static function uploadFile(Storage $repository, UploadedFile $uploadedFile)
+    {
+        $ret = null;
+
+        $file = new self();
+        $file->setAttributes([
+            'repository' => $repository->code,
+            'real_name' => $uploadedFile->name,
+            'file_path' => $repository->getHashFileName($uploadedFile->name),
+            'size' => $uploadedFile->size,
+        ]);
+
+        // абсолютный путь к новому файлу
+        $realPath = $repository->getPath($file->file_path);
+
+        // установить размер изображения
+        self::setImageSize($uploadedFile->tempName, $file);
+
+        // установить IP-адрес
+        self::setUploadedAddr($file);
+
+        try {
+            self::createFile($file, $uploadedFile->tempName, $realPath);
+
+            if ($file->id) {
+                $ret = $file;
+            }
+        } catch (Exception $ex) {
+            $ret = null;
+        }
+
+        return $ret;
+    }
+
+    /**
+     * Создать файл из существующего.
+     *
+     * @param \app\modules\storage\components\Storage $repository
+     * @param string $existsFile
+     * @param string $realName
+     * @param string $path
+     */
+    public static function createFromExists(Storage $repository, $existsFile, $realName, $path)
+    {
+        $ret = null;
+
+        $file = new self();
+        $file->setAttributes([
+            'repository' => $repository->code,
+            'real_name' => $realName,
+            'file_path' => $path,
+            'size' => @filesize($existsFile),
+        ]);
+
+        // получить размеры, если это изображение
+        self::setImageSize($existsFile, $file);
+
+        // определить адрес загрузки
+        self::setUploadedAddr($file);
+
+        // реальный путь к файлу
+        $realPath = $repository->getPath($path);
+
+        try {
+            self::createFile($file, $existsFile, $realPath);
+
+            if ($file->id) {
+                $ret = $file;
+            }
+        } catch (Exception $ex) {
+            $ret = null;
         }
 
         return $ret;
@@ -132,8 +227,8 @@ class File extends \yii\db\ActiveRecord
     {
         $ret = null;
 
-        if (isset(\Yii::$app->getModule('storage')->{$repository})) {
-            $ret = \Yii::$app->getModule('storage')->{$repository};
+        if (\Yii::$app->getModule('storage')->{$this->repository} instanceof Storage) {
+            $ret = \Yii::$app->getModule('storage')->{$this->repository};
         }
 
         return $ret;

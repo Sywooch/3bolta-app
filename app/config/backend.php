@@ -32,6 +32,10 @@ return ArrayHelper::merge(include __DIR__ . '/common.php', [
                 // categories actions
                 '/advert/categories/<action:(delete|update)>/<id:(\w+)>' => '/advert/category-backend/<action>',
                 '/advert/categories/<action:(\w+)>' => '/advert/category-backend/<action>',
+
+                // storage actions
+                '/storage/<action:(delete|update)>/<id:(\w+)>' => '/storage/storage-backend/<action>',
+                '/storage/<action:(\w+)>' => '/storage/storage-backend/<action>',
             ],
         ],
         'assetManager' => [

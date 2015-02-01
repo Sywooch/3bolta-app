@@ -20,6 +20,8 @@ return [
     'Roles list' => 'Список ролей',
     'Advert categories' => 'Категории объявлений',
     'Advert categories list' => 'Список категорий объявлений',
+    'File list' => 'Список файлов',
+    'File storage' => 'Файловое хранилище',
 
     'Incorrect username or password.' => 'Неверный логин или пароль.',
     'Toggle navigation' => 'Переключить',

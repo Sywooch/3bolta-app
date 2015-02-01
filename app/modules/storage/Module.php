@@ -1,6 +1,6 @@
 <?php
 
-namespace app\modules\advert;
+namespace app\modules\storage;
 
 use Yii;
 use yii\base\Exception;
@@ -32,6 +32,12 @@ class Module extends \yii\base\Module
             $repo['code'] = $code;
             $config['components'][$code] = $repo;
         }
+
+        $newRepo = [];
+        foreach ($this->repository as $repoCode => $repo) {
+            $newRepo[$repoCode] = $repoCode;
+        }
+        $this->repository = $newRepo;
 
         Yii::configure($this, $config);
     }

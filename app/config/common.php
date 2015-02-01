@@ -65,6 +65,19 @@ $config = ArrayHelper::merge([
         'advert' => [
             'class' => 'app\modules\advert\Module',
         ],
+        'storage' => [
+            'class' => 'app\modules\storage\Module',
+            'repository' => [
+                'advert' => [
+                    'baseUrl' => APP_STORAGE_ABSOLUTE_URL . '/advert/',
+                    'basePath' => realpath(__DIR__ . '/../../') . '/storage/advert',
+                ],
+                'media' => [
+                    'baseUrl' => APP_STORAGE_ABSOLUTE_URL . '/media/',
+                    'basePath' => realpath(__DIR__ . '/../../') . '/storage/media',
+                ],
+            ]
+        ],
     ],
     'params' => [
     ],
