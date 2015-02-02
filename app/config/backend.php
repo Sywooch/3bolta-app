@@ -36,6 +36,10 @@ return ArrayHelper::merge(include __DIR__ . '/common.php', [
                 // storage actions
                 '/storage/<action:(delete|update)>/<id:(\w+)>' => '/storage/storage-backend/<action>',
                 '/storage/<action:(\w+)>' => '/storage/storage-backend/<action>',
+
+                // handbook actions
+                '/handbook/<code:(\w+)>/<action:(delete|update)/<id:(\w+)>' => '/handbook/handbook-value-backend/<action>',
+                '/handbook/<code:(\w+)>/<action:(\w+)>' => '/handbook/handbook-value-backend/<action>',
             ],
         ],
         'assetManager' => [

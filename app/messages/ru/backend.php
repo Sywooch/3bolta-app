@@ -23,6 +23,8 @@ return [
     'File list' => 'Список файлов',
     'File storage' => 'Файловое хранилище',
 
+    'Handbook' => 'Справочники',
+
     'Incorrect username or password.' => 'Неверный логин или пароль.',
     'Toggle navigation' => 'Переключить',
     'Full name' => 'Полное имя',

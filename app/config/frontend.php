@@ -27,6 +27,22 @@ return ArrayHelper::merge(include __DIR__ . '/common.php', [
         ],
         'assetManager' => [
             'linkAssets' => true,
+            'bundles' => [
+                'yii\bootstrap\BootstrapPluginAsset' => [
+                    'sourcePath' => '@app/_assets/bootstrap',
+                    'js' => [
+                        'js/bootstrap.min.js',
+                    ]
+                ],
+                'yii\bootstrap\BootstrapAsset' => [
+                    'sourcePath' => '@app/_assets/bootstrap',
+                    'css' => [
+                        'css/bootstrap.min.css',
+                        'css/bootstrap-theme.min.css',
+                    ],
+                ],
+
+            ],
         ],
     ],
 ], include __DIR__ . '/frontend.local.php');

@@ -2,6 +2,7 @@
 namespace app\modules\backend;
 
 use Yii;
+use app\modules\handbook\models\Handbook;
 
 /**
  * Модуль для бекенда
@@ -15,6 +16,19 @@ class Module extends \yii\base\Module
     public function getMenu()
     {
         $user = Yii::$app->user;
+
+        // вывод всех справочников
+        $handbookMenu = [];
+        $res = Handbook::find()->all();
+        foreach ($res as $i) {
+            $handbookMenu[] = [
+                'label' => $i->name,
+                'icon' => '',
+                'url' => ['/handbook/handbook-value-backend/index', 'code' => $i->code],
+                'visible' => $user->can('backendViewHandbookValues'),
+                'active' => Yii::$app->controller->id == 'handbook-value-backend',
+            ];
+        }
 
         return [
             [
@@ -47,6 +61,14 @@ class Module extends \yii\base\Module
                 'visible' => $user->can('backendViewAdvertCategory'),
                 'options'=>[],
                 'active' => !empty(Yii::$app->controller->module) && Yii::$app->controller->module->id == 'advert' && Yii::$app->controller->id == 'category-backend',
+            ],
+            [
+                'label' => Yii::t('backend', 'Handbook'),
+                'icon' => '',
+                'visible' => $user->can('backendViewHandbookValues'),
+                'options'=>['class'=>'treeview'],
+                'active' => !empty(Yii::$app->controller->module) && Yii::$app->controller->module->id == 'handbook',
+                'items' => $handbookMenu,
             ],
             [
                 'label' => Yii::t('backend', 'File storage'),

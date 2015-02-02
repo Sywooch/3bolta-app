@@ -1,0 +1,17 @@
+<?php
+/* @var $this yii\web\View */
+/* @var $model \app\modules\handbook\models\HandbookValue */
+
+$this->title = Yii::t('backend', 'Update {modelClass}', [
+    'modelClass' => Yii::t('backend/handbook', 'Value'),
+]);
+$this->params['breadcrumbs'][] = ['label' => Yii::t('backend/handbook', 'Value list') . ' "' . $model->getHandbook()->name . '"', 'url' => ['index', 'code' => $model->handbook_code]];
+$this->params['breadcrumbs'][] = $this->title;
+?>
+<div class="page-update">
+
+    <?=$this->render('_form', [
+        'model' => $model,
+    ])?>
+
+</div>

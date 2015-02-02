@@ -65,6 +65,9 @@ $config = ArrayHelper::merge([
         'advert' => [
             'class' => 'app\modules\advert\Module',
         ],
+        'handbook' => [
+            'class' => 'app\modules\handbook\Module',
+        ],
         'storage' => [
             'class' => 'app\modules\storage\Module',
             'repository' => [
