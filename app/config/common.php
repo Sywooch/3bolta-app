@@ -81,6 +81,16 @@ $config = ArrayHelper::merge([
                 ],
             ]
         ],
+        'auto' => [
+            'class' => 'app\modules\auto\Module',
+            'components' => [
+                'externalDb' => [
+                    'class' => 'yii\db\Connection',
+                    'charset' => 'utf8',
+                    'tablePrefix' => 'car_',
+                ],
+            ],
+        ],
     ],
     'params' => [
     ],

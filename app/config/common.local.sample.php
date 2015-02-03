@@ -24,5 +24,16 @@ return [
             ],
         ],
     ],
+    'modules' => [
+        'auto' => [
+            'components' => [
+                'externalDb' => [
+                    'dsn' => 'mysql:host=localhost;dbname=auto_base_buy',
+                    'username' => 'root',
+                    'password' => '123',
+                ],
+            ]
+        ],
+    ],
 ];
 
