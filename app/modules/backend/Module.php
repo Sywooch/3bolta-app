@@ -71,12 +71,20 @@ class Module extends \yii\base\Module
                 'items' => $handbookMenu,
             ],
             [
+                'label' => Yii::t('backend', 'Automobiles'),
+                'icon' => '',
+                'url' => ['/auto/auto-backend/mark'],
+                'visible' => $user->can('backendViewAuto'),
+                'options'=>[],
+                'active' => !empty(Yii::$app->controller->module) && Yii::$app->controller->module->id == 'auto',
+            ],
+            [
                 'label' => Yii::t('backend', 'File storage'),
                 'icon' => '',
                 'url' => ['/storage/storage-backend/index'],
                 'visible' => $user->can('backendViewFile'),
                 'options'=>[],
-                'active' => !empty(Yii::$app->controller->module) && Yii::$app->controller->module->id == 'advert' && Yii::$app->controller->id == 'category-backend',
+                'active' => !empty(Yii::$app->controller->module) && Yii::$app->controller->module->id == 'storage',
             ],
         ];
     }

@@ -23,6 +23,8 @@ return [
     'File list' => 'Список файлов',
     'File storage' => 'Файловое хранилище',
 
+    'Automobiles' => 'Автомобили',
+
     'Handbook' => 'Справочники',
 
     'Incorrect username or password.' => 'Неверный логин или пароль.',

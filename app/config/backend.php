@@ -40,6 +40,12 @@ return ArrayHelper::merge(include __DIR__ . '/common.php', [
                 // handbook actions
                 '/handbook/<code:(\w+)>/<action:(delete|update)/<id:(\w+)>' => '/handbook/handbook-value-backend/<action>',
                 '/handbook/<code:(\w+)>/<action:(\w+)>' => '/handbook/handbook-value-backend/<action>',
+
+                // auto actions
+                '/auto/mark' => '/auto/auto-backend/mark',
+                '/auto/model/<mark_id:(\d+)>' => '/auto/auto-backend/model',
+                '/auto/serie/<model_id:(\d+)>' => '/auto/auto-backend/serie',
+                '/auto/modification/<model_id:(\d+)>/<serie_id:(\d+)>' => '/auto/auto-backend/modification',
             ],
         ],
         'assetManager' => [
