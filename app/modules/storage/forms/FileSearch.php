@@ -1,9 +1,9 @@
 <?php
 
-namespace app\modules\storage\forms;
+namespace storage\forms;
 
 use yii\data\ActiveDataProvider;
-use app\modules\storage\models\File;
+use storage\models\File;
 
 /**
  * Форма поиска файлов

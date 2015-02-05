@@ -1,8 +1,8 @@
 <?php
 
-namespace app\modules\user;
+namespace user;
 
-use app\modules\user\models\User;
+use user\models\User;
 
 /**
  * Модуль пользователей

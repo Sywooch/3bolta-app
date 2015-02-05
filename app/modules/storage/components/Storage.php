@@ -1,8 +1,8 @@
 <?php
-namespace app\modules\storage\components;
+namespace storage\components;
 
 use yii\base\Component;
-use app\modules\storage\models\File;
+use storage\models\File;
 use yii\web\UploadedFile;
 
 /**
@@ -33,7 +33,7 @@ class Storage extends Component
      *
      * @param string $file абсолютный путь к файлу, который необходимо сохранить
      * @param string $name название сохраняемого файла
-     * @return \app\modules\storage\models\File|null
+     * @return \storage\models\File|null
      */
     public function saveFile($file, $name = '')
     {

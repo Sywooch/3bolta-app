@@ -1,11 +1,11 @@
 <?php
-namespace app\modules\user\controllers;
+namespace user\controllers;
 
 use Yii;
 use yii\data\ArrayDataProvider;
 use yii\web\Response;
 use yii\widgets\ActiveForm;
-use app\modules\user\forms\Role as RoleForm;
+use user\forms\Role as RoleForm;
 use yii\web\NotFoundHttpException;
 use yii\web\ServerErrorHttpException;
 use Exception;
@@ -13,7 +13,7 @@ use Exception;
 /**
  * Управление правами
  */
-class RoleBackendController extends \app\modules\backend\components\BaseBackendController
+class RoleBackendController extends \backend\components\BaseBackendController
 {
     public function behaviors()
     {

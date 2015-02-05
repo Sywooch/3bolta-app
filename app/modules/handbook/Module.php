@@ -1,5 +1,5 @@
 <?php
-namespace app\modules\handbook;
+namespace handbook;
 
 use Yii;
 

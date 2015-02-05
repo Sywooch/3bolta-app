@@ -6,7 +6,7 @@
  * Time: 3:14 PM
  */
 
-namespace app\modules\backend\assets;
+namespace backend\assets;
 
 
 use yii\web\AssetBundle;
@@ -24,7 +24,7 @@ class BackendAsset extends AssetBundle{
 
     public $depends = [
         'yii\web\YiiAsset',
-        'app\modules\backend\assets\AdminLTE',
-        'app\modules\backend\assets\Html5shiv',
+        'backend\assets\AdminLTE',
+        'backend\assets\Html5shiv',
     ];
 }

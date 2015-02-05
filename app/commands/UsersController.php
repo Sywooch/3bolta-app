@@ -4,7 +4,7 @@ namespace app\commands;
 use Yii;
 
 use yii\console\Controller;
-use app\modules\user\models\User;
+use user\models\User;
 
 /**
  * Работа с пользователями: создать

@@ -1,6 +1,6 @@
 <?php
 /* @var $this yii\web\View */
-/* @var $model \app\modules\user\models\User */
+/* @var $model \user\models\User */
 
 $this->title = Yii::t('backend', 'Create {modelClass}', [
     'modelClass' => Yii::t('backend/user', 'User'),

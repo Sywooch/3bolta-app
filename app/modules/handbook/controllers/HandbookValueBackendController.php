@@ -1,10 +1,10 @@
 <?php
-namespace app\modules\handbook\controllers;
+namespace handbook\controllers;
 
 use Yii;
-use app\modules\handbook\forms\HandbookValueSearch;
-use app\modules\handbook\models\Handbook;
-use app\modules\handbook\models\HandbookValue;
+use handbook\forms\HandbookValueSearch;
+use handbook\models\Handbook;
+use handbook\models\HandbookValue;
 use yii\web\Response;
 use yii\widgets\ActiveForm;
 use Exception;
@@ -14,7 +14,7 @@ use yii\web\NotFoundHttpException;
 /**
  * Управление значениями справочника
  */
-class HandbookValueBackendController extends \app\modules\backend\components\BaseBackendController
+class HandbookValueBackendController extends \backend\components\BaseBackendController
 {
     public function behaviors()
     {
@@ -54,7 +54,7 @@ class HandbookValueBackendController extends \app\modules\backend\components\Bas
      * Получить справочник по символьному коду.
      *
      * @param string $code символьный код справочника
-     * @return \app\modules\handbook\models\Handbook
+     * @return \handbook\models\Handbook
      * @throws NotFoundHttpException
      */
     protected function getHandbook($code)

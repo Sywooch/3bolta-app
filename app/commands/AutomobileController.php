@@ -4,7 +4,7 @@ namespace app\commands;
 use Yii;
 
 use yii\console\Controller;
-use app\modules\auto\sync\Base;
+use auto\sync\Base;
 
 /**
  * Работа с автомобилями - синхронизация со внешней БД auto.basebuy.ru.

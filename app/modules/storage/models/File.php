@@ -1,9 +1,9 @@
 <?php
-namespace app\modules\storage\models;
+namespace storage\models;
 
 use Yii;
 use yii\base\Exception;
-use app\modules\storage\components\Storage;
+use storage\components\Storage;
 use yii\web\UploadedFile;
 
 class File extends \yii\db\ActiveRecord
@@ -54,7 +54,7 @@ class File extends \yii\db\ActiveRecord
 
     /**
      * Определить и установить IP-адрес с которого загружаем
-     * @param \app\modules\storage\models\File $file
+     * @param \storage\models\File $file
      */
     protected static function setUploadedAddr(File $file)
     {
@@ -70,7 +70,7 @@ class File extends \yii\db\ActiveRecord
      * Иначе - устанавливает только mime.
      *
      * @param string $filePath абсолютный путь к файл
-     * @param \app\modules\storage\models\File $file файл, в который сохраняем изображение
+     * @param \storage\models\File $file файл, в который сохраняем изображение
      */
     protected static function setImageSize($existsFile, File $file)
     {
@@ -97,7 +97,7 @@ class File extends \yii\db\ActiveRecord
      * Скопировать файл $existsFile в $realPath и запомнить его в $file.
      * В случае ошибки генерирует Exception.
      *
-     * @param \app\modules\storage\models\File $file
+     * @param \storage\models\File $file
      * @param string $existsFile путь к файлу, который необходимо скопировать
      * @param string $realPath путь к вновь создаваемому файлу
      * @throws yii\base\Exception
@@ -180,7 +180,7 @@ class File extends \yii\db\ActiveRecord
     /**
      * Создать файл из существующего.
      *
-     * @param \app\modules\storage\components\Storage $repository
+     * @param \storage\components\Storage $repository
      * @param string $existsFile
      * @param string $realName
      * @param string $path
@@ -221,7 +221,7 @@ class File extends \yii\db\ActiveRecord
 
     /**
      * Возвращает репозиторий
-     * @return \app\modules\storage\components\Storage
+     * @return \storage\components\Storage
      */
     public function getStorage()
     {

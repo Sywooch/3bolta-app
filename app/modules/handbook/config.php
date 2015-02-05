@@ -6,7 +6,7 @@
 return [
     'components' => [
         'handbookApi' => [
-            'class' => '\app\modules\handbook\api\HandbookApi',
+            'class' => '\handbook\api\HandbookApi',
         ],
     ],
 ];

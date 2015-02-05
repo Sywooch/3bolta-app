@@ -1,6 +1,6 @@
 <?php
 
-namespace app\modules\advert;
+namespace advert;
 
 use Yii;
 

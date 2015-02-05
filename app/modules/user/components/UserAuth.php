@@ -1,8 +1,8 @@
 <?php
 
-namespace app\modules\user\components;
+namespace user\components;
 
-use \app\modules\user\models\User;
+use \user\models\User;
 
 /**
  * Переопределение класса yii\web\User
@@ -18,7 +18,7 @@ class UserAuth extends \yii\web\User
     protected function afterLogin($identity, $cookieBased, $duration)
     {
         if ($this->identity instanceof User) {
-            /* @var $user \app\modules\user\models\User */
+            /* @var $user \user\models\User */
             $user = $this->identity;
             $user->last_login = date('Y-m-d H:i:s');
             $user->save(true, ['last_login']);

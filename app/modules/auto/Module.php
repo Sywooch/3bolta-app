@@ -1,12 +1,12 @@
 <?php
-namespace app\modules\auto;
+namespace auto;
 
 use Yii;
-use app\modules\auto\models\Mark;
-use app\modules\auto\models\Model;
-use app\modules\auto\models\Serie;
-use app\modules\auto\models\Generation;
-use app\modules\auto\models\Modification;
+use auto\models\Mark;
+use auto\models\Model;
+use auto\models\Serie;
+use auto\models\Generation;
+use auto\models\Modification;
 
 /**
  * Модуль структуры автомобилей.
@@ -37,19 +37,19 @@ class Module extends \yii\base\Module
         Yii::configure($this, [
             'components' => [
                 'syncMark' => [
-                    'class' => '\app\modules\auto\sync\Mark'
+                    'class' => '\auto\sync\Mark'
                 ],
                 'syncModel' => [
-                    'class' => '\app\modules\auto\sync\Model'
+                    'class' => '\auto\sync\Model'
                 ],
                 'syncSerie' => [
-                    'class' => '\app\modules\auto\sync\Serie'
+                    'class' => '\auto\sync\Serie'
                 ],
                 'syncGeneration' => [
-                    'class' => '\app\modules\auto\sync\Generation'
+                    'class' => '\auto\sync\Generation'
                 ],
                 'syncModification' => [
-                    'class' => '\app\modules\auto\sync\Modification'
+                    'class' => '\auto\sync\Modification'
                 ],
             ]
         ]);

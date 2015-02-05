@@ -1,11 +1,11 @@
 <?php
 
-namespace app\modules\user\forms;
+namespace user\forms;
 
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\modules\user\models\User;
+use user\models\User;
 
 /**
  * UserSearch represents the model behind the search form about `common\models\User`.

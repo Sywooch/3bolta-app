@@ -1,6 +1,6 @@
 <?php
 /* @var $this yii\web\View */
-/* @var $model \app\modules\advert\models\Category */
+/* @var $model \advert\models\Category */
 
 $this->title = Yii::t('backend', 'Update {modelClass}', [
     'modelClass' => Yii::t('backend/advert', 'Category'),

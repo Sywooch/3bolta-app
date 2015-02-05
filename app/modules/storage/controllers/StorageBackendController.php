@@ -1,21 +1,21 @@
 <?php
-namespace app\modules\storage\controllers;
+namespace storage\controllers;
 
 use Yii;
-use app\modules\storage\forms\FileSearch;
+use storage\forms\FileSearch;
 use yii\web\Response;
 use yii\widgets\ActiveForm;
 use Exception;
 use yii\web\NotFoundHttpException;
 use yii\web\ServerErrorHttpException;
 use yii\web\UploadedFile;
-use app\modules\storage\forms\UploadFile;
-use app\modules\storage\models\File;
+use storage\forms\UploadFile;
+use storage\models\File;
 
 /**
  * Управление файлами
  */
-class StorageBackendController extends \app\modules\backend\components\BaseBackendController
+class StorageBackendController extends \backend\components\BaseBackendController
 {
     public function behaviors()
     {

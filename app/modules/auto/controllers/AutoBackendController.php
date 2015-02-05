@@ -1,19 +1,19 @@
 <?php
-namespace app\modules\auto\controllers;
+namespace auto\controllers;
 
 use Yii;
 use yii\data\ActiveDataProvider;
-use app\modules\auto\models\Mark;
-use app\modules\auto\models\Model;
-use app\modules\auto\models\Generation;
-use app\modules\auto\models\Serie;
-use app\modules\auto\models\Modification;
+use auto\models\Mark;
+use auto\models\Model;
+use auto\models\Generation;
+use auto\models\Serie;
+use auto\models\Modification;
 use yii\web\NotFoundHttpException;
 
 /**
  * Управление автомобилями
  */
-class AutoBackendController extends \app\modules\backend\components\BaseBackendController
+class AutoBackendController extends \backend\components\BaseBackendController
 {
     public function behaviors()
     {

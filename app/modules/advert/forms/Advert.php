@@ -1,5 +1,5 @@
 <?php
-namespace app\modules\advert\forms;
+namespace advert\forms;
 
 use Yii;
 

@@ -3,7 +3,7 @@
  * Базовый контроллер для бекенда
  */
 
-namespace app\modules\backend\components;
+namespace backend\components;
 
 use yii\web\Controller;
 use yii\filters\AccessControl;

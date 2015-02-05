@@ -3,7 +3,7 @@ use yii\grid\GridView;
 use yii\helpers\Html;
 use yii\helpers\Url;
 
-/* @var $mark app\modules\auto\models\Mark */
+/* @var $mark auto\models\Mark */
 /* @var $this yii\web\View */
 $this->title = Html::encode($mark->name);
 $this->params['breadcrumbs'][] = [

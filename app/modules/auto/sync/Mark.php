@@ -1,5 +1,5 @@
 <?php
-namespace app\modules\auto\sync;
+namespace auto\sync;
 
 /**
  * Синхронизация марок

@@ -20,8 +20,8 @@ return ArrayHelper::merge(include __DIR__ . '/common.php', [
             ],
         ],
         'user' => [
-            'class' => 'app\modules\user\components\UserAuth',
-            'identityClass' => 'app\modules\user\models\User',
+            'class' => 'user\components\UserAuth',
+            'identityClass' => 'user\models\User',
             'enableAutoLogin' => true,
             'loginUrl' => ['site/login'],
         ],

@@ -1,5 +1,5 @@
 <?php
-namespace app\modules\auto\models;
+namespace auto\models;
 
 use Yii;
 use yii\db\ActiveRecord;

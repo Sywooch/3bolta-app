@@ -1,10 +1,10 @@
 <?php
 
-namespace app\modules\advert\forms;
+namespace advert\forms;
 
 use Yii;
 use yii\data\ActiveDataProvider;
-use app\modules\advert\models\Category;
+use advert\models\Category;
 
 /**
  * Search model of Category

@@ -1,9 +1,9 @@
 <?php
-namespace app\modules\advert\controllers;
+namespace advert\controllers;
 
 use Yii;
-use app\modules\advert\forms\CategorySearch;
-use app\modules\advert\models\Category;
+use advert\forms\CategorySearch;
+use advert\models\Category;
 use yii\web\Response;
 use yii\widgets\ActiveForm;
 use Exception;
@@ -13,7 +13,7 @@ use yii\web\ServerErrorHttpException;
 /**
  * Управление категориями
  */
-class CategoryBackendController extends \app\modules\backend\components\BaseBackendController
+class CategoryBackendController extends \backend\components\BaseBackendController
 {
     public function behaviors()
     {

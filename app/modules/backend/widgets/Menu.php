@@ -6,7 +6,7 @@
  * Time: 11:16 AM
  */
 
-namespace app\modules\backend\widgets;
+namespace backend\widgets;
 
 
 use frontend\models\WidgetMenu;

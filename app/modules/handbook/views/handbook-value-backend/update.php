@@ -1,6 +1,6 @@
 <?php
 /* @var $this yii\web\View */
-/* @var $model \app\modules\handbook\models\HandbookValue */
+/* @var $model \handbook\models\HandbookValue */
 
 $this->title = Yii::t('backend', 'Update {modelClass}', [
     'modelClass' => Yii::t('backend/handbook', 'Value'),

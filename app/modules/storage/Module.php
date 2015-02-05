@@ -1,6 +1,6 @@
 <?php
 
-namespace app\modules\storage;
+namespace storage;
 
 use Yii;
 use yii\base\Exception;
@@ -24,7 +24,7 @@ class Module extends \yii\base\Module
 
         foreach ($this->repository as $code => $repo) {
             if (empty($repo['class'])) {
-                $repo['class'] = 'app\modules\storage\components\Storage';
+                $repo['class'] = 'storage\components\Storage';
             }
             if (empty($repo['basePath']) || empty($repo['baseUrl'])) {
                 throw new Exception();

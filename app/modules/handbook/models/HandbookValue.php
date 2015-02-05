@@ -1,5 +1,5 @@
 <?php
-namespace app\modules\handbook\models;
+namespace handbook\models;
 
 use Yii;
 use yii\db\ActiveRecord;

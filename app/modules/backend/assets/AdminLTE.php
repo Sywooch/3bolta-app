@@ -6,7 +6,7 @@
  * Time: 11:40 AM
  */
 
-namespace app\modules\backend\assets;
+namespace backend\assets;
 
 
 use yii\web\AssetBundle;
@@ -23,6 +23,6 @@ class AdminLTE extends AssetBundle{
         '\yii\web\JqueryAsset',
         '\yii\jui\JuiAsset',
         '\yii\bootstrap\BootstrapPluginAsset',
-        //'\app\modules\backend\FontAwesome'
+        //'\backend\FontAwesome'
     ];
 }

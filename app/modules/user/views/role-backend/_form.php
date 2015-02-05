@@ -3,7 +3,7 @@ use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
 
 /* @var $this yii\web\View */
-/* @var $model app\modules\user\forms\Role */
+/* @var $model user\forms\Role */
 /* @var $form yii\bootstrap\ActiveForm */
 /* @var $role yii\rbac\Role */
 /* @var $permissions yii\rbac\Permission[] */

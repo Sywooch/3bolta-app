@@ -4,7 +4,7 @@ use yii\bootstrap\ActiveForm;
 use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
-/* @var $model app\modules\handbook\models\HandbookValue */
+/* @var $model handbook\models\HandbookValue */
 /* @var $form yii\bootstrap\ActiveForm */
 ?>
 

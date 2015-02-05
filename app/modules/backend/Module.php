@@ -1,8 +1,8 @@
 <?php
-namespace app\modules\backend;
+namespace backend;
 
 use Yii;
-use app\modules\handbook\models\Handbook;
+use handbook\models\Handbook;
 
 /**
  * Модуль для бекенда

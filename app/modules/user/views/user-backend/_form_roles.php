@@ -1,6 +1,6 @@
 <?php
 /* @var $this yii\web\View */
-/* @var $model app\modules\user\models\User */
+/* @var $model user\models\User */
 /* @var $form yii\bootstrap\ActiveForm */
 /* @var $authManager \yii\rbac\DbManager */
 $authManager = Yii::$app->authManager;

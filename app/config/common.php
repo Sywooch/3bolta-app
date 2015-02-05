@@ -12,11 +12,11 @@ $config = ArrayHelper::merge([
     'basePath' => dirname(__DIR__),
     'language' => 'ru',
     'bootstrap' => ['log'],
-    'aliases' => [
+    'aliases' => ArrayHelper::merge([
         '@' => dirname(__DIR__),
         '@backendUrl' => APP_BACKEND_ABSOLUTE_URL,
         '@frontendUrl' => APP_FRONTEND_ABSOLUTE_URL,
-    ],
+    ], include __DIR__ . '/aliases.php'),
     'components' => [
         'i18n' => [
             'translations' => [
@@ -60,16 +60,16 @@ $config = ArrayHelper::merge([
     ],
     'modules' => [
         'user' => [
-            'class' => 'app\modules\user\Module',
+            'class' => 'user\Module',
         ],
         'advert' => [
-            'class' => 'app\modules\advert\Module',
+            'class' => 'advert\Module',
         ],
         'handbook' => [
-            'class' => 'app\modules\handbook\Module',
+            'class' => 'handbook\Module',
         ],
         'storage' => [
-            'class' => 'app\modules\storage\Module',
+            'class' => 'storage\Module',
             'repository' => [
                 'advert' => [
                     'baseUrl' => APP_STORAGE_ABSOLUTE_URL . '/advert/',
@@ -82,7 +82,7 @@ $config = ArrayHelper::merge([
             ]
         ],
         'auto' => [
-            'class' => 'app\modules\auto\Module',
+            'class' => 'auto\Module',
             'components' => [
                 'externalDb' => [
                     'class' => 'yii\db\Connection',

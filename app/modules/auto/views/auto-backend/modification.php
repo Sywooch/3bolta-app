@@ -3,10 +3,10 @@ use yii\grid\GridView;
 use yii\helpers\Html;
 use yii\helpers\Url;
 
-/* @var $mark app\modules\auto\models\Mark */
-/* @var $model app\modules\auto\models\Model */
-/* @var $serie app\modules\auto\models\Serie */
-/* @var $generation app\modules\auto\models\Generation */
+/* @var $mark auto\models\Mark */
+/* @var $model auto\models\Model */
+/* @var $serie auto\models\Serie */
+/* @var $generation auto\models\Generation */
 /* @var $this yii\web\View */
 $this->title = '';
 if ($mark) {

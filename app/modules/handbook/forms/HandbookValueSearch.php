@@ -1,10 +1,10 @@
 <?php
-namespace app\modules\handbook\forms;
+namespace handbook\forms;
 
 use Yii;
 use yii\data\ActiveDataProvider;
-use app\modules\handbook\models\HandbookValue;
-use app\modules\handbook\models\Handbook;
+use handbook\models\HandbookValue;
+use handbook\models\Handbook;
 
 /**
  * Поиск значений справочников

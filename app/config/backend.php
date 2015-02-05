@@ -52,8 +52,8 @@ return ArrayHelper::merge(include __DIR__ . '/common.php', [
             'linkAssets' => true,
         ],
         'user' => [
-            'class' => 'app\modules\user\components\UserAuth',
-            'identityClass' => 'app\modules\user\models\User',
+            'class' => 'user\components\UserAuth',
+            'identityClass' => 'user\models\User',
             'enableAutoLogin' => true,
             'loginUrl' => ['/backend/dashboard/login'],
         ],
@@ -63,7 +63,7 @@ return ArrayHelper::merge(include __DIR__ . '/common.php', [
     ],
     'modules' => [
         'backend' => [
-            'class' => 'app\modules\backend\Module',
+            'class' => 'backend\Module',
         ]
     ]
 ], include __DIR__ . '/backend.local.php');

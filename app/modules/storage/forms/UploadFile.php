@@ -1,8 +1,8 @@
 <?php
-namespace app\modules\storage\forms;
+namespace storage\forms;
 
 use Yii;
-use app\modules\storage\components\Storage;
+use storage\components\Storage;
 use yii\web\UploadedFile;
 
 /**
@@ -54,7 +54,7 @@ class UploadFile extends \yii\base\Model
 
     /**
      * Возвращает репозиторий или null
-     * @return app\modules\storage\components\Storage|null
+     * @return storage\components\Storage|null
      */
     public function getStorage()
     {

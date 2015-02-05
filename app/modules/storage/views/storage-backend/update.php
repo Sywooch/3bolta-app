@@ -1,6 +1,6 @@
 <?php
 /* @var $this yii\web\View */
-/* @var $model \app\modules\storage\model\File */
+/* @var $model \storage\model\File */
 /* @var $form yii\bootstrap\ActiveForm */
 
 use yii\helpers\Html;

@@ -6,7 +6,7 @@
  * Time: 8:16 PM
  */
 
-namespace app\modules\backend\assets;
+namespace backend\assets;
 
 
 use yii\web\AssetBundle;

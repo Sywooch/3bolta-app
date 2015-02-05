@@ -3,7 +3,7 @@
  * Модель пользователя
  */
 
-namespace app\modules\user\models;
+namespace user\models;
 
 use \Yii;
 use yii\db\ActiveRecord;

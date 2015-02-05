@@ -1,5 +1,5 @@
 <?php
-namespace app\modules\advert\models;
+namespace advert\models;
 
 use Yii;
 use yii\db\ActiveRecord;

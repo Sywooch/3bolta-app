@@ -2,10 +2,10 @@
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
 use yii\widgets\DetailView;
-use app\modules\advert\models\Category;
+use advert\models\Category;
 
 /* @var $this yii\web\View */
-/* @var $model app\modules\advert\models\Category */
+/* @var $model advert\models\Category */
 /* @var $form yii\bootstrap\ActiveForm */
 ?>
 

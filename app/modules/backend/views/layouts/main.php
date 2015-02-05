@@ -5,7 +5,7 @@
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\widgets\Breadcrumbs;
-use app\modules\backend\widgets\Menu;
+use backend\widgets\Menu;
 ?>
 <?php $this->beginContent('@app/modules/backend/views/layouts/_base.php'); ?>
 <!-- header logo: style can be found in header.less -->

@@ -1,5 +1,5 @@
 <?php
-namespace app\modules\user\forms;
+namespace user\forms;
 
 use yii\base\Model;
 use Yii;
@@ -82,7 +82,7 @@ class Role extends Model
      * Создать модель из роли
      * @param \yii\rbac\Role $role
      * @param \yii\rbac\Permission[] $permissions
-     * @return \app\modules\user\forms\Role
+     * @return \user\forms\Role
      */
     public static function createFromRole(\yii\rbac\Role $role, $permissions)
     {
