@@ -7,7 +7,7 @@ use Yii;
 /**
  * Модуль объявлений
  */
-class Module extends \yii\base\Module
+class Module extends \app\components\BaseModule
 {
     public function init()
     {

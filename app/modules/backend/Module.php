@@ -7,7 +7,7 @@ use handbook\models\Handbook;
 /**
  * Модуль для бекенда
  */
-class Module extends \yii\base\Module
+class Module extends \app\components\BaseModule
 {
     /**
      * Генерация левого меню для бекенда
@@ -24,9 +24,9 @@ class Module extends \yii\base\Module
             $handbookMenu[] = [
                 'label' => $i->name,
                 'icon' => '',
-                'url' => ['/handbook/handbook-value-backend/index', 'code' => $i->code],
+                'url' => ['/handbook/handbook-value/index', 'code' => $i->code],
                 'visible' => $user->can('backendViewHandbookValues'),
-                'active' => Yii::$app->controller->id == 'handbook-value-backend',
+                'active' => Yii::$app->controller->id == 'handbook-value',
             ];
         }
 
@@ -41,26 +41,26 @@ class Module extends \yii\base\Module
                     [
                         'label' => Yii::t('backend', 'Users list'),
                         'icon' => '',
-                        'url' => ['/user/user-backend/index'],
+                        'url' => ['/user/user/index'],
                         'visible' => $user->can('backendViewUser'),
-                        'active' => Yii::$app->controller->id == 'user-backend',
+                        'active' => Yii::$app->controller->id == 'user',
                     ],
                     [
                         'label' => Yii::t('backend', 'Roles list'),
                         'icon' => '',
-                        'url' => ['/user/role-backend/index'],
+                        'url' => ['/user/role/index'],
                         'visible' => $user->can('backendRoleAdmin'),
-                        'active' => Yii::$app->controller->id == 'role-backend',
+                        'active' => Yii::$app->controller->id == 'role',
                     ]
                 ]
             ],
             [
                 'label' => Yii::t('backend', 'Advert categories'),
                 'icon' => '',
-                'url' => ['/advert/category-backend/index'],
+                'url' => ['/advert/category/index'],
                 'visible' => $user->can('backendViewAdvertCategory'),
                 'options'=>[],
-                'active' => !empty(Yii::$app->controller->module) && Yii::$app->controller->module->id == 'advert' && Yii::$app->controller->id == 'category-backend',
+                'active' => !empty(Yii::$app->controller->module) && Yii::$app->controller->module->id == 'advert' && Yii::$app->controller->id == 'category',
             ],
             [
                 'label' => Yii::t('backend', 'Handbook'),
@@ -73,7 +73,7 @@ class Module extends \yii\base\Module
             [
                 'label' => Yii::t('backend', 'Automobiles'),
                 'icon' => '',
-                'url' => ['/auto/auto-backend/mark'],
+                'url' => ['/auto/auto/mark'],
                 'visible' => $user->can('backendViewAuto'),
                 'options'=>[],
                 'active' => !empty(Yii::$app->controller->module) && Yii::$app->controller->module->id == 'auto',
@@ -81,7 +81,7 @@ class Module extends \yii\base\Module
             [
                 'label' => Yii::t('backend', 'File storage'),
                 'icon' => '',
-                'url' => ['/storage/storage-backend/index'],
+                'url' => ['/storage/storage/index'],
                 'visible' => $user->can('backendViewFile'),
                 'options'=>[],
                 'active' => !empty(Yii::$app->controller->module) && Yii::$app->controller->module->id == 'storage',

@@ -6,7 +6,7 @@ use Yii;
 /**
  * Модуль справочников
  */
-class Module extends \yii\base\Module
+class Module extends \app\components\BaseModule
 {
     public function init()
     {

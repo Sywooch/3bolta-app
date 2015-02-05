@@ -1,5 +1,5 @@
 <?php
-namespace storage\controllers;
+namespace storage\controllers\backend;
 
 use Yii;
 use storage\forms\FileSearch;
@@ -15,7 +15,7 @@ use storage\models\File;
 /**
  * Управление файлами
  */
-class StorageBackendController extends \backend\components\BaseBackendController
+class StorageController extends \app\components\BaseBackendController
 {
     public function behaviors()
     {

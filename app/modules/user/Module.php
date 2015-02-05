@@ -7,7 +7,7 @@ use user\models\User;
 /**
  * Модуль пользователей
  */
-class Module extends \yii\base\Module
+class Module extends \app\components\BaseModule
 {
     /**
      * Вернуть захешированный пароль

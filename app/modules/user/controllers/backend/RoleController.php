@@ -1,5 +1,5 @@
 <?php
-namespace user\controllers;
+namespace user\controllers\backend;
 
 use Yii;
 use yii\data\ArrayDataProvider;
@@ -13,7 +13,7 @@ use Exception;
 /**
  * Управление правами
  */
-class RoleBackendController extends \backend\components\BaseBackendController
+class RoleController extends \app\components\BaseBackendController
 {
     public function behaviors()
     {

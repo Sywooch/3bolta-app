@@ -1,11 +1,9 @@
 <?php
-namespace auto\controllers;
+namespace auto\controllers\backend;
 
-use Yii;
 use yii\data\ActiveDataProvider;
 use auto\models\Mark;
 use auto\models\Model;
-use auto\models\Generation;
 use auto\models\Serie;
 use auto\models\Modification;
 use yii\web\NotFoundHttpException;
@@ -13,7 +11,7 @@ use yii\web\NotFoundHttpException;
 /**
  * Управление автомобилями
  */
-class AutoBackendController extends \backend\components\BaseBackendController
+class AutoController extends \app\components\BaseBackendController
 {
     public function behaviors()
     {

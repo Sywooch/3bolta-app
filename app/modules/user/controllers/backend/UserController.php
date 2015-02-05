@@ -1,5 +1,5 @@
 <?php
-namespace user\controllers;
+namespace user\controllers\backend;
 
 use Yii;
 use user\forms\UserSearch;
@@ -13,7 +13,7 @@ use yii\web\ServerErrorHttpException;
 /**
  * Управление пользователями
  */
-class UserBackendController extends \backend\components\BaseBackendController
+class UserController extends \app\components\BaseBackendController
 {
     public function behaviors()
     {

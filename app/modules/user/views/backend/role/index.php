@@ -27,7 +27,7 @@ print GridView::widget([
             'value' => function($data) {
                 return Html::a(
                     Html::encode($data->description),
-                    Url::toRoute(['/user/role-backend/update', 'id' => $data->name])
+                    Url::toRoute(['/user/role/update', 'id' => $data->name])
                 );
             },
             'format' => 'html',
