@@ -3,7 +3,7 @@
 /* @var $role yii\rbac\Role */
 
 $this->title = Yii::t('backend', 'Create {modelClass}', [
-    'modelClass' => Yii::t('backend/user', 'Role'),
+    'modelClass' => $this->context->getSubstanceName(),
 ]);
 $this->params['breadcrumbs'][] = ['label' => Yii::t('backend', 'Roles list'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;

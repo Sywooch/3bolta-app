@@ -15,6 +15,11 @@ use yii\web\ServerErrorHttpException;
  */
 class CategoryController extends \app\components\BaseBackendController
 {
+    public function getSubstanceName()
+    {
+        return Yii::t('backend/advert', 'of category');
+    }
+
     public function behaviors()
     {
         return \yii\helpers\ArrayHelper::merge([

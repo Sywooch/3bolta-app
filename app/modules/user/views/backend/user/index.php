@@ -11,7 +11,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="page-index">
 <?php
 print Html::tag('p', Html::a(Yii::t('backend', 'Create {modelClass}', [
-    'modelClass' => Yii::t('backend/user', 'User')
+    'modelClass' => $this->context->getSubstanceName(),
 ]), ['create'], ['class' => 'btn btn-success']));
 ?>
 

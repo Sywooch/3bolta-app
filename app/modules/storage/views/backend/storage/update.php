@@ -8,7 +8,7 @@ use yii\bootstrap\ActiveForm;
 use yii\bootstrap\Tabs;
 use yii\widgets\DetailView;
 $this->title = Yii::t('backend', 'Update {modelClass}', [
-    'modelClass' => Yii::t('backend/storage', 'File'),
+    'modelClass' => $this->context->getSubstanceName(),
 ]);
 $this->params['breadcrumbs'][] = ['label' => Yii::t('backend', 'File list'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;

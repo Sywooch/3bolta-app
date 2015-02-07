@@ -1,24 +1,23 @@
 <?php
-namespace handbook\controllers\backend;
+namespace advert\controllers\backend;
 
 use Yii;
-use handbook\forms\HandbookValueSearch;
-use handbook\models\Handbook;
-use handbook\models\HandbookValue;
+use advert\forms\AdvertSearch;
+use advert\models\Advert;
 use yii\web\Response;
 use yii\widgets\ActiveForm;
 use Exception;
-use yii\web\ServerErrorHttpException;
 use yii\web\NotFoundHttpException;
+use yii\web\ServerErrorHttpException;
 
 /**
- * Управление значениями справочника
+ * Управление объявлениями
  */
-class HandbookValueController extends \app\components\BaseBackendController
+class AdvertController extends \app\components\BaseBackendController
 {
     public function getSubstanceName()
     {
-        return Yii::t('backend/handbook', 'of value');
+        return Yii::t('backend/advert', 'of advert');
     }
 
     public function behaviors()
@@ -30,19 +29,19 @@ class HandbookValueController extends \app\components\BaseBackendController
                         'actions' => ['index', 'update'],
                         'allow' => true,
                         'verbs' => ['GET'],
-                        'roles' => ['backendViewHandbookValues'],
+                        'roles' => ['backendViewAdvert'],
                     ],
                     [
                         'actions' => ['update', 'delete'],
                         'allow' => true,
                         'verbs' => ['GET', 'POST'],
-                        'roles' => ['backendUpdateHandbookValues'],
+                        'roles' => ['backendUpdateAdvert'],
                     ],
                     [
                         'actions' => ['create'],
                         'allow' => true,
                         'verbs' => ['GET', 'POST'],
-                        'roles' => ['backendCreateHandbookValues'],
+                        'roles' => ['backendCreateAdvert'],
                     ]
                 ],
             ],
@@ -56,32 +55,11 @@ class HandbookValueController extends \app\components\BaseBackendController
     }
 
     /**
-     * Получить справочник по символьному коду.
-     *
-     * @param string $code символьный код справочника
-     * @return \handbook\models\Handbook
-     * @throws NotFoundHttpException
+     * Создание
      */
-    protected function getHandbook($code)
+    public function actionCreate()
     {
-        $ret = Handbook::find()->where(['code' => $code])->one();
-
-        if (!($ret instanceof Handbook)) {
-            throw new NotFoundHttpException();
-        }
-
-        return $ret;
-    }
-
-    /**
-     * Создание новой записи
-     */
-    public function actionCreate($code)
-    {
-        $handbook = $this->getHandbook($code);
-
-        $model = new HandbookValue();
-        $model->handbook_code = $handbook->code;
+        $model = new Advert();
 
         if (Yii::$app->request->isAjax && $model->load($_POST)) {
             Yii::$app->response->format = Response::FORMAT_JSON;
@@ -89,22 +67,29 @@ class HandbookValueController extends \app\components\BaseBackendController
         }
 
         if ($model->load($_POST) && $model->validate()) {
+            $transaction = Yii::$app->db->beginTransaction();
+
             try {
                 if (!$model->save()) {
                     throw new Exception();
                 }
 
-                Yii::$app->serviceMessage->setMessage('success', Yii::t('backend/handbook', 'Success create handbook value'));
+                $transaction->commit();
+
+                Yii::$app->serviceMessage->setMessage('success', Yii::t('backend/advert', 'Success create advert'));
 
                 if (isset($_POST['apply'])) {
-                    return $this->refresh();
+                    return $this->redirect(['update', 'id' => $model->id]);
                 }
                 else {
-                    return $this->redirect(['index', 'code' => $handbook->code]);
+                    return $this->redirect(['index']);
                 }
             }
             catch (Exception $ex) {
-                Yii::$app->serviceMessage->setMessage('danger', Yii::t('backend/handbook', 'Error create a handbook value'));
+                $transaction->rollback();
+
+                throw $ex;
+                Yii::$app->serviceMessage->setMessage('danger', Yii::t('backend/advert', 'Error create a advert'));
             }
         }
 
@@ -114,14 +99,11 @@ class HandbookValueController extends \app\components\BaseBackendController
     }
 
     /**
-     * Редактирование записи
+     * Редактирование
      */
-    public function actionUpdate($code, $id)
+    public function actionUpdate($id)
     {
-        $handbook = $this->getHandbook($code);
-
-        $model = $this->findModel($handbook->code, $id);
-        $model->handbook_code = $handbook->code;
+        $model = $this->findModel($id);
 
         if (Yii::$app->request->isAjax && $model->load($_POST)) {
             Yii::$app->response->format = Response::FORMAT_JSON;
@@ -129,22 +111,28 @@ class HandbookValueController extends \app\components\BaseBackendController
         }
 
         if ($model->load($_POST) && $model->validate()) {
+            $transaction = Yii::$app->db->beginTransaction();
+
             try {
                 if (!$model->save()) {
                     throw new Exception();
                 }
 
-                Yii::$app->serviceMessage->setMessage('success', Yii::t('backend/handbook', 'Success update value'));
+                $transaction->commit();
+
+                Yii::$app->serviceMessage->setMessage('success', Yii::t('backend/advert', 'Success update advert'));
 
                 if (isset($_POST['apply'])) {
                     return $this->refresh();
                 }
                 else {
-                    return $this->redirect(['index', 'code' => $handbook->code]);
+                    return $this->redirect(['index']);
                 }
             }
             catch (Exception $ex) {
-                Yii::$app->serviceMessage->setMessage('danger', Yii::t('backend/handbook', 'Error update a value'));
+                $transaction->rollback();
+
+                Yii::$app->serviceMessage->setMessage('danger', Yii::t('backend/advert', 'Error update a advert'));
             }
         }
 
@@ -154,32 +142,27 @@ class HandbookValueController extends \app\components\BaseBackendController
     }
 
     /**
-     * Удаление значения
+     * Удаление
      */
-    public function actionDelete($code, $id)
+    public function actionDelete($id)
     {
-        $handbook = $this->getHandbook($code);
-
-        $model = $this->findModel($handbook->code, $id);
+        $model = $this->findModel($id);
 
         try {
             $model->delete();
 
-            return $this->redirect(['index', 'code' => $handbook->code]);
+            return $this->redirect(['index']);
         } catch (Exception $ex) {
             throw new ServerErrorHttpException();
         }
     }
 
     /**
-     * Список значений
+     * Список
      */
-    public function actionIndex($code)
+    public function actionIndex()
     {
-        $handbook = $this->getHandbook($code);
-
-        $searchModel = new HandbookValueSearch();
-        $searchModel->handbook_code = $handbook->code;
+        $searchModel = new AdvertSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -190,17 +173,13 @@ class HandbookValueController extends \app\components\BaseBackendController
 
     /**
      * Возвращает искомую модель
-     * @param string $code символьный код справочника
      * @param string $id
      * @return \yii\db\ActiveRecord
      * @throws NotFoundHttpException
      */
-    protected function findModel($code, $id)
+    protected function findModel($id)
     {
-        $model = HandbookValue::find()->where([
-            'id' => $id,
-            'handbook_code' => $code,
-        ])->one();
+        $model = Advert::find()->where(['id' => $id])->one();
 
         if (empty($model)) {
             throw new NotFoundHttpException();

@@ -1,9 +1,9 @@
 <?php
 /* @var $this yii\web\View */
-/* @var $model \user\models\User */
+/* @var $model \advert\models\Category */
 
 $this->title = Yii::t('backend', 'Create {modelClass}', [
-    'modelClass' => Yii::t('backend/advert', 'Category'),
+    'modelClass' => $this->context->getSubstanceName(),
 ]);
 $this->params['breadcrumbs'][] = ['label' => Yii::t('backend', 'Advert categories list'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;

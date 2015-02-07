@@ -15,6 +15,11 @@ use yii\web\ServerErrorHttpException;
  */
 class UserController extends \app\components\BaseBackendController
 {
+    public function getSubstanceName()
+    {
+        return Yii::t('backend/user', 'of user');
+    }
+
     public function behaviors()
     {
         return \yii\helpers\ArrayHelper::merge([

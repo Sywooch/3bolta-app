@@ -18,9 +18,4 @@
  */
 return [
     'Error update a value' => 'Ошибка редактирования значения',
-    'Success update value' => 'Успешно создано значение',
-    'of value' => 'значение',
-    'Error create a handbook value' => 'Ошибка создания значения',
-    'Success create handbook value' => 'Успешно создано значение',
-    'Value list' => 'Список значений',
 ];

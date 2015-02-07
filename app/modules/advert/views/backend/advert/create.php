@@ -1,11 +1,11 @@
 <?php
 /* @var $this yii\web\View */
-/* @var $model \user\models\User */
+/* @var $model \advert\models\Advert */
 
-$this->title = Yii::t('backend', 'Update {modelClass}', [
+$this->title = Yii::t('backend', 'Create {modelClass}', [
     'modelClass' => $this->context->getSubstanceName(),
-]) . ' ' . $model->email;
-$this->params['breadcrumbs'][] = ['label' => Yii::t('backend', 'Users list'), 'url' => ['index']];
+]);
+$this->params['breadcrumbs'][] = ['label' => Yii::t('backend', 'Advert categories list'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="page-update">

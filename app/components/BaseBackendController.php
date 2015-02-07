@@ -11,6 +11,15 @@ use yii\filters\AccessControl;
 abstract class BaseBackendController extends Controller
 {
     /**
+     * Перевод сущности в родительном падеже
+     * @return string
+     */
+    public function getSubstanceName()
+    {
+        return '';
+    }
+
+    /**
      * @var string Шаблон по умолчанию.
      */
     public $layout = '@app/modules/backend/views/layouts/main';

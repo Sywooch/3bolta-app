@@ -25,17 +25,17 @@ class Advert extends \yii\base\Model
      */
     public function rules()
     {
-        $rules = [];
-
-        $rules[] = [['name', 'category_id', 'condition_id'], 'required'];
-        $rules[] = [['description'], 'string', 'max' => self::DESCRIPTION_MAX_LENGTH];
-
-        if (!$this->user_id) {
-            $rules[] = [['user_name', 'user_phone', 'user_email'], 'required'];
-            $rules[] = [['user_email'], 'email'];
-        }
-
-        return $rules;
+        return [
+            [['name', 'category_id', 'condition_id'], 'required'],
+            [['category_id', 'condition_id'], 'integer'],
+            [['description'], 'string', 'max' => self::DESCRIPTION_MAX_LENGTH],
+            [['user_name', 'user_phone', 'user_email'], 'required', 'when' => function($model) {
+                return empty($model->user_id);
+            }],
+            [['user_email'], 'email', 'when' => function($model) {
+                return empty($model->user_id);
+            }],
+        ];
     }
 
     /**

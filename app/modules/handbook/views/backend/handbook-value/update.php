@@ -3,7 +3,7 @@
 /* @var $model \handbook\models\HandbookValue */
 
 $this->title = Yii::t('backend', 'Update {modelClass}', [
-    'modelClass' => Yii::t('backend/handbook', 'Value'),
+    'modelClass' => $this->context->getSubstanceName(),
 ]);
 $this->params['breadcrumbs'][] = ['label' => Yii::t('backend/handbook', 'Value list') . ' "' . $model->getHandbook()->name . '"', 'url' => ['index', 'code' => $model->handbook_code]];
 $this->params['breadcrumbs'][] = $this->title;

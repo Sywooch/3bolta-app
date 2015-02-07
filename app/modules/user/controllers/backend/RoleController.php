@@ -15,6 +15,11 @@ use Exception;
  */
 class RoleController extends \app\components\BaseBackendController
 {
+    public function getSubstanceName()
+    {
+        return Yii::t('backend/user', 'of role');
+    }
+
     public function behaviors()
     {
         return \yii\helpers\ArrayHelper::merge([

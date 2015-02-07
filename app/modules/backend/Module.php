@@ -55,12 +55,30 @@ class Module extends \app\components\BaseModule
                 ]
             ],
             [
-                'label' => Yii::t('backend', 'Advert categories'),
+                'label' => Yii::t('backend', 'Advert'),
                 'icon' => '',
                 'url' => ['/advert/category/index'],
-                'visible' => $user->can('backendViewAdvertCategory'),
-                'options'=>[],
-                'active' => !empty(Yii::$app->controller->module) && Yii::$app->controller->module->id == 'advert' && Yii::$app->controller->id == 'category',
+                'visible' => $user->can('backendViewAdvertCategory') || $user->can('backendViewAdvert'),
+                'options'=>['class'=>'treeview'],
+                'active' => !empty(Yii::$app->controller->module) && Yii::$app->controller->module->id == 'advert',
+                'items' => [
+                    [
+                        'label' => Yii::t('backend', 'Advert categories'),
+                        'icon' => '',
+                        'url' => ['/advert/category/index'],
+                        'visible' => $user->can('backendViewAdvertCategory'),
+                        'options'=>[],
+                        'active' => !empty(Yii::$app->controller->module) && Yii::$app->controller->module->id == 'advert' && Yii::$app->controller->id == 'category',
+                    ],
+                    [
+                        'label' => Yii::t('backend', 'Adverts list'),
+                        'icon' => '',
+                        'url' => ['/advert/advert/index'],
+                        'visible' => $user->can('backendViewAdvert'),
+                        'options'=>[],
+                        'active' => !empty(Yii::$app->controller->module) && Yii::$app->controller->module->id == 'advert' && Yii::$app->controller->id == 'advert',
+                    ],
+                ]
             ],
             [
                 'label' => Yii::t('backend', 'Handbook'),

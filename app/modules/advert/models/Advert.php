@@ -1,6 +1,8 @@
 <?php
 namespace advert\models;
 
+use Yii;
+
 use user\models\User;
 use handbook\models\HandbookValue;
 
@@ -33,13 +35,52 @@ class Advert extends \yii\db\ActiveRecord
     {
         return [
             [['advert_name', 'price', 'condition_id', 'category_id'], 'required'],
+            [['price'], 'filter', 'filter' => function($value) {
+                return str_replace(',', '.', $value);
+            }],
+            [['price'], 'number', 'min' => 1, 'max' => 9999999],
+            [['description'], 'safe'],
             [['user_id', 'condition_id', 'category_id'], 'integer'],
             [['user_name', 'user_phone', 'user_email'], 'required', 'when' => function($model) {
                 // обязательна либо привязка к пользователю, либо координаты пользователя
                 return empty($model->user_id);
             }],
+            [['user_email'], 'email', 'when' => function($model) {
+                return empty($model->user_id);
+            }],
             [['active'], 'boolean'],
         ];
+    }
+
+    /**
+     * Подписи атрибутов
+     * @return []
+     */
+    public function attributeLabels()
+    {
+        return [
+            'id' => 'ID',
+            'advert_name' => Yii::t('advert', 'Part name'),
+            'price' => Yii::t('advert', 'Part price'),
+            'condition_id' => Yii::t('advert', 'Part condition'),
+            'category_id' => Yii::t('advert', 'Part category'),
+            'user_name' => Yii::t('advert', 'Contact name'),
+            'user_phone' => Yii::t('advert', 'Contact phone'),
+            'user_email' => Yii::t('advert', 'Contact email'),
+            'user_id' => Yii::t('advert', 'User id'),
+            'active' => Yii::t('advert', 'Part active'),
+            'description' => Yii::t('advert', 'Advert description'),
+        ];
+    }
+
+    public function beforeSave($insert)
+    {
+        if ($this->isNewRecord) {
+            $this->created = date('Y-m-d H:i:s');
+        }
+        $this->edited = date('Y-m-d H:i:s');
+
+        return parent::beforeSave($insert);
     }
 
     /**
@@ -247,5 +288,37 @@ class Advert extends \yii\db\ActiveRecord
     public function attachModification($modificationIds)
     {
         $this->attachAutomobile('{{%advert_modification}}', $modificationIds);
+    }
+
+    /**
+     * Выпадающий список категорий
+     * @return []
+     */
+    public static function getCategoryDropDownList()
+    {
+        $ret = [];
+
+        $categories = Category::find()->all();
+        foreach ($categories as $category) {
+            $ret[$category->id] = $category->getFormatName();
+        }
+
+        return $ret;
+    }
+
+    /**
+     * Выпадающий список состояния запчасти
+     * @return []
+     */
+    public static function getConditionDropDownList()
+    {
+        $ret = [];
+
+        $values = HandbookValue::find()->andWhere(['handbook_code' => 'part_condition'])->all();
+        foreach ($values as $value) {
+            $ret[$value->id] = $value->name;
+        }
+
+        return $ret;
     }
 }

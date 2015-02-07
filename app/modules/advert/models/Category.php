@@ -175,4 +175,17 @@ class Category extends ActiveRecord
 
         return $ret;
     }
+
+    /**
+     * Возвращает имя с дефисами спереди для определения уровня вложенности
+     * @return string
+     */
+    public function getFormatName()
+    {
+        if ($this->depth > 0) {
+            $ret = str_repeat('--', $this->depth - 1);
+        }
+        $ret .= $this->name;
+        return $ret;
+    }
 }

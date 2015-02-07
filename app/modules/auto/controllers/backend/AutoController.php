@@ -13,6 +13,11 @@ use yii\web\NotFoundHttpException;
  */
 class AutoController extends \app\components\BaseBackendController
 {
+    public function getSubstanceName()
+    {
+        return Yii::t('backend/auto', 'of automobile');
+    }
+
     public function behaviors()
     {
         return \yii\helpers\ArrayHelper::merge([

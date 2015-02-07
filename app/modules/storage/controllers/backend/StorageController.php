@@ -17,6 +17,11 @@ use storage\models\File;
  */
 class StorageController extends \app\components\BaseBackendController
 {
+    public function getSubstanceName()
+    {
+        return Yii::t('backend/storage', 'of file');
+    }
+
     public function behaviors()
     {
         return \yii\helpers\ArrayHelper::merge([

@@ -7,7 +7,7 @@ use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
 use yii\bootstrap\Tabs;
 $this->title = Yii::t('backend', 'Create {modelClass}', [
-    'modelClass' => Yii::t('backend/storage', 'File'),
+    'modelClass' => $this->context->getSubstanceName(),
 ]);
 $this->params['breadcrumbs'][] = ['label' => Yii::t('backend', 'File list'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
