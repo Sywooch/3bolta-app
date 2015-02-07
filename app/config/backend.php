@@ -16,6 +16,7 @@ return ArrayHelper::merge(include __DIR__ . '/common.php', [
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
+            'enableStrictParsing' => true,
             'rules' => [
                 // base actions
                 '/<action:(login|logout)>' => '/backend/dashboard/<action>',
@@ -33,6 +34,10 @@ return ArrayHelper::merge(include __DIR__ . '/common.php', [
                 '/advert/categories/<action:(delete|update)>/<id:(\w+)>' => '/advert/category/<action>',
                 '/advert/categories/<action:(\w+)>' => '/advert/category/<action>',
 
+                // advert actions
+                '/advert/ads/<action:(delete|update)>/<id:(\w+)>' => '/advert/advert/<action>',
+                '/advert/ads/<action:(\w+)>' => '/advert/advert/<action>',
+
                 // storage actions
                 '/storage/<action:(delete|update)>/<id:(\w+)>' => '/storage/storage/<action>',
                 '/storage/<action:(\w+)>' => '/storage/storage/<action>',
@@ -46,6 +51,7 @@ return ArrayHelper::merge(include __DIR__ . '/common.php', [
                 '/auto/model/<mark_id:(\d+)>' => '/auto/auto/model',
                 '/auto/serie/<model_id:(\d+)>' => '/auto/auto/serie',
                 '/auto/modification/<model_id:(\d+)>/<serie_id:(\d+)>' => '/auto/auto/modification',
+                '/auto/choose/<action:(\w+)>' => '/auto/choose-auto/<action>',
             ],
         ],
         'assetManager' => [

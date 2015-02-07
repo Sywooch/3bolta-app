@@ -5,6 +5,11 @@ use Yii;
 
 class Advert extends \yii\base\Model
 {
+    public $chooseMark;
+    public $chooseModel;
+    public $chooseSerie;
+    public $chooseModification;
+
     /**
      * Максимальная длина описания
      */

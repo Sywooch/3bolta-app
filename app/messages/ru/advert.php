@@ -17,17 +17,22 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'Part active' => 'Активность',
-    'Part price' => 'Цена',
+    'Choose mark' => 'Выберите марку',
+    'Choose model' => 'Выберите модель',
+    'Choose modificaion' => 'Выбреите модификацию',
+    'Choose modification' => 'Выберите модификацию',
+    'Choose serie' => 'Выберите серию',
     'Advert description' => 'Описание',
     'Category name' => 'Название категории',
     'Contact email' => 'Контактный e-mail',
     'Contact name' => 'Имя для контактов',
     'Contact phone' => 'Контактный телефон',
     'Parent category' => 'Родительская категория',
+    'Part active' => 'Активность',
     'Part category' => 'Категория запчасти',
     'Part condition' => 'Состояние запчасти',
     'Part name' => 'Название запчасти',
+    'Part price' => 'Цена',
     'Sort' => 'Сортировка',
     'User id' => 'Пользователь',
 ];

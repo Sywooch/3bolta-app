@@ -17,16 +17,6 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'Choose automobiles' => 'Выбор автомобилей',
-    'Active' => 'Активность',
-    'Begin production year' => 'Начало выпуска',
-    'End production year' => 'Окончание выпуска',
-    'Generation' => 'Поколение',
-    'Generation name' => 'Название поколения',
-    'Mark' => 'Марка',
-    'Mark name' => 'Название марки',
-    'Model' => 'Модель',
-    'Model name' => 'Название модели',
-    'Serie' => 'Серия',
-    'Serie name' => 'Название серии',
+    'Are you sure you want to delete this item?' => '',
+    'Delete' => '',
 ];

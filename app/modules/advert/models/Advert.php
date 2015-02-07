@@ -18,6 +18,11 @@ use yii\base\Exception;
  */
 class Advert extends \yii\db\ActiveRecord
 {
+    public $chooseMark;
+    public $chooseModel;
+    public $chooseSerie;
+    public $chooseModification;
+
     /**
      * Таблица
      * @return string
@@ -70,6 +75,10 @@ class Advert extends \yii\db\ActiveRecord
             'user_id' => Yii::t('advert', 'User id'),
             'active' => Yii::t('advert', 'Part active'),
             'description' => Yii::t('advert', 'Advert description'),
+            'chooseMark' => Yii::t('advert', 'Choose mark'),
+            'chooseModel' => Yii::t('advert', 'Choose model'),
+            'chooseSerie' => Yii::t('advert', 'Choose serie'),
+            'chooseModification' => Yii::t('advert', 'Choose modificaion'),
         ];
     }
 
