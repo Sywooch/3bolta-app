@@ -28,7 +28,7 @@ var chooseAutomobile = function(params) {
         var html = '';
         $.each(data, function(i, item) {
             item['checked'] = '';
-            if (exists && exists.inArray(item.id) != -1) {
+            if (exists && exists.indexOf(item.id) != -1) {
                 item['checked'] = 'checked="checked"';
             }
             item['attributeName'] = attributeName;
@@ -51,6 +51,7 @@ var chooseAutomobile = function(params) {
         return ret;
     };
 
+    var queries = 0;
     /**
      * Выполнить запрос
      * @param {string} url
@@ -58,12 +59,20 @@ var chooseAutomobile = function(params) {
      * @param {object} callback
      */
     var query = function(url, params, callback) {
+        queries++;
+        wrap('.choose-auto-loader').show();
         $.ajax({
             'url'           : url,
             'type'          : 'post',
             'dataType'      : 'json',
             'data'          : params,
-            'success'       : callback
+            'success'       : function(d) {
+                queries--;
+                if (queries < 1) {
+                    wrap('.choose-auto-loader').hide();
+                }
+                callback(d);
+            }
         });
     };
 
@@ -77,7 +86,7 @@ var chooseAutomobile = function(params) {
         }
         query(params.modificationUrl, {'serieId': serieId}, function(d) {
             if (d.cnt && d.data) {
-                appendWrapItems('.choose-auto-modification', getDataHtml(d.data, params.modificationName));
+                appendWrapItems('.choose-auto-modification', getDataHtml(d.data, params.modificationName, params.modificationIds));
             }
         });
     };
@@ -104,7 +113,7 @@ var chooseAutomobile = function(params) {
         }
         query(params.serieUrl, {'modelId': modelId}, function(d) {
             if (d.cnt && d.data) {
-                appendWrapItems('.choose-auto-serie', getDataHtml(d.data, params.serieName));
+                appendWrapItems('.choose-auto-serie', getDataHtml(d.data, params.serieName, params.serieIds));
             }
         });
     };
@@ -131,7 +140,7 @@ var chooseAutomobile = function(params) {
         }
         query(params.modelUrl, {'markId': markId}, function(d) {
             if (d.cnt && d.data) {
-                appendWrapItems('.choose-auto-model', getDataHtml(d.data, params.modelName));
+                appendWrapItems('.choose-auto-model', getDataHtml(d.data, params.modelName, params.modelIds));
             }
         });
     };
@@ -181,8 +190,17 @@ var chooseAutomobile = function(params) {
     // предзагрузка марок
     query(params.markUrl, {}, function(d) {
         if (d.cnt && d.data) {
-            appendWrapItems('.choose-auto-mark', getDataHtml(d.data, params.markName));
+            appendWrapItems('.choose-auto-mark', getDataHtml(d.data, params.markName, params.markIds));
         }
+    });
+    $.each(params.markIds, function(key, id) {
+        chooseMark(id);
+    });
+    $.each(params.modelIds, function(key, id) {
+        chooseModel(id);
+    });
+    $.each(params.serieIds, function(key, id) {
+        chooseSerie(id);
     });
 };
 

@@ -1,0 +1,21 @@
+.choose-auto-container .choose-auto-panel {
+    border: 0px;
+}
+.choose-auto-container .choose-auto-panel-body {
+    overflow-y: scroll; 
+    height:300px;
+}
+.choose-auto-container {
+    position: relative;
+    background-color: #FFFFFF;
+}
+.choose-auto-loader {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    background-color: #FFFFFF;
+    opacity: 0.7;
+    width: 100%;
+    height: 100%; 
+    z-index: 300;
+}

@@ -3,6 +3,7 @@ namespace advert\models;
 
 use Yii;
 
+use yii\helpers\ArrayHelper;
 use user\models\User;
 use handbook\models\HandbookValue;
 
@@ -18,10 +19,13 @@ use yii\base\Exception;
  */
 class Advert extends \yii\db\ActiveRecord
 {
-    public $chooseMark;
-    public $chooseModel;
-    public $chooseSerie;
-    public $chooseModification;
+    /**
+     * Привязка к автомобилям, массивы
+     */
+    protected $_marks;
+    protected $_models;
+    protected $_series;
+    protected $_modifications;
 
     /**
      * Таблица
@@ -54,6 +58,7 @@ class Advert extends \yii\db\ActiveRecord
                 return empty($model->user_id);
             }],
             [['active'], 'boolean'],
+            [['marks', 'models', 'series', 'modifications'], 'safe'],
         ];
     }
 
@@ -75,10 +80,10 @@ class Advert extends \yii\db\ActiveRecord
             'user_id' => Yii::t('advert', 'User id'),
             'active' => Yii::t('advert', 'Part active'),
             'description' => Yii::t('advert', 'Advert description'),
-            'chooseMark' => Yii::t('advert', 'Choose mark'),
-            'chooseModel' => Yii::t('advert', 'Choose model'),
-            'chooseSerie' => Yii::t('advert', 'Choose serie'),
-            'chooseModification' => Yii::t('advert', 'Choose modificaion'),
+            'marks' => Yii::t('advert', 'Choose mark'),
+            'models' => Yii::t('advert', 'Choose model'),
+            'series' => Yii::t('advert', 'Choose serie'),
+            'modifications' => Yii::t('advert', 'Choose modificaion'),
         ];
     }
 
@@ -90,6 +95,19 @@ class Advert extends \yii\db\ActiveRecord
         $this->edited = date('Y-m-d H:i:s');
 
         return parent::beforeSave($insert);
+    }
+
+    public function afterSave($insert, $changedAttributes)
+    {
+        if (is_array($this->_marks) && is_array($this->_models) &&
+            is_array($this->_series) && is_array($this->_modifications)) {
+            // редактировались автомобили, обновляем все
+            $this->attachMark($this->_marks);
+            $this->attachModel($this->_models);
+            $this->attachSerie($this->_series);
+            $this->attachModification($this->_modifications);
+        }
+        return parent::afterSave($insert, $changedAttributes);
     }
 
     /**
@@ -126,7 +144,7 @@ class Advert extends \yii\db\ActiveRecord
      */
     public function getMark()
     {
-        $this->hasMany(Mark::className(), ['id' => 'mark_id'])
+        return $this->hasMany(Mark::className(), ['id' => 'mark_id'])
             ->viaTable('{{%advert_mark}}', ['advert_id' => 'id']);
     }
 
@@ -136,7 +154,7 @@ class Advert extends \yii\db\ActiveRecord
      */
     public function getModel()
     {
-        $this->hasMany(Model::className(), ['id' => 'model_id'])
+        return $this->hasMany(Model::className(), ['id' => 'model_id'])
             ->viaTable('{{%advert_model}}', ['advert_id' => 'id']);
     }
 
@@ -146,7 +164,7 @@ class Advert extends \yii\db\ActiveRecord
      */
     public function getSerie()
     {
-        $this->hasMany(Serie::className(), ['id' => 'serie_id'])
+        return $this->hasMany(Serie::className(), ['id' => 'serie_id'])
             ->viaTable('{{%advert_serie}}', ['advert_id' => 'id']);
     }
 
@@ -156,7 +174,7 @@ class Advert extends \yii\db\ActiveRecord
      */
     public function getModification()
     {
-        $this->hasMany(Modification::className(), ['id' => 'modifiction_id'])
+        return $this->hasMany(Modification::className(), ['id' => 'modification_id'])
             ->viaTable('{{%advert_modification}}', ['advert_id' => 'id']);
     }
 
@@ -192,6 +210,8 @@ class Advert extends \yii\db\ActiveRecord
             default:
                 throw new Exception();
         }
+
+        return $xrefColumn;
     }
 
     /**
@@ -246,10 +266,7 @@ class Advert extends \yii\db\ActiveRecord
         // сгенерировать строки для записи
         $rows = [];
         foreach ($ids as $id) {
-            $rows[] = [
-                $xrefColumn => $id,
-                'advert_id' => $this->id,
-            ];
+            $rows[] = [$id, $this->id];
         }
 
         if (!empty($ids)) {
@@ -329,5 +346,105 @@ class Advert extends \yii\db\ActiveRecord
         }
 
         return $ret;
+    }
+
+    /**
+     * Возвращает массив идентификаторов привязанных марок
+     * @return []
+     */
+    public function getMarks()
+    {
+        if ($this->_marks === null) {
+            $this->_marks = [];
+            $res = $this->getMark()->all();
+            $this->_marks = array_values(ArrayHelper::map($res, 'id', 'id'));
+        }
+        return $this->_marks;
+    }
+
+    /**
+     * Возвращает массив идентификаторов привязанных моделей
+     * @return []
+     */
+    public function getModels()
+    {
+        if ($this->_models === null) {
+            $this->_models = [];
+            $res = $this->getModel()->all();
+            $this->_models = array_values(ArrayHelper::map($res, 'id', 'id'));
+        }
+        return $this->_models;
+    }
+
+    /**
+     * Возвращает массив идентификаторов привязанных серий
+     * @return []
+     */
+    public function getSeries()
+    {
+        if ($this->_series === null) {
+            $this->_series = [];
+            $res = $this->getSerie()->all();
+            $this->_series = array_values(ArrayHelper::map($res, 'id', 'id'));
+        }
+        return $this->_series;
+    }
+
+    /**
+     * Возвращает массив идентификаторов привязанных модификаций
+     * @return []
+     */
+    public function getModifications()
+    {
+        if ($this->_modifications === null) {
+            $this->_modifications = [];
+            $res = $this->getModification()->all();
+            $this->_modifications = array_values(ArrayHelper::map($res, 'id', 'id'));
+        }
+        return $this->_modifications;
+    }
+
+    /**
+     * Установить новые марки
+     * @param [] $ids
+     */
+    public function setMarks($ids)
+    {
+        if (is_array($ids)) {
+            $this->_marks = $ids;
+        }
+    }
+
+    /**
+     * Установить новые модели
+     * @param [] $ids
+     */
+    public function setModels($ids)
+    {
+        if (is_array($ids)) {
+            $this->_models = $ids;
+        }
+    }
+
+    /**
+     * Установить новые серии
+     * @param [] $ids
+     */
+    public function setSeries($ids)
+    {
+        if (is_array($ids)) {
+            $this->_series = $ids;
+        }
+    }
+
+    /**
+     * Установить новые модификации
+     * @param [] $ids
+     */
+    public function setModifications($ids)
+    {
+        if (is_array($ids)) {
+            $this->_modifications = $ids;
+        }
     }
 }

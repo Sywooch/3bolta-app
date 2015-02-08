@@ -116,15 +116,13 @@ class ChooseAutomobile extends \yii\base\Widget
     protected function renderPanel($class, $label)
     {
         print Html::beginTag('div', [
-            'class' => 'panel panel-default col-xs-3 col-sm-3',
-            'style' => 'border: 0px;',
+            'class' => 'panel panel-default choose-auto-panel col-xs-3 col-sm-3',
         ]);
         print Html::tag('label', $label, [
             'class' => 'control-label',
         ]);
         print Html::beginTag('div', [
-            'class' => 'panel-body',
-            'style' => 'overflow: scroll; height:300px;'
+            'class' => 'choose-auto-panel-body',
         ]);
         print Html::beginTag('div', [
             'class' => 'form-group ' . $class
@@ -148,6 +146,7 @@ class ChooseAutomobile extends \yii\base\Widget
                 'serieUrl'          : '{$this->serieUrl}',
                 'modificationUrl'   : '{$this->modificationUrl}',
                 'template'          : '{$this->itemTemplate}',
+                'markName'          : '{$this->markName}',
                 'modelName'         : '{$this->modelName}',
                 'serieName'         : '{$this->serieName}',
                 'modificationName'  : '{$this->modificationName}',
@@ -186,9 +185,10 @@ class ChooseAutomobile extends \yii\base\Widget
     public function run()
     {
         print Html::beginTag('div', [
-            'class' => 'container js-choose-auto-container',
+            'class' => 'container choose-auto-container js-choose-auto-container',
             'id' => $this->id,
         ]);
+        print Html::tag('div', '', ['class' => 'choose-auto-loader col-xs-3 col-sm-3']);
         $this->renderPanel('choose-auto-mark', Yii::t('advert', 'Choose mark'));
         $this->renderPanel('choose-auto-model', Yii::t('advert', 'Choose model'));
         $this->renderPanel('choose-auto-serie', Yii::t('advert', 'Choose serie'));

@@ -12,6 +12,10 @@ class ChooseAutomobile extends \yii\web\AssetBundle
         'js/chooseAutomobile.js',
     ];
 
+    public $css = [
+        'css/style.css',
+    ];
+
     public $depends = [
         'yii\web\YiiAsset',
         'yii\bootstrap\BootstrapAsset',

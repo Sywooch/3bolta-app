@@ -143,9 +143,9 @@ class ChooseAutoController extends \app\components\BaseBackendController
             $generation = $i->getGeneration()->one();
             if ($generation && $generation->name && $generation->year_begin) {
                 $item .= ' ' . $generation->name;
-                $item .= ' (' . $generation->year_begin . '-';
+                $item .= ' (' . $generation->year_begin . ' - ';
                 if (!empty($generation->year_end)) {
-                    $item .= ' - ' . $generation->year_end;
+                    $item .= $generation->year_end;
                 }
                 else {
                     $item .= '...';

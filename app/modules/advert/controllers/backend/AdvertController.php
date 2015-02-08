@@ -87,8 +87,6 @@ class AdvertController extends \app\components\BaseBackendController
             }
             catch (Exception $ex) {
                 $transaction->rollback();
-
-                throw $ex;
                 Yii::$app->serviceMessage->setMessage('danger', Yii::t('backend/advert', 'Error create a advert'));
             }
         }
@@ -131,7 +129,6 @@ class AdvertController extends \app\components\BaseBackendController
             }
             catch (Exception $ex) {
                 $transaction->rollback();
-
                 Yii::$app->serviceMessage->setMessage('danger', Yii::t('backend/advert', 'Error update a advert'));
             }
         }
