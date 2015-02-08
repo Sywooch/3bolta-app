@@ -146,10 +146,10 @@ class ChooseAutomobile extends \yii\base\Widget
                 'serieUrl'          : '{$this->serieUrl}',
                 'modificationUrl'   : '{$this->modificationUrl}',
                 'template'          : '{$this->itemTemplate}',
-                'markName'          : '{$this->markName}',
-                'modelName'         : '{$this->modelName}',
-                'serieName'         : '{$this->serieName}',
-                'modificationName'  : '{$this->modificationName}',
+                'markName'          : '{$this->markName}[]',
+                'modelName'         : '{$this->modelName}[]',
+                'serieName'         : '{$this->serieName}[]',
+                'modificationName'  : '{$this->modificationName}[]',
                 'markIds'           : " . Json::encode($this->markIds) . ",
                 'modelIds'          : " . Json::encode($this->modelIds) . ",
                 'serieIds'          : " . Json::encode($this->serieIds) . ",
@@ -188,6 +188,10 @@ class ChooseAutomobile extends \yii\base\Widget
             'class' => 'container choose-auto-container js-choose-auto-container',
             'id' => $this->id,
         ]);
+        print Html::input('hidden', $this->markName, '');
+        print Html::input('hidden', $this->modelName, '');
+        print Html::input('hidden', $this->serieName, '');
+        print Html::input('hidden', $this->modificationName, '');
         print Html::tag('div', '', ['class' => 'choose-auto-loader col-xs-3 col-sm-3']);
         $this->renderPanel('choose-auto-mark', Yii::t('advert', 'Choose mark'));
         $this->renderPanel('choose-auto-model', Yii::t('advert', 'Choose model'));

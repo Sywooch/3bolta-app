@@ -97,17 +97,15 @@ class Advert extends \yii\db\ActiveRecord
         return parent::beforeSave($insert);
     }
 
-    public function afterSave($insert, $changedAttributes)
+    /**
+     * Обновить автомобили, если требуется
+     */
+    public function updateAutomobiles()
     {
-        if (is_array($this->_marks) && is_array($this->_models) &&
-            is_array($this->_series) && is_array($this->_modifications)) {
-            // редактировались автомобили, обновляем все
-            $this->attachMark($this->_marks);
-            $this->attachModel($this->_models);
-            $this->attachSerie($this->_series);
-            $this->attachModification($this->_modifications);
-        }
-        return parent::afterSave($insert, $changedAttributes);
+        $this->attachMark(is_array($this->_marks) ? $this->_marks : []);
+        $this->attachModel(is_array($this->_models) ? $this->_models : []);
+        $this->attachSerie(is_array($this->_series) ? $this->_series : []);
+        $this->attachModification(is_array($this->_modifications) ? $this->_modifications : []);
     }
 
     /**
@@ -413,6 +411,9 @@ class Advert extends \yii\db\ActiveRecord
         if (is_array($ids)) {
             $this->_marks = $ids;
         }
+        else {
+            $this->_marks = [];
+        }
     }
 
     /**
@@ -423,6 +424,9 @@ class Advert extends \yii\db\ActiveRecord
     {
         if (is_array($ids)) {
             $this->_models = $ids;
+        }
+        else {
+            $this->_models = [];
         }
     }
 
@@ -435,6 +439,9 @@ class Advert extends \yii\db\ActiveRecord
         if (is_array($ids)) {
             $this->_series = $ids;
         }
+        else {
+            $this->_series = [];
+        }
     }
 
     /**
@@ -445,6 +452,9 @@ class Advert extends \yii\db\ActiveRecord
     {
         if (is_array($ids)) {
             $this->_modifications = $ids;
+        }
+        else {
+            $this->_modifications = [];
         }
     }
 }
