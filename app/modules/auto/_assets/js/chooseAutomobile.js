@@ -99,7 +99,7 @@ var chooseAutomobile = function(params) {
         wrap('.js-serie-' + serieId).remove();
         var index = params.serieIds.indexOf(serieId);
         if (index >= 0) {
-            params.serieIds.remove(index);
+            params.serieIds.splice(index, 1);
         }
     };
 
@@ -126,7 +126,7 @@ var chooseAutomobile = function(params) {
         wrap('.js-model-' + modelId).remove();
         var index = params.modelIds.indexOf(modelId);
         if (index >= 0) {
-            params.modelIds.remove(index);
+            params.modelIds.splice(index, 1);
         }
     };
 
@@ -153,7 +153,7 @@ var chooseAutomobile = function(params) {
         wrap('.js-mark-' + markId).remove();
         var index = params.markIds.indexOf(markId);
         if (index >= 0) {
-            params.markIds.remove(index);
+            params.markIds.splice(index, 1);
         }
     };
 

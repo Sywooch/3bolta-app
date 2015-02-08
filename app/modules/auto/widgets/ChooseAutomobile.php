@@ -50,7 +50,7 @@ class ChooseAutomobile extends \yii\base\Widget
     /**
      * @var string шаблон элемента
      */
-    public $itemTemplate = '<div class="checkbox"><label><input type="checkbox" {$checked} name="{$attributeName}" value="{$id}" />{$name}</label></div>';
+    public $itemTemplate = '<div class="checkbox {$jsClass}"><label><input type="checkbox" {$checked} name="{$attributeName}" value="{$id}" />{$name}</label></div>';
 
     /**
      * @var string
