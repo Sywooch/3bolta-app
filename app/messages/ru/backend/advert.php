@@ -17,6 +17,7 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
+    'Image' => 'Изображения',
     'Advert list' => 'Список объявлений',
     'Auto' => 'Автомобили',
     'Common settings' => 'Общие настройки',

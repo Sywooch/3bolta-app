@@ -22,7 +22,8 @@
         "yiisoft/yii2-jui": "*",
         "bower-asset/html5shiv": "~3.0",
         "bower-asset/flot": "*",
-        "bower-asset/font-awesome": "*"
+        "bower-asset/font-awesome": "*",
+        "kartik-v/yii2-widgets": "*"
     },
     "require-dev": {
         "yiisoft/yii2-codeception": "*",

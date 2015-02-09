@@ -14,11 +14,24 @@ use auto\models\Modification;
 
 use yii\base\Exception;
 
+use storage\models\File;
+use yii\web\UploadedFile;
+
 /**
  * Модель объявления
  */
 class Advert extends \yii\db\ActiveRecord
 {
+    /**
+     * Максимальное количество файлов для загрузки
+     */
+    const UPLOAD_MAX_FILES = 10;
+
+    /**
+     * @var [] доступные расширения изображений
+     */
+    public static $_imageFileExtensions = ['jpeg', 'jpg', 'gif', 'png', 'bmp', 'tiff'];
+
     /**
      * Привязка к автомобилям, массивы
      */
@@ -26,6 +39,11 @@ class Advert extends \yii\db\ActiveRecord
     protected $_models;
     protected $_series;
     protected $_modifications;
+
+    /**
+     * @var [] поле для загрузки новых изображений
+     */
+    protected $_uploadImage;
 
     /**
      * Таблица
@@ -59,6 +77,11 @@ class Advert extends \yii\db\ActiveRecord
             }],
             [['active'], 'boolean'],
             [['marks', 'models', 'series', 'modifications'], 'safe'],
+            [['uploadImage'], 'file',
+                'skipOnEmpty' => true,
+                'extensions' => self::$_imageFileExtensions,
+                'maxFiles' => self::UPLOAD_MAX_FILES
+            ],
         ];
     }
 
@@ -84,6 +107,7 @@ class Advert extends \yii\db\ActiveRecord
             'models' => Yii::t('advert', 'Choose model'),
             'series' => Yii::t('advert', 'Choose serie'),
             'modifications' => Yii::t('advert', 'Choose modificaion'),
+            'uploadImage' => Yii::t('advert', 'Upload image'),
         ];
     }
 
@@ -97,6 +121,50 @@ class Advert extends \yii\db\ActiveRecord
         return parent::beforeSave($insert);
     }
 
+    public function afterSave($insert, $changedAttributes)
+    {
+        // после сохранения необходимо прицепить файлы к объявлению
+        if (!empty($this->_uploadImage)) {
+            $this->attachImages($this->_uploadImage);
+        }
+
+        return parent::afterSave($insert, $changedAttributes);
+    }
+
+    /**
+     * прикрепить изображения к объявлению
+     * @param [] $uploadedFiles
+     */
+    protected function attachImages($uploadedFiles)
+    {
+        /* @var $storage \storage\components\Storage */
+        $storage = Yii::$app->getModule('storage')->advert;
+        /* @var $db yii\db\Connection */
+        $db = $this->getDb();
+
+        $transaction = $db->beginTransaction();
+
+        try {
+            foreach ($uploadedFiles as $image) {
+                /* @var $image UploadedFile */
+                $file = File::uploadFile($storage, $image);
+                if ($file instanceof File) {
+                    $db->createCommand()
+                        ->insert('{{%advert_image}}', [
+                            'advert_id' => $this->id,
+                            'file_id' => $file->id,
+                        ])
+                        ->execute();
+                }
+            }
+
+            $transaction->commit();
+        }
+        catch (Exception $ex) {
+            $transaction->rollback();
+        }
+    }
+
     /**
      * Обновить автомобили, если требуется
      */
@@ -106,6 +174,42 @@ class Advert extends \yii\db\ActiveRecord
         $this->attachModel(is_array($this->_models) ? $this->_models : []);
         $this->attachSerie(is_array($this->_series) ? $this->_series : []);
         $this->attachModification(is_array($this->_modifications) ? $this->_modifications : []);
+    }
+
+    /**
+     * Загрузить изображения в модель
+     * @return true
+     */
+    public function loadUploadedImages()
+    {
+        if ($files = UploadedFile::getInstances($this, 'uploadImage')) {
+            $this->setUploadImage($files);
+        }
+        return true;
+    }
+
+    /**
+     * Получить изображения для загрузки.
+     * Возвращает всегда null, иначе начинаются глюки в виджете FileInput.
+     * @return null
+     */
+    public function getUploadImage()
+    {
+        return null;
+    }
+
+    /**
+     * Установить изображения для загрузки
+     * @param [] $files
+     */
+    public function setUploadImage($files)
+    {
+        if (is_array($files)) {
+            $this->_uploadImage = $files;
+        }
+        else {
+            $this->_uploadImage = [];
+        }
     }
 
     /**
@@ -134,6 +238,16 @@ class Advert extends \yii\db\ActiveRecord
     {
         return $this->hasOne(HandbookValue::className(), ['id' => 'condition_id'])
                 ->where(['handbook_code' => 'part_condition']);
+    }
+
+    /**
+     * Получить изображения
+     * @return yii\db\ActiveQuery
+     */
+    public function getImages()
+    {
+        return $this->hasMany(File::className(), ['id' => 'file_id'])
+            ->viaTable('{{%advert_image}}', ['advert_id' => 'id']);
     }
 
     /**

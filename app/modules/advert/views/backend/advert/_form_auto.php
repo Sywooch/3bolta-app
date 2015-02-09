@@ -1,13 +1,18 @@
 <?php
 use yii\helpers\Html;
-use yii\bootstrap\ActiveForm;
-use advert\models\Advert;
-use yii\bootstrap\Modal;
+use auto\widgets\ChooseAutomobile;
 
 /* @var $this yii\web\View */
 /* @var $model advert\models\Category */
 /* @var $form yii\bootstrap\ActiveForm */
-print $this->render('_auto_modal', [
-    'form' => $form,
-    'model' => $model,
+
+print ChooseAutomobile::widget([
+    'markName' => Html::getInputName($model, 'marks'),
+    'modelName' => Html::getInputName($model, 'models'),
+    'serieName' => Html::getInputName($model, 'series'),
+    'modificationName' => Html::getInputName($model, 'modifications'),
+    'markIds' => $model->getMarks(),
+    'modelIds' => $model->getModels(),
+    'serieIds' => $model->getSeries(),
+    'modificationIds' => $model->getModifications(),
 ]);

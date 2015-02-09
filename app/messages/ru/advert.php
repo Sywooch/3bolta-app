@@ -17,13 +17,14 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
+    'Upload image' => 'Загрузить изображение',
+    'Advert description' => 'Описание',
+    'Category name' => 'Название категории',
     'Choose mark' => 'Выберите марку',
     'Choose model' => 'Выберите модель',
     'Choose modificaion' => 'Выбреите модификацию',
     'Choose modification' => 'Выберите модификацию',
     'Choose serie' => 'Выберите серию',
-    'Advert description' => 'Описание',
-    'Category name' => 'Название категории',
     'Contact email' => 'Контактный e-mail',
     'Contact name' => 'Имя для контактов',
     'Contact phone' => 'Контактный телефон',

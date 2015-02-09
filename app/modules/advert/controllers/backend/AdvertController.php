@@ -108,7 +108,7 @@ class AdvertController extends \app\components\BaseBackendController
             return ActiveForm::validate($model);
         }
 
-        if ($model->load($_POST) && $model->validate()) {
+        if ($model->load($_POST) && $model->loadUploadedImages() && $model->validate()) {
             $transaction = Yii::$app->db->beginTransaction();
 
             try {

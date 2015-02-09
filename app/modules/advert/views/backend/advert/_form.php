@@ -14,7 +14,10 @@ use yii\bootstrap\Tabs;
 
     <?php
     $form = ActiveForm::begin([
-        'enableAjaxValidation' => true
+        'enableAjaxValidation' => true,
+        'options' => [
+            'enctype' => 'multipart/form-data',
+        ]
     ]);
         print Tabs::widget([
             'items' => [
@@ -30,6 +33,14 @@ use yii\bootstrap\Tabs;
                     'label' => Yii::t('backend/advert', 'Auto'),
                     'active' => false,
                     'content' => $this->render('_form_auto', [
+                        'form' => $form,
+                        'model' => $model,
+                    ])
+                ],
+                [
+                    'label' => Yii::t('backend/advert', 'Image'),
+                    'active' => false,
+                    'content' => $this->render('_form_image', [
                         'form' => $form,
                         'model' => $model,
                     ])
