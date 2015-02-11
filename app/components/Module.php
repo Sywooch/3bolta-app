@@ -6,7 +6,7 @@ use Yii;
 /**
  * Базовый класс для всех модулей в проекте
  */
-abstract class BaseModule extends \yii\base\Module
+abstract class Module extends \yii\base\Module
 {
     public function init()
     {

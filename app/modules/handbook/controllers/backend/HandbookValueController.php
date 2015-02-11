@@ -14,7 +14,7 @@ use yii\web\NotFoundHttpException;
 /**
  * Управление значениями справочника
  */
-class HandbookValueController extends \app\components\BaseBackendController
+class HandbookValueController extends \app\components\BackendController
 {
     public function getSubstanceName()
     {

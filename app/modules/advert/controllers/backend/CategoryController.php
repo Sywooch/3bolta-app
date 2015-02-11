@@ -13,7 +13,7 @@ use yii\web\ServerErrorHttpException;
 /**
  * Управление категориями
  */
-class CategoryController extends \app\components\BaseBackendController
+class CategoryController extends \app\components\BackendController
 {
     public function getSubstanceName()
     {

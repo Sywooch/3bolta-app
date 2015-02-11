@@ -13,7 +13,7 @@ use yii\web\ServerErrorHttpException;
 /**
  * Управление пользователями
  */
-class UserController extends \app\components\BaseBackendController
+class UserController extends \app\components\BackendController
 {
     public function getSubstanceName()
     {

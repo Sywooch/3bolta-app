@@ -23,7 +23,7 @@ use auto\models\Modification;
  *
  * Для sync требуется указать префикс (по умолчанию - car).
  */
-class Module extends \app\components\BaseModule
+class Module extends \app\components\Module
 {
     /**
      * @var \yii\db\Connection подключение к БД сайта

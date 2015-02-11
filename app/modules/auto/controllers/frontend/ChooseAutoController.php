@@ -1,5 +1,5 @@
 <?php
-namespace auto\controllers\backend;
+namespace auto\controllers\frontend;
 
 use Yii;
 
@@ -14,23 +14,8 @@ use yii\web\NotFoundHttpException;
 /**
  * Выбор автомобилей для виджета ChooseAutomobile
  */
-class ChooseAutoController extends \app\components\BackendController
+class ChooseAutoController extends \app\components\Controller
 {
-    public function behaviors()
-    {
-        return \yii\helpers\ArrayHelper::merge([
-            'access' => [
-                'rules' => [
-                    [
-                        'allow' => true,
-                        'roles' => ['backend'],
-                        'verbs' => ['POST'],
-                    ],
-                ],
-            ],
-        ], parent::behaviors());
-    }
-
     public function init()
     {
         if (!Yii::$app->request->isAjax) {

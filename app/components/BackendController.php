@@ -2,13 +2,12 @@
 namespace app\components;
 
 use Yii;
-use yii\web\Controller;
 use yii\filters\AccessControl;
 
 /**
  * Базовый контроллер для бекенда
  */
-abstract class BaseBackendController extends Controller
+abstract class BackendController extends Controller
 {
     /**
      * Перевод сущности в родительном падеже
@@ -32,14 +31,5 @@ abstract class BaseBackendController extends Controller
                 'rules' => [],
             ],
         ];
-    }
-
-    public function getViewPath()
-    {
-        if ($this->module->id == 'backend') {
-            // для модуля backend все остается по старому
-            return parent::getViewPath();
-        }
-        return $this->module->getViewPath() . DIRECTORY_SEPARATOR . Yii::$app->id . DIRECTORY_SEPARATOR . $this->id;
     }
 }

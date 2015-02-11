@@ -3,12 +3,12 @@ use yii\helpers\Html;
 use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
 use yii\widgets\Breadcrumbs;
-use app\assets\AppAsset;
-
+use app\assets\FrontendAssets;
+use advert\widgets\TopSearch;
 /* @var $this \yii\web\View */
 /* @var $content string */
 
-AppAsset::register($this);
+FrontendAssets::register($this);
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -26,27 +26,31 @@ AppAsset::register($this);
     <div class="wrap">
         <?php
             NavBar::begin([
-                'brandLabel' => 'My Company',
+                'brandLabel' => Yii::$app->params['siteName'],
                 'brandUrl' => Yii::$app->homeUrl,
                 'options' => [
-                    'class' => 'navbar-default navbar-fixed-top',
+                    'class' => 'navbar-default main-navbar',
                 ],
+                'renderInnerContainer' => false,
             ]);
             echo Nav::widget([
                 'options' => ['class' => 'navbar-nav navbar-right'],
                 'items' => [
-                    ['label' => 'Home', 'url' => ['/site/index']],
-                    ['label' => 'About', 'url' => ['/site/about']],
-                    ['label' => 'Contact', 'url' => ['/site/contact']],
-                    Yii::$app->user->isGuest ?
-                        ['label' => 'Login', 'url' => ['/site/login']] :
-                        ['label' => 'Logout (' . Yii::$app->user->identity->username . ')',
-                            'url' => ['/site/logout'],
-                            'linkOptions' => ['data-method' => 'post']],
+                    ['label' => '', 'linkOptions' => [
+                        'class' => 'glyphicon glyphicon-search',
+                        'id' => 'toggleTopSearch'
+                    ], 'url' => '#'],
+                    ['label' => Yii::t('frontend/menu', 'Parts catalogue'), 'url' => '#'],
+                    ['label' => Yii::t('frontend/menu', 'About project'), 'url' => '#'],
                 ],
             ]);
             NavBar::end();
-        ?>
+            ?>
+            <div class="panel panel-default" id="topSearch">
+                <div class="panel-body">
+                    <?=$this->render('top_search/index')?>
+                </div>
+            </div>
 
         <div class="container">
             <?= Breadcrumbs::widget([
@@ -58,7 +62,7 @@ AppAsset::register($this);
 
     <footer class="footer">
         <div class="container">
-            <p class="pull-left">&copy; My Company <?= date('Y') ?></p>
+            <p class="pull-left">&copy; <?=Yii::$app->params['siteName']?> <?= date('Y') ?></p>
             <p class="pull-right"><?= Yii::powered() ?></p>
         </div>
     </footer>

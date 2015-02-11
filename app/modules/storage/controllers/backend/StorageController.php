@@ -15,7 +15,7 @@ use storage\models\File;
 /**
  * Управление файлами
  */
-class StorageController extends \app\components\BaseBackendController
+class StorageController extends \app\components\BackendController
 {
     public function getSubstanceName()
     {

@@ -7,7 +7,7 @@ use handbook\models\Handbook;
 /**
  * Модуль для бекенда
  */
-class Module extends \app\components\BaseModule
+class Module extends \app\components\Module
 {
     /**
      * Генерация левого меню для бекенда

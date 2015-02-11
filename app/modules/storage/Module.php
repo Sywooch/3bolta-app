@@ -10,7 +10,7 @@ use yii\base\Exception;
  * В конфигурации приложения можно указать неограниченное количество файловых хранилищ.
  * Каждое файловое хранилище должно сопровождаться символьным кодом.
  */
-class Module extends \app\components\BaseModule
+class Module extends \app\components\Module
 {
     public $repository;
 

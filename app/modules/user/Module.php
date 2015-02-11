@@ -7,7 +7,7 @@ use user\models\User;
 /**
  * Модуль пользователей
  */
-class Module extends \app\components\BaseModule
+class Module extends \app\components\Module
 {
     /**
      * Вернуть захешированный пароль

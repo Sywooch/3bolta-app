@@ -17,15 +17,9 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'Active' => 'Активность',
-    'Begin production year' => 'Начало выпуска',
-    'End production year' => 'Окончание выпуска',
-    'Generation' => 'Поколение',
-    'Generation name' => 'Название поколения',
-    'Mark' => 'Марка',
-    'Mark name' => 'Название марки',
-    'Model' => 'Модель',
-    'Model name' => 'Название модели',
-    'Serie' => 'Серия',
-    'Serie name' => 'Название серии',
+    'Choose automobile' => 'Выберите автомобиль',
+    'Choose automobile...' => 'Выберите автомобиль...',
+    'Part for' => 'Запчасть для',
+    'Toogle automobile' => 'Выберите автомобиль',
+    'Choose' => 'Выбрать',
 ];

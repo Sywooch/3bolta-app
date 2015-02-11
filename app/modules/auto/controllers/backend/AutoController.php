@@ -11,7 +11,7 @@ use yii\web\NotFoundHttpException;
 /**
  * Управление автомобилями
  */
-class AutoController extends \app\components\BaseBackendController
+class AutoController extends \app\components\BackendController
 {
     public function getSubstanceName()
     {

@@ -3,12 +3,12 @@ namespace backend\controllers;
 
 use Yii;
 use backend\forms\Login as LoginForm;
-use app\components\BaseBackendController;
+use app\components\BackendController;
 
 /**
  * Бекенд: авторизация, восстановление пароля и главная страница.
  */
-class DashboardController extends BaseBackendController
+class DashboardController extends BackendController
 {
     public function behaviors()
     {

@@ -16,7 +16,10 @@ return ArrayHelper::merge(include __DIR__ . '/common.php', [
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
+            'enableStrictParsing' => true,
             'rules' => [
+                '/' => 'site/index',
+                '/auto/choose/<action:(\w+)>' => '/auto/choose-auto/<action>',
             ],
         ],
         'user' => [

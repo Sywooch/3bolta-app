@@ -13,7 +13,7 @@ use Exception;
 /**
  * Управление правами
  */
-class RoleController extends \app\components\BaseBackendController
+class RoleController extends \app\components\BackendController
 {
     public function getSubstanceName()
     {

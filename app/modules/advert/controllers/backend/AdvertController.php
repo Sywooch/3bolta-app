@@ -13,7 +13,7 @@ use yii\web\ServerErrorHttpException;
 /**
  * Управление объявлениями
  */
-class AdvertController extends \app\components\BaseBackendController
+class AdvertController extends \app\components\BackendController
 {
     public function getSubstanceName()
     {

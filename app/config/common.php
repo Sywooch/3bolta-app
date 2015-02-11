@@ -93,6 +93,7 @@ $config = ArrayHelper::merge([
         ],
     ],
     'params' => [
+        'siteName' => '3bolta.com',
     ],
 ], include __DIR__ . '/common.local.php');
 

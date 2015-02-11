@@ -1,12 +1,8 @@
 <?php
 namespace auto\widgets;
 
-use Yii;
-
 use yii\helpers\Json;
 use yii\helpers\Html;
-
-use auto\models\Mark;
 
 use yii\helpers\Url;
 
@@ -23,89 +19,45 @@ class ChooseAutomobile extends \yii\base\Widget
     public $id;
 
     /**
-     * @var string заголовок модального окна
+     * @var string класс для панели
      */
-    public $header;
+    public $panelClass;
 
     /**
-     * @var string ссылка для получения марок
+     * @var string класс для контейнера
      */
-    public $markUrl;
+    public $containerClass;
 
     /**
-     * @var string ссылка для получения моделей
+     * @var [] параметры для JS-плагина
      */
-    public $modelUrl;
+    public $pluginOptions = [
+        'multipleSelect' => false,
+        'markUrl' => null,
+        'modelUrl' => null,
+        'serieUrl' => null,
+        'modificationUrl' => null,
+        'markName' => null,
+        'modelName' => null,
+        'serieName' => null,
+        'modificationName' => null,
+        'markIds' => [],
+        'modelIds' => [],
+        'serieIds' => [],
+        'modificationIds' => [],
+        'markWrapper' => null,
+        'modelWrapper' => null,
+        'serieWrapper' => null,
+        'modificationWrapper' => null,
+        'renderItem' => null,
+    ];
 
-    /**
-     * @var string ссылка для получения серий
-     */
-    public $serieUrl;
-
-    /**
-     * @var string ссылка для получения модфикиций
-     */
-    public $modificationUrl;
-
-    /**
-     * @var string шаблон элемента
-     */
-    public $itemTemplate = '<div class="checkbox {$jsClass}"><label><input type="checkbox" {$checked} name="{$attributeName}" value="{$id}" />{$name}</label></div>';
-
-    /**
-     * @var string
-     */
-    public $markName;
-
-    /**
-     * @var string
-     */
-    public $modelName;
-
-    /**
-     * @var string
-     */
-    public $serieName;
-
-    /**
-     * @var string
-     */
-    public $modificationName;
-
-    /**
-     * @var []
-     */
-    public $markIds = [];
-
-    /**
-     * @var []
-     */
-    public $modelIds = [];
-
-    /**
-     * @var []
-     */
-    public $serieIds = [];
-
-    /**
-     * @var []
-     */
-    public $modificationIds = [];
-
-    /**
-     * Получить список марок
-     * @return array
-     */
-    protected function getMarkList()
+    public function __construct($config = array())
     {
-        $markList = [];
-
-        $res = Mark::find()->all();
-        foreach ($res as $i) {
-            $markList[$i->id] = $i->name;
+        if (isset($config['pluginOptions'])) {
+            $config['pluginOptions'] = \yii\helpers\ArrayHelper::merge($this->pluginOptions, $config['pluginOptions']);
         }
-
-        return $markList;
+        parent::__construct($config);
     }
 
     /**
@@ -113,10 +65,11 @@ class ChooseAutomobile extends \yii\base\Widget
      * @parm string $class
      * @param string $label
      */
-    protected function renderPanel($class, $label)
+    public function renderPanel($class, $label)
     {
+        $panelClass = $this->panelClass ? $this->panelClass : 'panel panel-default choose-auto-panel col-xs-3 col-sm-3';
         print Html::beginTag('div', [
-            'class' => 'panel panel-default choose-auto-panel col-xs-3 col-sm-3',
+            'class' => $panelClass,
         ]);
         print Html::tag('label', $label, [
             'class' => 'control-label',
@@ -125,7 +78,7 @@ class ChooseAutomobile extends \yii\base\Widget
             'class' => 'choose-auto-panel-body',
         ]);
         print Html::beginTag('div', [
-            'class' => 'form-group ' . $class
+            'class' => $class
         ]);
         print Html::endTag('div');
         print Html::endTag('div');
@@ -137,25 +90,9 @@ class ChooseAutomobile extends \yii\base\Widget
      */
     protected function registerJs()
     {
+        $pluginOptions = Json::encode($this->pluginOptions);
         ChooseAutomobileAssets::register($this->getView());
-        $js = "
-            new chooseAutomobile({
-                'wrapper'           : '#{$this->id}',
-                'markUrl'           : '{$this->markUrl}',
-                'modelUrl'          : '{$this->modelUrl}',
-                'serieUrl'          : '{$this->serieUrl}',
-                'modificationUrl'   : '{$this->modificationUrl}',
-                'template'          : '{$this->itemTemplate}',
-                'markName'          : '{$this->markName}[]',
-                'modelName'         : '{$this->modelName}[]',
-                'serieName'         : '{$this->serieName}[]',
-                'modificationName'  : '{$this->modificationName}[]',
-                'markIds'           : " . Json::encode($this->markIds) . ",
-                'modelIds'          : " . Json::encode($this->modelIds) . ",
-                'serieIds'          : " . Json::encode($this->serieIds) . ",
-                'modificationIds'   : " . Json::encode($this->modificationIds) . "
-            });
-        ";
+        $js = "$('#{$this->id}').chooseAutomobile({$pluginOptions});";
         $this->getView()->registerJs($js);
     }
 
@@ -163,40 +100,31 @@ class ChooseAutomobile extends \yii\base\Widget
     {
         parent::init();
 
-        $this->header = Yii::t('auto', 'Choose automobiles');
-
         if (!$this->id) {
             $this->id = 'chooseAutomobile' . uniqid();
         }
-        if (!$this->markUrl) {
-            $this->markUrl = Url::toRoute(['/auto/choose-auto/mark']);
+        if (!$this->pluginOptions['markUrl']) {
+            $this->pluginOptions['markUrl'] = Url::toRoute(['/auto/choose-auto/mark']);
         }
-        if (!$this->modelUrl) {
-            $this->modelUrl = Url::toRoute(['/auto/choose-auto/model']);
+        if (!$this->pluginOptions['modelUrl']) {
+            $this->pluginOptions['modelUrl'] = Url::toRoute(['/auto/choose-auto/model']);
         }
-        if (!$this->serieUrl) {
-            $this->serieUrl = Url::toRoute(['/auto/choose-auto/serie']);
+        if (!$this->pluginOptions['serieUrl']) {
+            $this->pluginOptions['serieUrl'] = Url::toRoute(['/auto/choose-auto/serie']);
         }
-        if (!$this->modificationUrl) {
-            $this->modificationUrl = Url::toRoute(['/auto/choose-auto/modification']);
+        if (!$this->pluginOptions['modificationUrl']) {
+            $this->pluginOptions['modificationUrl'] = Url::toRoute(['/auto/choose-auto/modification']);
         }
+
+        $containerClass = $this->containerClass ? $this->containerClass : 'container choose-auto-container';
+        print Html::beginTag('div', [
+            'class' => 'js-choose-auto-container ' . $containerClass,
+            'id' => $this->id,
+        ]);
     }
 
     public function run()
     {
-        print Html::beginTag('div', [
-            'class' => 'container choose-auto-container js-choose-auto-container',
-            'id' => $this->id,
-        ]);
-        print Html::input('hidden', $this->markName, '');
-        print Html::input('hidden', $this->modelName, '');
-        print Html::input('hidden', $this->serieName, '');
-        print Html::input('hidden', $this->modificationName, '');
-        print Html::tag('div', '', ['class' => 'choose-auto-loader col-xs-3 col-sm-3']);
-        $this->renderPanel('choose-auto-mark', Yii::t('advert', 'Choose mark'));
-        $this->renderPanel('choose-auto-model', Yii::t('advert', 'Choose model'));
-        $this->renderPanel('choose-auto-serie', Yii::t('advert', 'Choose serie'));
-        $this->renderPanel('choose-auto-modification', Yii::t('advert', 'Choose modification'));
         print Html::endTag('div');
 
         $this->registerJs();

@@ -9,7 +9,7 @@ class ChooseAutomobile extends \yii\web\AssetBundle
     public $sourcePath = '@auto/_assets';
 
     public $js = [
-        'js/chooseAutomobile.js',
+        'js/chooseAutomobile.js.php',
     ];
 
     public $css = [
