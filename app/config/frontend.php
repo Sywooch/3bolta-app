@@ -19,7 +19,12 @@ return ArrayHelper::merge(include __DIR__ . '/common.php', [
             'enableStrictParsing' => true,
             'rules' => [
                 '/' => 'site/index',
+
+                // выбор автомобилей
                 '/auto/choose/<action:(\w+)>' => '/auto/choose-auto/<action>',
+
+                // объявления
+                '/search' => '/advert/advert/search',
             ],
         ],
         'user' => [

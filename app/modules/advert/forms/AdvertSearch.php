@@ -5,7 +5,7 @@ use yii\data\ActiveDataProvider;
 use advert\models\Advert;
 
 /**
- * Поиск объявлений
+ * Поиск объявлений в бекенде
  */
 class AdvertSearch extends Advert
 {

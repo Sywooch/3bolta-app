@@ -4,4 +4,9 @@
  */
 
 return [
+    'components' => [
+        'search' => [
+            'class' => 'advert\components\SearchApi',
+        ]
+    ]
 ];

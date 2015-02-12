@@ -430,11 +430,16 @@ class Advert extends \yii\db\ActiveRecord
 
     /**
      * Выпадающий список категорий
+     * @param boolean $getFirstEmpty получать первый пустой элемент
      * @return []
      */
-    public static function getCategoryDropDownList()
+    public static function getCategoryDropDownList($getFirstEmpty = false)
     {
         $ret = [];
+
+        if ($getFirstEmpty) {
+            $ret[''] = '';
+        }
 
         $categories = Category::find()->all();
         foreach ($categories as $category) {
@@ -570,5 +575,17 @@ class Advert extends \yii\db\ActiveRecord
         else {
             $this->_modifications = [];
         }
+    }
+
+    /**
+     * Поиск активных и опубликованных объявлений
+     * @return \yii\db\ActiveQuery
+     */
+    public static function findActiveAndPublished()
+    {
+        return self::find()->andWhere([
+                'active' => true
+            ])
+            ->andFilterWhere(['not', 'published' => null]);
     }
 }

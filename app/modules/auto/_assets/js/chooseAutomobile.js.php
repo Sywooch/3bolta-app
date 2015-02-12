@@ -102,6 +102,9 @@
          */
         var chooseSerie = function(serieId) {
             clearSelected('serieIds');
+            if (!serieId) {
+                return;
+            }
             if (options.serieIds.indexOf(serieId) === -1) {
                 options.serieIds.push(serieId);
             }
@@ -132,6 +135,9 @@
          */
         var chooseModel = function(modelId) {
             clearSelected('modelIds');
+            if (!modelId) {
+                return;
+            }
             if (options.modelIds.indexOf(modelId) === -1) {
                 options.modelIds.push(modelId);
             }
@@ -162,6 +168,9 @@
          */
         var chooseMark = function(markId) {
             clearSelected('markIds');
+            if (!markId) {
+                return;
+            }
             if (options.markIds.indexOf(markId) === -1) {
                 options.markIds.push(markId);
             }

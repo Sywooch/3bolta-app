@@ -17,9 +17,16 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
+    'Category' => 'Категория',
+    'Condition' => 'Состояние',
+    'Mark' => 'Марка',
+    'Model' => 'Модель',
+    'Modification' => 'Модификация',
+    'Part name' => 'Название запчасти',
+    'Search' => 'Найти',
+    'Serie' => 'Серия',
+    'Choose' => 'Выбрать',
     'Choose automobile' => 'Выберите автомобиль',
     'Choose automobile...' => 'Выберите автомобиль...',
     'Part for' => 'Запчасть для',
-    'Toogle automobile' => 'Выберите автомобиль',
-    'Choose' => 'Выбрать',
 ];

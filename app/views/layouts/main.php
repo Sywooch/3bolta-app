@@ -45,12 +45,8 @@ FrontendAssets::register($this);
                 ],
             ]);
             NavBar::end();
+            print TopSearch::widget();
             ?>
-            <div class="panel panel-default" id="topSearch">
-                <div class="panel-body">
-                    <?=$this->render('top_search/index')?>
-                </div>
-            </div>
 
         <div class="container">
             <?= Breadcrumbs::widget([

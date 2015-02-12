@@ -2,9 +2,8 @@
 namespace advert\widgets;
 
 use Yii;
-use yii\helpers\Html;
-use auto\widgets\ChooseAutomobile;
-use yii\bootstrap\Modal;
+
+use advert\forms\Search as Form;
 
 /**
  * Виджет поиска по автозапчастям вверху шапки
@@ -12,56 +11,30 @@ use yii\bootstrap\Modal;
 class TopSearch extends \yii\bootstrap\Widget
 {
     /**
-     * Вывести виджет выбора автомобиля
+     * @var Form форма поиска
      */
-    protected function searchAutomobileRender()
-    {
+    public $model;
 
-    }
-
-    /**
-     * Вывести модальное окно выбора автомобиля
-     */
-    protected function searchAutomobile()
+    public function getViewPath()
     {
-        $modal = Modal::begin([
-            'header' => Yii::t('frontend/advert', 'Choose automobile'),
-            'size' => Modal::SIZE_LARGE,
-            'toggleButton' => [
-                'type' => 'button',
-                'label' => Yii::t('frontend/advert', 'Toogle automobile'),
-            ]
-        ]);
-        print ChooseAutomobile::widget([
-            'panelClass' => 'col-xs-2 col-sm-2',
-            'containerClass' => 'choose-auto',
-            'markName' => 'mark',
-            'modelName' => 'model',
-            'serieName' => 'serie',
-            'modificationName' => 'modification',
-            'itemTemplate' => '<div class="checkbox {$jsClass}"><label><input type="radio" {$checked} name="{$attributeName}" value="{$id}" />{$name}</label></div>',
-        ]);
-        $modal->end();
+        return parent::getViewPath() . DIRECTORY_SEPARATOR . 'top-search';
     }
 
     public function init()
     {
+        parent::init();
+        if (!($this->model instanceof Form)) {
+            $this->model = new Form();
+            if ($this->model->load(Yii::$app->request->getQueryParams())) {
+                $this->model->validate();
+            }
+        }
     }
 
     public function run()
     {
-        parent::init();
-        print Html::beginTag('div', [
-            'class' => 'panel panel-default',
-            'id' => $this->options['id'],
+        return $this->render('index', [
+            'model' => $this->model,
         ]);
-        print Html::beginTag('div', [
-            'class' => 'panel-body'
-        ]);
-        $this->searchAutomobile();
-        print Html::endTag('div');
-        print Html::endTag('div');
-
-        return parent::run();
     }
 }

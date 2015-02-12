@@ -57,7 +57,10 @@ class ChooseAutoController extends \app\components\BackendController
      */
     public function actionModification()
     {
-        $serieId = $_POST['serieId'];
+        $serieId = !empty($_POST['serieId']) ? $_POST['serieId'] : null;
+        if (!$serieId) {
+            throw new NotFoundHttpException();
+        }
         $serie = Serie::find()->andWhere(['id' => $serieId])->one();
         if (!($serie instanceof Serie)) {
             throw new NotFoundHttpException();
@@ -108,7 +111,10 @@ class ChooseAutoController extends \app\components\BackendController
      */
     public function actionSerie()
     {
-        $modelId = $_POST['modelId'];
+        $modelId = !empty($_POST['modelId']) ? $_POST['modelId'] : null;
+        if (!$modelId) {
+            throw new NotFoundHttpException();
+        }
         $model = Model::find()->andWhere(['id' => $modelId])->one();
         if (!($model instanceof Model)) {
             throw new NotFoundHttpException();
@@ -152,7 +158,10 @@ class ChooseAutoController extends \app\components\BackendController
      */
     public function actionModel()
     {
-        $markId = $_POST['markId'];
+        $markId = !empty($_POST['markId']) ? $_POST['markId'] : null;
+        if (!$markId) {
+            throw new NotFoundHttpException();
+        }
         $mark = Mark::find()->andWhere(['id' => $markId])->one();
         if (!($mark instanceof Mark)) {
             throw new NotFoundHttpException();
