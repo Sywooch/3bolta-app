@@ -44,7 +44,7 @@ class AutoController extends \app\components\BackendController
     public function actionMark()
     {
         $dataProvider = new ActiveDataProvider([
-            'query' => Mark::find(),
+            'query' => Mark::findOrderByName(),
         ]);
 
         return $this->render('mark', [
@@ -118,7 +118,7 @@ class AutoController extends \app\components\BackendController
      * Возвращает искомую модель
      * @param string $className
      * @param string $id
-     * @return \yii\db\ActiveRecord
+     * @return \app\components\ActiveRecord
      * @throws NotFoundHttpException
      */
     protected function findModel($className, $id)

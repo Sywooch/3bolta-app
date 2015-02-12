@@ -6,7 +6,7 @@
 namespace user\models;
 
 use \Yii;
-use yii\db\ActiveRecord;
+use app\components\ActiveRecord;
 use yii\web\IdentityInterface;
 
 class User extends ActiveRecord implements IdentityInterface

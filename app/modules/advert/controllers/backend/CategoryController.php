@@ -173,7 +173,7 @@ class CategoryController extends \app\components\BackendController
     /**
      * Возвращает искомую модель
      * @param string $id
-     * @return \yii\db\ActiveRecord
+     * @return \app\components\ActiveRecord
      * @throws NotFoundHttpException
      */
     protected function findModel($id)

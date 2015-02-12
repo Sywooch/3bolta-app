@@ -47,13 +47,9 @@ FrontendAssets::register($this);
             NavBar::end();
             print TopSearch::widget();
             ?>
-
-        <div class="container">
-            <?= Breadcrumbs::widget([
-                'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
-            ]) ?>
-            <?= $content ?>
-        </div>
+            <div class="container">
+                <?= $content ?>
+            </div>
     </div>
 
     <footer class="footer">

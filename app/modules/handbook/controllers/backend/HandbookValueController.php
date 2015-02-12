@@ -192,7 +192,7 @@ class HandbookValueController extends \app\components\BackendController
      * Возвращает искомую модель
      * @param string $code символьный код справочника
      * @param string $id
-     * @return \yii\db\ActiveRecord
+     * @return \app\components\ActiveRecord
      * @throws NotFoundHttpException
      */
     protected function findModel($code, $id)

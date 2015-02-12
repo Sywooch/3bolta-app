@@ -2,7 +2,7 @@
 namespace advert\models;
 
 use Yii;
-use yii\db\ActiveRecord;
+use app\components\ActiveRecord;
 use app\extensions\nestedsets\NestedSetsBehavior;
 
 /**

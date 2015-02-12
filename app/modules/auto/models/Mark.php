@@ -2,7 +2,7 @@
 namespace auto\models;
 
 use Yii;
-use yii\db\ActiveRecord;
+use app\components\ActiveRecord;
 
 /**
  * Модель марок
@@ -46,9 +46,9 @@ class Mark extends ActiveRecord
     /**
      * Условие по умолчанию
      */
-    public static function find()
+    public static function findOrderByName()
     {
-        return parent::find()->orderBy('name ASC');
+        return parent::find()->orderBy('mark.name ASC');
     }
 
     /**

@@ -6,7 +6,7 @@ use yii\base\Exception;
 use storage\components\Storage;
 use yii\web\UploadedFile;
 
-class File extends \yii\db\ActiveRecord
+class File extends \app\components\ActiveRecord
 {
     /**
      * Название таблицы

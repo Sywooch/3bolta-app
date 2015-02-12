@@ -104,6 +104,9 @@ class SearchApi extends \yii\base\Component
             $this->makeConditionQuery($query, $form->con);
         }
 
+        // своя сортировка
+        $query->orderBy('advert.published DESC');
+
         return new ActiveDataProvider([
             'query' => $query,
         ]);

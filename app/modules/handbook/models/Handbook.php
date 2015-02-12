@@ -2,7 +2,7 @@
 namespace handbook\models;
 
 use Yii;
-use yii\db\ActiveRecord;
+use app\components\ActiveRecord;
 
 class Handbook extends ActiveRecord
 {

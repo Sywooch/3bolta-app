@@ -2,7 +2,7 @@
 namespace auto\models;
 
 use Yii;
-use yii\db\ActiveRecord;
+use app\components\ActiveRecord;
 
 class Modification extends ActiveRecord
 {

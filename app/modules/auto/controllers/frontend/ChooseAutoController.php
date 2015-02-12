@@ -30,7 +30,7 @@ class ChooseAutoController extends \app\components\Controller
      */
     public function actionMark()
     {
-        $res = Mark::find()->all();
+        $res = Mark::findOrderByName()->all();
         $data = ArrayHelper::map($res, 'id', 'name');
         return $this->renderData($data, '', []);
     }
@@ -147,7 +147,7 @@ class ChooseAutoController extends \app\components\Controller
         if (!$markId) {
             throw new NotFoundHttpException();
         }
-        $mark = Mark::find()->andWhere(['id' => $markId])->one();
+        $mark = Mark::findOrderByName()->andWhere(['id' => $markId])->one();
         if (!($mark instanceof Mark)) {
             throw new NotFoundHttpException();
         }

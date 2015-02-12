@@ -20,7 +20,7 @@ use yii\web\UploadedFile;
 /**
  * Модель объявления
  */
-class Advert extends \yii\db\ActiveRecord
+class Advert extends \app\components\ActiveRecord
 {
     /**
      * Максимальное количество файлов для загрузки
@@ -584,8 +584,8 @@ class Advert extends \yii\db\ActiveRecord
     public static function findActiveAndPublished()
     {
         return self::find()->andWhere([
-                'active' => true
+                'advert.active' => true
             ])
-            ->andFilterWhere(['not', 'published' => null]);
+            ->andFilterWhere(['not', 'advert.published' => null]);
     }
 }

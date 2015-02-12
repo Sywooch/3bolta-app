@@ -19,11 +19,10 @@ class AdvertController extends Controller
 
         /* @var $dataProvider \yii\data\ActiveDataProvider */
         $dataProvider = $searchApi->searchItems(Yii::$app->request->getQueryParams());
-
-        ?><pre><?php print_r($dataProvider->getModels());
-        ?><pre><?php print_r($dataProvider);exit();
+        $dataProvider->pagination->pageSize = 1;
 
         return $this->render('list', [
+            'dataProvider' => $dataProvider,
         ]);
     }
 }
