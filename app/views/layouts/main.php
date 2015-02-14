@@ -47,7 +47,7 @@ FrontendAssets::register($this);
             NavBar::end();
             print TopSearch::widget();
             ?>
-            <div class="container">
+            <div class="container content-container">
                 <?= $content ?>
             </div>
     </div>

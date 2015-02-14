@@ -2,7 +2,6 @@
 namespace auto\models;
 
 use Yii;
-use app\components\ActiveRecord;
 
 /**
  * Серии
@@ -24,12 +23,11 @@ class Serie extends ActiveRecord
      */
     public function rules()
     {
-        return [
-            [['name', 'model_id'], 'required'],
+        return array_merge(parent::rules(), [
+            [['model_id'], 'required'],
             [['model_id'], 'integer'],
             [['generation_id'], 'integer', 'skipOnEmpty' => true],
-            [['active'], 'boolean'],
-        ];
+        ]);
     }
 
     /**
@@ -38,13 +36,10 @@ class Serie extends ActiveRecord
      */
     public function attributeLabels()
     {
-        return [
-            'id' => 'ID',
-            'name' => Yii::t('auto', 'Serie name'),
+        return array_merge(parent::attributeLabels(), [
             'model_id' => Yii::t('auto', 'Model'),
             'geneartion_id' => Yii::t('auto', 'Generation'),
-            'active' => Yii::t('auto', 'Active'),
-        ];
+        ]);
     }
 
     /**

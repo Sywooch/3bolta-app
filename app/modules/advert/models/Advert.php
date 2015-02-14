@@ -14,7 +14,6 @@ use auto\models\Modification;
 
 use yii\base\Exception;
 
-use storage\models\File;
 use yii\web\UploadedFile;
 
 /**
@@ -126,6 +125,7 @@ class Advert extends \app\components\ActiveRecord
         // после сохранения необходимо прицепить файлы к объявлению
         if (!empty($this->_uploadImage)) {
             $this->attachImages($this->_uploadImage);
+            $this->_uploadImage = [];
         }
 
         return parent::afterSave($insert, $changedAttributes);
@@ -137,30 +137,25 @@ class Advert extends \app\components\ActiveRecord
      */
     protected function attachImages($uploadedFiles)
     {
-        /* @var $storage \storage\components\Storage */
-        $storage = Yii::$app->getModule('storage')->advert;
-        /* @var $db yii\db\Connection */
-        $db = $this->getDb();
+        if ($this->isNewRecord) {
+            return false;
+        }
 
-        $transaction = $db->beginTransaction();
+        // получить превью, если оно есть
+        $preview = $this->getPreview();
+        $hasPreview = !empty($preview);
+
+        $transaction = self::getDb()->beginTransaction();
 
         try {
-            foreach ($uploadedFiles as $image) {
-                /* @var $image UploadedFile */
-                $file = File::uploadFile($storage, $image);
-                if ($file instanceof File) {
-                    $db->createCommand()
-                        ->insert('{{%advert_image}}', [
-                            'advert_id' => $this->id,
-                            'file_id' => $file->id,
-                        ])
-                        ->execute();
-                }
+            $isFirst = true;
+            foreach ($uploadedFiles as $file) {
+                AdvertImage::attachToAdvert($this, $file, $isFirst && !$hasPreview);
+                $isFirst = false;
             }
 
             $transaction->commit();
-        }
-        catch (Exception $ex) {
+        } catch (Exception $ex) {
             $transaction->rollback();
         }
     }
@@ -241,13 +236,25 @@ class Advert extends \app\components\ActiveRecord
     }
 
     /**
+     * Получить превью
+     * @return \storage\models\File
+     */
+    public function getPreview()
+    {
+        $ret = $this->getImages()->andWhere(['is_preview' => true])->one();
+        if ($ret) {
+            $ret = $ret->getPreview();
+        }
+        return $ret;
+    }
+
+    /**
      * Получить изображения
-     * @return yii\db\ActiveQuery
+     * @return \yii\db\ActiveQuery
      */
     public function getImages()
     {
-        return $this->hasMany(File::className(), ['id' => 'file_id'])
-            ->viaTable('{{%advert_image}}', ['advert_id' => 'id']);
+        return $this->hasMany(AdvertImage::className(), ['advert_id' => 'id']);
     }
 
     /**
@@ -378,10 +385,12 @@ class Advert extends \app\components\ActiveRecord
         // сгенерировать строки для записи
         $rows = [];
         foreach ($ids as $id) {
-            $rows[] = [$id, $this->id];
+            if ($id) {
+                $rows[] = [$id, $this->id];
+            }
         }
 
-        if (!empty($ids)) {
+        if (!empty($rows)) {
             $this->getDb()->createCommand()
                 ->batchInsert($tableName, [$xrefColumn, 'advert_id'], $rows)
                 ->execute();
@@ -587,5 +596,127 @@ class Advert extends \app\components\ActiveRecord
                 'advert.active' => true
             ])
             ->andFilterWhere(['not', 'advert.published' => null]);
+    }
+
+    /**
+     * Возвращает отформатированную цену
+     * @return string
+     */
+    public function getPriceFormated()
+    {
+        $price = (float) $this->price;
+        $decimals = 2;
+        if (round($price, 0) == $price) {
+            $decimals = 0;
+        }
+        return number_format($price, $decimals, ',', ' ');
+    }
+
+    /**
+     * Возвращает массив автомобилей объявления в виде:
+     * - name - название;
+     * - url - ссылка на поиск по автомобилю.
+     *
+     * @param string $route путь к странице поиска
+     * @param string $markParam параметр для формирования марки
+     * @param string $modelParam параметр для формирования модели
+     * @param string $serieParam параметр для формирования серии
+     * @param string $modificationParam параметр для формирования модификации
+     */
+    public function getAutomobilesLinks($route, $markParam, $modelParam, $serieParam, $modificationParam)
+    {
+        $mapper = function($data, $default = null) use (
+                $markParam, $modelParam, $serieParam, $modificationParam
+        ) {
+            $queryParam = '';
+            $parentId = null;
+            if ($data instanceof Mark) {
+                $queryParam = $markParam;
+            }
+            else if ($data instanceof Model) {
+                $parentId = $data->mark_id;
+                $queryParam = $modelParam;
+            }
+            else if ($data instanceof Serie) {
+                $parentId = $data->model_id;
+                $queryParam = $serieParam;
+            }
+            else if ($data instanceof Modification) {
+                $parentId = $data->serie_id;
+                $queryParam = $modificationParam;
+            }
+            else {
+                return $default;
+            }
+
+            return [
+                'name' => $data->full_name,
+                'query' => [$queryParam => $data->id],
+                'parent_id' => $parentId,
+            ];
+        };
+
+        $marks = ArrayHelper::map($this->getMark()->all(), 'id', $mapper);
+        $models = ArrayHelper::map($this->getModel()->all(), 'id', $mapper);
+        $series = ArrayHelper::map($this->getSerie()->all(), 'id', $mapper);
+        $modifications = ArrayHelper::map($this->getModification()->all(), 'id', $mapper);
+
+        $removeMarks = [];
+        $removeModels = [];
+        $removeSeries = [];
+
+        foreach ($marks as $k => $mark) {
+            if (!$mark) {
+                unset ($marks[$k]);
+            }
+        }
+
+        foreach ($models as $k => $model) {
+            if (!$model) {
+                unset ($models[$k]);
+            }
+            if (isset($marks[$model['parent_id']])) {
+                $models[$k]['query'] = array_merge($marks[$model['parent_id']]['query'], $model['query']);
+                $removeMarks[] = $model['parent_id'];
+            }
+        }
+
+        foreach ($series as $k => $serie) {
+            if (!$serie) {
+                unset ($series[$k]);
+            }
+            if (isset($models[$serie['parent_id']])) {
+                $series[$k]['query'] = array_merge($models[$serie['parent_id']]['query'], $serie['query']);
+                $removeModels[] = $serie['parent_id'];
+            }
+        }
+
+        foreach ($modifications as $k => $modification) {
+            if (!$modification) {
+                unset ($modifications[$k]);
+            }
+            if (isset($series[$modification['parent_id']])) {
+                $modifications[$k]['query'] = array_merge($series[$modification['parent_id']]['query'], $modification['query']);
+                $removeSeries[] = $modification['parent_id'];
+            }
+        }
+
+        foreach ($removeMarks as $id) { unset ($marks[$id]); }
+        foreach ($removeModels as $id) { unset ($models[$id]); }
+        foreach ($removeSeries as $id) { unset ($series[$id]); }
+
+        $ret = [];
+
+        foreach (array_merge(
+            array_values($marks), array_values($models),
+            array_values($series), array_values($modifications)) as $auto) {
+            $r = array_merge([$route], $auto['query']);
+            $ret[] = [
+                'name' => $auto['name'],
+                'url' => \yii\helpers\Url::toRoute($r),
+            ];
+        }
+
+        return $ret;
     }
 }

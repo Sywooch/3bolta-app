@@ -33,9 +33,10 @@ class Storage extends Component
      *
      * @param string $file абсолютный путь к файлу, который необходимо сохранить
      * @param string $name название сохраняемого файла
+     * @param boolean $removeExists удалять существующий файл
      * @return \storage\models\File|null
      */
-    public function saveFile($file, $name = '')
+    public function saveFile($file, $name = '', $removeExists = false)
     {
         if (empty($name)) {
             $name = $file;
@@ -48,7 +49,11 @@ class Storage extends Component
 
         $this->checkDirs($path);
 
-        return File::createFromExists($this, $file, $realName, $name);
+        $ret = File::createFromExists($this, $file, $realName, $name);
+        if ($ret instanceof File && $removeExists) {
+            unlink($file);
+        }
+        return $ret;
     }
 
     /**

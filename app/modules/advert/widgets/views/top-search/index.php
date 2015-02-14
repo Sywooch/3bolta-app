@@ -20,6 +20,8 @@ use advert\forms\Search;
             'id' => 'topSearch',
             'method' => 'get',
             'action' => Url::toRoute(['/advert/advert/search']),
+            'enableAjaxValidation' => false,
+            'enableClientValidation' => false,
         ]);
         ?>
         <div class="row">

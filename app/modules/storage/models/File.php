@@ -5,6 +5,7 @@ use Yii;
 use yii\base\Exception;
 use storage\components\Storage;
 use yii\web\UploadedFile;
+use yii\helpers\FileHelper;
 
 class File extends \app\components\ActiveRecord
 {
@@ -77,18 +78,13 @@ class File extends \app\components\ActiveRecord
         try {
             // определить тип
             $info = getimagesize($existsFile);
-            if (!empty($info['mime']) &&
-                in_array($info['mime'], ['image/gif', 'image/jpeg', 'image/png', 'image/bmp']) &&
-                !empty($info[0]) && !empty($info[1])) {
+            if (!empty($info[0]) && !empty($info[1])) {
                 // в случае изображения сохраняем размеры
                 $file->setAttributes([
                     'is_image' => true,
                     'width' => $info[0],
                     'height' => $info[1],
                 ]);
-            }
-            if (!empty($info['mime'])) {
-                $file->setAttribute('mime_type', $info['mime']);
             }
         } catch (Exception $ex) { }
     }
@@ -161,6 +157,9 @@ class File extends \app\components\ActiveRecord
         // установить размер изображения
         self::setImageSize($uploadedFile->tempName, $file);
 
+        // установить тип
+        $file->setAttribute('mime_type', FileHelper::getMimeType($uploadedFile->tempName));
+
         // установить IP-адрес
         self::setUploadedAddr($file);
 
@@ -199,6 +198,9 @@ class File extends \app\components\ActiveRecord
 
         // получить размеры, если это изображение
         self::setImageSize($existsFile, $file);
+
+        // установить тип
+        $file->setAttribute('mime_type', FileHelper::getMimeType($existsFile));
 
         // определить адрес загрузки
         self::setUploadedAddr($file);
@@ -250,6 +252,16 @@ class File extends \app\components\ActiveRecord
     }
 
     /**
+     * Возвращает разрешение файла
+     * @return string
+     */
+    public function getExtension()
+    {
+        $info = pathinfo($this->getPath());
+        return !empty($info['extension']) ? $info['extension'] : null;
+    }
+
+    /**
      * Возвращает полный путь к файлу
      * @return string
      */
@@ -258,7 +270,7 @@ class File extends \app\components\ActiveRecord
         $ret = '';
 
         if ($repository = $this->getStorage()) {
-            $ret = $repository->getPath($this->file_name);
+            $ret = $repository->getPath($this->file_path);
         }
 
         return $ret;

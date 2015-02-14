@@ -2,7 +2,6 @@
 namespace auto\models;
 
 use Yii;
-use app\components\ActiveRecord;
 
 /**
  * Модель поколений

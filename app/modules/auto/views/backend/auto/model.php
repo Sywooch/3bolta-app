@@ -5,7 +5,7 @@ use yii\helpers\Url;
 
 /* @var $mark auto\models\Mark */
 /* @var $this yii\web\View */
-$this->title = Html::encode($mark->name);
+$this->title = Html::encode($mark->full_name);
 $this->params['breadcrumbs'][] = [
     'url' => ['mark'],
     'label' => Yii::t('backend/auto', 'Mark list'),

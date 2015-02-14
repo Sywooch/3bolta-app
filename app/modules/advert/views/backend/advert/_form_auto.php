@@ -9,10 +9,10 @@ use auto\widgets\ChooseAutomobile;
 $chooseAutomobile = ChooseAutomobile::begin([
     'pluginOptions' => [
         'multipleSelect' => true,
-        'markName' => Html::getInputName($model, 'marks'),
-        'modelName' => Html::getInputName($model, 'models'),
-        'serieName' => Html::getInputName($model, 'series'),
-        'modificationName' => Html::getInputName($model, 'modifications'),
+        'markName' => Html::getInputName($model, 'marks') . '[]',
+        'modelName' => Html::getInputName($model, 'models') . '[]',
+        'serieName' => Html::getInputName($model, 'series') . '[]',
+        'modificationName' => Html::getInputName($model, 'modifications') . '[]',
         'markIds' => $model->getMarks(),
         'modelIds' => $model->getModels(),
         'serieIds' => $model->getSeries(),
@@ -21,14 +21,14 @@ $chooseAutomobile = ChooseAutomobile::begin([
         'modelWrapper' => '.choose-auto-model',
         'serieWrapper' => '.choose-auto-serie',
         'modificationWrapper' => '.choose-auto-modification',
-        'renderItem' => new yii\web\JsExpression('function(type, jsClass, selected, attributeName, id, name) {
+        'renderItem' => new yii\web\JsExpression('function(type, jsClass, selected, attributeName, id, name, full_name) {
             var obj = {
                 "type"          : type,
                 "jsClass"       : jsClass,
                 "checked"       : selected ? "checked=\"checked\"" : "",
                 "attributeName" : attributeName,
                 "id"            : id,
-                "name"          : name
+                "name"          : full_name
             };
             var tpl = \'<div class="checkbox {$jsClass}"><label><input data-type="{$type}" type="checkbox" {$checked} name="{$attributeName}" value="{$id}" />{$name}</label></div>\';
             $.each(obj, function(k, i) {

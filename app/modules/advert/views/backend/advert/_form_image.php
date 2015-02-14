@@ -11,8 +11,8 @@ use yii\helpers\Url;
 $exists = [];
 
 foreach ($model->getImages()->all() as $file) {
-    /* @var $image storage\models\File */
-    $exists[] = Html::img($file->getUrl(), [
+    /* @var $file \advert\models\AdvertImage */
+    $exists[] = Html::img($file->getFile()->getUrl(), [
         'class' => 'file-preview-image',
     ]);
 }

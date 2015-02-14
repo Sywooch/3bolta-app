@@ -26,13 +26,34 @@ class ChooseAutoController extends \app\components\Controller
     }
 
     /**
+     * Сгенерировать данные
+     * @param [] $res массив ActiveRecord
+     */
+    protected function renderDataArray($res)
+    {
+        return ArrayHelper::map($res, 'id', function($data, $default) {
+            if ($data instanceof \auto\models\ActiveRecord) {
+                return [
+                    'name' => $data->name,
+                    'full_name' => $data->full_name,
+                ];
+            }
+            else {
+                return [
+                    'name' => '',
+                    'full_name' => '',
+                ];
+            }
+        });
+    }
+
+    /**
      * Получить марки
      */
     public function actionMark()
     {
         $res = Mark::findOrderByName()->all();
-        $data = ArrayHelper::map($res, 'id', 'name');
-        return $this->renderData($data, '', []);
+        return $this->renderData($res, []);
     }
 
     /**
@@ -67,27 +88,12 @@ class ChooseAutoController extends \app\components\Controller
             'serie-' . $serie->id,
         ];
 
-        $generation = $serie->getGeneration()->one();
-
-        $prefixName = $mark->name . ' ' . $model->name . ' (' . $serie->name . ')';
-        if ($generation && $generation->year_begin && $generation->name) {
-            $prefixName .= ' ' . $generation->name . ' (' . $generation->year_begin . ' - ';
-            if ($generation->year_end) {
-                $prefixName .= $generation->year_end;
-            }
-            else {
-                $prefixName .= '...';
-            }
-            $prefixName .= ')';
-        }
-
         $res = Modification::find()->andWhere([
             'model_id' => $model->id,
             'serie_id' => $serie->id,
         ])->all();
-        $data = ArrayHelper::map($res, 'id', 'name');
 
-        return $this->renderData($data, $prefixName, $parents);
+        return $this->renderData($res, $parents);
     }
 
     /**
@@ -113,28 +119,11 @@ class ChooseAutoController extends \app\components\Controller
         $parents = [];
 
         $res = Serie::find()->andWhere(['model_id' => $modelId])->all();
-        $data = [];
-        foreach ($res as $i) {
-            $item = ' (' . $i->name . ')';
-            $generation = $i->getGeneration()->one();
-            if ($generation && $generation->name && $generation->year_begin) {
-                $item .= ' ' . $generation->name;
-                $item .= ' (' . $generation->year_begin . ' - ';
-                if (!empty($generation->year_end)) {
-                    $item .= $generation->year_end;
-                }
-                else {
-                    $item .= '...';
-                }
-                $item .= ')';
-            }
-            $data[$i->id] = $item;
-        }
 
         $parents[] = 'mark-' . $mark->id;
         $parents[] = 'model-' . $model->id;
 
-        return $this->renderData($data, $mark->name . ' ' . $model->name, $parents);
+        return $this->renderData($res, $parents);
     }
 
     /**
@@ -155,22 +144,22 @@ class ChooseAutoController extends \app\components\Controller
         $parents = [];
 
         $res = Model::find()->andWhere(['mark_id' => $markId])->all();
-        $data = ArrayHelper::map($res, 'id', 'name');
 
         $parents[] = 'mark-' . $mark->id;
 
-        return $this->renderData($data, $mark->name, $parents);
+        return $this->renderData($res, $parents);
     }
 
     /**
      * Рендер страницы
-     * @param [] $data массив данных: ключ - идентификатор, значение - название
-     * @param string $prefixName префикс к названиям
+     * @param [] $data массив данных ActiveRecord
      * @param [] $parents массив родителей вида: mark-id, model-id и т.д.
      * @return []
      */
-    protected function renderData($data = [], $prefixName = '', $parents = [])
+    protected function renderData($data = [], $parents = [])
     {
+        $data = $this->renderDataArray($data);
+
         $ret = [
             'cnt' => count($data),
             'data' => []
@@ -182,10 +171,11 @@ class ChooseAutoController extends \app\components\Controller
         }
         $jsClass = implode(' ', $jsClass);
 
-        foreach ($data as $k => $name) {
+        foreach ($data as $k => $item) {
             $data[$k] = [
                 'id' => $k,
-                'name' => $prefixName ? $prefixName . ' ' . $name : $name,
+                'name' => $item['name'],
+                'full_name' => $item['full_name'],
                 'jsClass' => $jsClass,
             ];
         }

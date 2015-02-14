@@ -2,7 +2,6 @@
 namespace auto\models;
 
 use Yii;
-use app\components\ActiveRecord;
 
 /**
  * Модели автомобилей
@@ -24,11 +23,10 @@ class Model extends ActiveRecord
      */
     public function rules()
     {
-        return [
-            [['name', 'mark_id'], 'required'],
+        return array_merge(parent::rules(), [
+            [['mark_id'], 'required'],
             [['mark_id'], 'integer'],
-            [['active'], 'boolean'],
-        ];
+        ]);
     }
 
     /**
@@ -37,12 +35,9 @@ class Model extends ActiveRecord
      */
     public function attributeLabels()
     {
-        return [
-            'id' => 'ID',
-            'name' => Yii::t('auto', 'Model name'),
+        return array_merge(parent::attributeLabels(), [
             'mark_id' => Yii::t('auto', 'Mark'),
-            'active' => Yii::t('auto', 'Active'),
-        ];
+        ]);
     }
 
     /**

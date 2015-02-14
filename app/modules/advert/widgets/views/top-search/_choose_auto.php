@@ -40,16 +40,17 @@ $chooseAutomobile = ChooseAutomobile::begin([
         'serieWrapper' => '.choose-auto-serie',
         'modificationWrapper' => '.choose-auto-modification',
         'renderItem' => new JsExpression('
-            function(type, jsClass, selected, attributeName, id, name) {
+            function(type, jsClass, selected, attributeName, id, name, full_name) {
                 var obj = {
                     "type"          : type,
                     "jsClass"       : jsClass,
                     "active"       : selected ? "list-group-item-success" : "",
                     "attributeName" : attributeName,
                     "id"            : id,
-                    "name"          : name
+                    "name"          : name,
+                    "full_name"     : full_name
                 };
-                var tpl = \'<a href="#" class="list-group-item {$jsClass} {$active}" data-type="{$type}" data-id="{$id}" data-attribute="{$attributeName}">{$name}</a>\';
+                var tpl = \'<a href="#" class="list-group-item {$jsClass} {$active}" data-type="{$type}" data-id="{$id}" data-full-name="{$full_name}" data-attribute="{$attributeName}">{$name}</a>\';
                 $.each(obj, function(k, i) {
                     tpl = tpl.replace(\'{$\' + k + \'}\', i);
                 });
@@ -106,7 +107,7 @@ $chooseAutomobile = ChooseAutomobile::begin([
                 method += type.charAt(0).toUpperCase() + type.substr(1, type.length - 1);
                 chooser.chooseAutomobile(method, id);
             }
-            $('.top-search-choose-auto-button').text($(this).text());
+            $('.top-search-choose-auto-button').text($(this).data('full-name'));
             $('#topSearch input[name="' + attribute + '"]').val(id);
         });
     });

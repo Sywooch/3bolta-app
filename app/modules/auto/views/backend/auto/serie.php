@@ -6,11 +6,7 @@ use yii\helpers\Url;
 /* @var $mark auto\models\Mark */
 /* @var $model auto\models\Model */
 /* @var $this yii\web\View */
-$this->title = '';
-if ($mark) {
-    $this->title .= Html::encode($mark->name) . ' ';
-}
-$this->title .= Html::encode($model->name);
+$this->title = $model->full_name;
 $this->params['breadcrumbs'][] = [
     'url' => ['mark'],
     'label' => Yii::t('backend/auto', 'Mark list'),
@@ -18,7 +14,7 @@ $this->params['breadcrumbs'][] = [
 if ($mark) {
     $this->params['breadcrumbs'][] = [
         'url' => ['model', 'mark_id' => $mark->id],
-        'label' => Html::encode($mark->name) . ' ',
+        'label' => Html::encode($mark->full_name) . ' ',
     ];
 }
 $this->params['breadcrumbs'][] = $this->title;
@@ -46,19 +42,8 @@ print GridView::widget([
         ],
         [
             'attribute' => 'name',
-            'value' => function($data) use ($model, $mark) {
-                $ret = '';
-                if (!empty($mark)) {
-                    $ret .= $mark->name . ' ';
-                }
-                if ($generation = $data->getGeneration()->one()) {
-                    $ret .= $generation->name . ' (' . $generation->year_begin . '-' . $generation->year_end . ') ';
-                }
-                else {
-                    $ret .= $model->name . ' ';
-                }
-                $ret .= $data->name;
-                return $ret;
+            'value' => function($data) {
+                return $data->full_name;
             }
         ],
         [

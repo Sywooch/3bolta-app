@@ -11,7 +11,7 @@ use yii\widgets\LinkPager;
 $models = $dataProvider->getModels();
 foreach ($models as $model) {
     print Html::beginTag('div', [
-        'class' => 'col-xs-10 col-sm-10'
+        'class' => 'col-lg-6 col-xs-12 col-md-6 col-sm-12 list-item'
     ]);
         print $this->render('_list_item', [
             'model' => $model,

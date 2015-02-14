@@ -8,17 +8,7 @@ use yii\helpers\Url;
 /* @var $serie auto\models\Serie */
 /* @var $generation auto\models\Generation */
 /* @var $this yii\web\View */
-$this->title = '';
-if ($mark) {
-    $this->title .= $mark->name . ' ';
-}
-if ($generation) {
-    $this->title .= $generation->name . ' ';
-}
-else {
-    $this->title .= $model->name . ' ';
-}
-$this->title .= $serie->name . ' ';
+$this->title = $serie->full_name;
 $this->title = Html::encode($this->title);
 $this->params['breadcrumbs'][] = [
     'url' => ['mark'],
@@ -33,7 +23,7 @@ if ($mark) {
 if ($mark && $model) {
     $this->params['breadcrumbs'][] = [
         'url' => ['serie', 'model_id' => $model->id],
-        'label' => Html::encode($mark->name) . ' ' . Html::encode($model->name),
+        'label' => Html::encode($model->full_name),
     ];
 }
 $this->params['breadcrumbs'][] = $this->title;
@@ -50,7 +40,7 @@ print GridView::widget([
                 return $data->active ? Yii::t('main', 'Yes') : Yii::t('main', 'No');
             }
         ],
-        'name',
+        'full_name',
     ],
 ]);
 ?>

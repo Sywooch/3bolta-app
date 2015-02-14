@@ -42,7 +42,7 @@
                 html += options.renderItem(
                     type, item.jsClass,
                     exists && exists.indexOf(item.id) !== -1,
-                    attributeName, item.id, item.name
+                    attributeName, item.id, item.name, item.full_name
                 );
             });
             return html;

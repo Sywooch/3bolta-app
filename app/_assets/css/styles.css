@@ -129,3 +129,7 @@ a.desc:after {
     cursor: pointer;
     border-bottom: 1px dotted #23527c;
 }
+.content-container {
+    width: 90%;
+    margin: 0 auto;
+}
