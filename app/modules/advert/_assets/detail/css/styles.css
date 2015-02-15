@@ -1,0 +1,27 @@
+.item-details-row {
+    margin-bottom: 20px;
+}
+.item-details-title h2 {
+    font-size: 20px;
+    margin: 0px;
+}
+.item-details-price {
+    font-size: 20px;
+    margin-bottom: 20px;
+}
+.item-details-phone {
+    font-size: 14px;
+    margin-left: 20px;
+}
+.item-details-images .item-details-images-full img {
+    max-width: 100%;
+}
+.item-detilas-images-list {
+    padding-top: 15px;
+}
+.item-details-images-list div {
+    float: left;
+    min-width: 120px;
+    padding: 10px;
+    text-align: center;
+}

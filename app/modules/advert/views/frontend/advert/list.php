@@ -5,13 +5,16 @@
 
 use yii\helpers\Html;
 use yii\widgets\LinkPager;
+use advert\assets\AdvertList;
+
+AdvertList::register($this);
 
 /* @var $this \yii\base\View */
 /* @var $dataProvider \yii\data\ActiveDataProvider */
 $models = $dataProvider->getModels();
 foreach ($models as $model) {
     print Html::beginTag('div', [
-        'class' => 'col-lg-6 col-xs-12 col-md-6 col-sm-12 list-item'
+        'class' => 'col-lg-8 col-xs-12 col-md-6 col-sm-12 list-item'
     ]);
         print $this->render('_list_item', [
             'model' => $model,
@@ -20,6 +23,6 @@ foreach ($models as $model) {
     print Html::endTag('div');
 }
 
-print Html::beginTag('div', ['class' => 'container']);
+print Html::beginTag('div', ['class' => 'list-pager']);
 print LinkPager::widget(['pagination' => $dataProvider->pagination]);
 print Html::endTag('div');

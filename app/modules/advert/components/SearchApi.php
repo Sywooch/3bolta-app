@@ -1,7 +1,10 @@
 <?php
 namespace advert\components;
 
-use Yii;
+use yii\helpers\StringHelper;
+use yii\helpers\ArrayHelper;
+use yii\helpers\Url;
+use yii\helpers\Html;
 use advert\forms\Search;
 use yii\data\ActiveDataProvider;
 use advert\models\Advert;
@@ -110,5 +113,108 @@ class SearchApi extends \yii\base\Component
         return new ActiveDataProvider([
             'query' => $query,
         ]);
+    }
+
+    /**
+     * Возвращает дерево автомобилей, привязанных к объявлению.
+     * Структура возвращаемого массива:
+     * ['mark' => [1 => ['name' => ..., 'parent' => null, 'parent_id' => null, 'query' => ['mark' => 1]], ..],
+     * ['model' => [33 => ['name' => ..., 'parent' => 'mark', 'parent_id' => 1, 'query' => ['mark' => 1, 'model' => 33], ...]],
+     * [...]
+     * @param Advert $advert
+     * @return []
+     */
+    protected function getAdvertAutomobileTree(Advert $advert)
+    {
+        $r = ArrayHelper::map(array_merge(
+            $advert->getMark()->all(), $advert->getModel()->all(),
+            $advert->getSerie()->all(), $advert->getModification()->all()
+        ), 'id', function($data) {
+            /* @var $data \yii\db\ActiveRecord */
+            $queryParam = strtolower(StringHelper::basename($data->className()));
+            $parentKey = null;
+            $parent = null;
+            switch ($queryParam) {
+                case 'model':
+                    $parentKey = $data->mark_id;
+                    $parent = 'mark';
+                    break;
+                case 'serie':
+                    $parentKey = $data->model_id;
+                    $parent = 'model';
+                    break;
+                case 'modification':
+                    $parentKey = $data->serie_id;
+                    $parent = 'serie';
+                    break;
+            }
+            return [
+                'query' => [$queryParam => $data->id],
+                'name' => $data->full_name,
+                'parent_id' => $parentKey,
+                'parent' => $parent,
+            ];
+        }, function($data) {
+            /* @var $data \yii\db\ActiveRecord */
+            return strtolower(StringHelper::basename($data->className()));
+        });
+
+        foreach ($r as $k1 => $items) {
+            foreach ($items as $k2 => $i) {
+                if (isset($i['parent'], $i['parent_id']) && isset($r[$i['parent']][$i['parent_id']])) {
+                    $parent = $r[$i['parent']][$i['parent_id']];
+                    $r[$k1][$k2]['query'] = ArrayHelper::merge($parent['query'], $i['query']);
+                    $r[$i['parent']][$i['parent_id']]['remove'] = true;
+                }
+            }
+        }
+
+        foreach ($r as $k1 => $items) {
+            foreach ($items as $k2 => $i) {
+                if (!empty($i['remove'])) {
+                    unset ($r[$k1][$k2]);
+                }
+            }
+        }
+
+        return $r;
+    }
+
+    /**
+     * Возвращает массив ссылок на поиск по автомобилям, привязанным к объявлению.
+     *
+     * @param [] путь к поиску
+     * @param Advert $advert
+     * @return []
+     */
+    public function getAutomobilesLink($route, Advert $advert)
+    {
+        $result = [];
+
+        $data = $this->getAdvertAutomobileTree($advert);
+
+        $searchModel = new Search();
+        foreach ($data as $k1 => $items) {
+            foreach ($items as $k2 => $i) {
+                $r = $route;
+                foreach ($i['query'] as $key => $value) {
+                    $key = Html::getInputName($searchModel, $key);
+                    $r[$key] = $value;
+                }
+                $result[] = Html::a(Html::encode($i['name']), Url::toRoute($r));
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * По идентификатору возвращает опубликованно объявление.
+     *
+     * @param type $id
+     */
+    public function getDetails($id)
+    {
+        return Advert::findActiveAndPublished()->andWhere(['id' => $id])->one();
     }
 }

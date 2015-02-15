@@ -1,0 +1,25 @@
+.list-group-item {
+        border:0;
+}
+.list-item-row {
+        margin-bottom: 10px;
+}
+.list-item-price {
+        font-size: 20px;
+        margin-bottom: 20px;
+}
+.list-item-condition {
+        font-size: 12px;
+            margin-left: 12px;
+}
+.list-item h3 {
+    margin-top: 3px;
+    margin-bottom: 0px; 
+    font-size: 20px;
+}
+.list-item-image {
+    height: 200px;
+}
+.list-item-date {
+    padding-top: 0px;
+}

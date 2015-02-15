@@ -3,6 +3,7 @@ namespace advert\models;
 
 use Yii;
 
+use app\helpers\Date as DateHelper;
 use yii\helpers\ArrayHelper;
 use user\models\User;
 use handbook\models\HandbookValue;
@@ -233,6 +234,21 @@ class Advert extends \app\components\ActiveRecord
     {
         return $this->hasOne(HandbookValue::className(), ['id' => 'condition_id'])
                 ->where(['handbook_code' => 'part_condition']);
+    }
+
+    /**
+     * Получить название состояния
+     * @return string
+     */
+    public function getConditionName()
+    {
+        $handbook = $this->hasOne(HandbookValue::className(), ['id' => 'condition_id'])
+                ->where(['handbook_code' => 'part_condition'])->one();
+        if ($handbook instanceof HandbookValue) {
+            return $handbook->name;
+        }
+
+        return '';
     }
 
     /**
@@ -595,7 +611,7 @@ class Advert extends \app\components\ActiveRecord
         return self::find()->andWhere([
                 'advert.active' => true
             ])
-            ->andFilterWhere(['not', 'advert.published' => null]);
+            ->andWhere(['not', 'advert.published IS NULL']);
     }
 
     /**
@@ -613,110 +629,49 @@ class Advert extends \app\components\ActiveRecord
     }
 
     /**
-     * Возвращает массив автомобилей объявления в виде:
-     * - name - название;
-     * - url - ссылка на поиск по автомобилю.
-     *
-     * @param string $route путь к странице поиска
-     * @param string $markParam параметр для формирования марки
-     * @param string $modelParam параметр для формирования модели
-     * @param string $serieParam параметр для формирования серии
-     * @param string $modificationParam параметр для формирования модификации
+     * Получить массив дерева категорий
+     * @return []
      */
-    public function getAutomobilesLinks($route, $markParam, $modelParam, $serieParam, $modificationParam)
+    public function getCategoriesTree()
     {
-        $mapper = function($data, $default = null) use (
-                $markParam, $modelParam, $serieParam, $modificationParam
-        ) {
-            $queryParam = '';
-            $parentId = null;
-            if ($data instanceof Mark) {
-                $queryParam = $markParam;
-            }
-            else if ($data instanceof Model) {
-                $parentId = $data->mark_id;
-                $queryParam = $modelParam;
-            }
-            else if ($data instanceof Serie) {
-                $parentId = $data->model_id;
-                $queryParam = $serieParam;
-            }
-            else if ($data instanceof Modification) {
-                $parentId = $data->serie_id;
-                $queryParam = $modificationParam;
-            }
-            else {
-                return $default;
-            }
-
-            return [
-                'name' => $data->full_name,
-                'query' => [$queryParam => $data->id],
-                'parent_id' => $parentId,
-            ];
-        };
-
-        $marks = ArrayHelper::map($this->getMark()->all(), 'id', $mapper);
-        $models = ArrayHelper::map($this->getModel()->all(), 'id', $mapper);
-        $series = ArrayHelper::map($this->getSerie()->all(), 'id', $mapper);
-        $modifications = ArrayHelper::map($this->getModification()->all(), 'id', $mapper);
-
-        $removeMarks = [];
-        $removeModels = [];
-        $removeSeries = [];
-
-        foreach ($marks as $k => $mark) {
-            if (!$mark) {
-                unset ($marks[$k]);
-            }
-        }
-
-        foreach ($models as $k => $model) {
-            if (!$model) {
-                unset ($models[$k]);
-            }
-            if (isset($marks[$model['parent_id']])) {
-                $models[$k]['query'] = array_merge($marks[$model['parent_id']]['query'], $model['query']);
-                $removeMarks[] = $model['parent_id'];
-            }
-        }
-
-        foreach ($series as $k => $serie) {
-            if (!$serie) {
-                unset ($series[$k]);
-            }
-            if (isset($models[$serie['parent_id']])) {
-                $series[$k]['query'] = array_merge($models[$serie['parent_id']]['query'], $serie['query']);
-                $removeModels[] = $serie['parent_id'];
-            }
-        }
-
-        foreach ($modifications as $k => $modification) {
-            if (!$modification) {
-                unset ($modifications[$k]);
-            }
-            if (isset($series[$modification['parent_id']])) {
-                $modifications[$k]['query'] = array_merge($series[$modification['parent_id']]['query'], $modification['query']);
-                $removeSeries[] = $modification['parent_id'];
-            }
-        }
-
-        foreach ($removeMarks as $id) { unset ($marks[$id]); }
-        foreach ($removeModels as $id) { unset ($models[$id]); }
-        foreach ($removeSeries as $id) { unset ($series[$id]); }
-
         $ret = [];
 
-        foreach (array_merge(
-            array_values($marks), array_values($models),
-            array_values($series), array_values($modifications)) as $auto) {
-            $r = array_merge([$route], $auto['query']);
-            $ret[] = [
-                'name' => $auto['name'],
-                'url' => \yii\helpers\Url::toRoute($r),
-            ];
+        $category = $this->getCategory()->one();
+
+        if ($category) {
+            $ret[$category->id] = $category->name;
+            $previewDepth = $category->depth;
+            if ($previewDepth > 1) {
+                $list = Category::find()
+                    ->andWhere(['<', 'lft', $category->lft])
+                    ->orderBy('lft DESC')
+                    ->all();
+                foreach ($list as $i) {
+                    if ($i->depth == $previewDepth) {
+                        continue;
+                    }
+                    $previewDepth = $i->depth;
+                    $ret[$i->id] = $i->name;
+                    if ($previewDepth == 1) {
+                        break;
+                    }
+                }
+            }
         }
 
+        return array_reverse($ret, true);
+    }
+
+    /**
+     * Возвращает отформатированную дату публикации
+     * @return string
+     */
+    public function getPublishedFormatted()
+    {
+        $ret = '';
+        if ($this->published) {
+            $ret = DateHelper::formatDate($this->published);
+        }
         return $ret;
     }
 }

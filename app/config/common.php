@@ -10,7 +10,8 @@ require_once __DIR__ . '/env.local.php';
 
 $config = ArrayHelper::merge([
     'basePath' => dirname(__DIR__),
-    'language' => 'ru',
+    'language' => 'ru-RU',
+    'sourceLanguage' => 'en-US',
     'bootstrap' => ['log'],
     'aliases' => ArrayHelper::merge([
         '@' => dirname(__DIR__),
@@ -23,7 +24,8 @@ $config = ArrayHelper::merge([
                 '*' => [
                     'class' => 'yii\i18n\PhpMessageSource',
                     'basePath' => '@app/messages',
-                    'sourceLanguage' => 'en',
+                    'forceTranslation' => true,
+                    'sourceLanguage' => 'ru-RU',
                     'fileMap' => [
                     ],
                 ],

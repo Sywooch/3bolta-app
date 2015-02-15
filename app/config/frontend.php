@@ -25,6 +25,7 @@ return ArrayHelper::merge(include __DIR__ . '/common.php', [
 
                 // объявления
                 '/search' => '/advert/advert/search',
+                '/details/<id:(\d+)>' => '/advert/advert/details',
             ],
         ],
         'user' => [
