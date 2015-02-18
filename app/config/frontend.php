@@ -24,8 +24,11 @@ return ArrayHelper::merge(include __DIR__ . '/common.php', [
                 '/auto/choose/<action:(\w+)>' => '/auto/choose-auto/<action>',
 
                 // объявления
-                '/search' => '/advert/advert/search',
-                '/details/<id:(\d+)>' => '/advert/advert/details',
+                '/search' => '/advert/catalog/search',
+                '/details/<id:(\d+)>' => '/advert/catalog/details',
+
+                // работа с объявлениями
+                '/ads/append' => '/advert/advert/append',
             ],
         ],
         'user' => [

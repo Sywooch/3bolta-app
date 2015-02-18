@@ -82,6 +82,7 @@ class Advert extends \app\components\ActiveRecord
                 'extensions' => self::$_imageFileExtensions,
                 'maxFiles' => self::UPLOAD_MAX_FILES
             ],
+            [['confirmation'], 'safe'],
         ];
     }
 
@@ -476,11 +477,16 @@ class Advert extends \app\components\ActiveRecord
 
     /**
      * Выпадающий список состояния запчасти
+     * @param boolean $getFirstEmpty получать первый пустой элемент
      * @return []
      */
-    public static function getConditionDropDownList()
+    public static function getConditionDropDownList($getFirstEmpty = false)
     {
         $ret = [];
+
+        if ($getFirstEmpty) {
+            $ret[''] = '';
+        }
 
         $values = HandbookValue::find()->andWhere(['handbook_code' => 'part_condition'])->all();
         foreach ($values as $value) {

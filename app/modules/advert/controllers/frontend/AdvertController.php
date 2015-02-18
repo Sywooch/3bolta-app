@@ -2,46 +2,44 @@
 namespace advert\controllers\frontend;
 
 use Yii;
+use yii\web\Response;
+use yii\widgets\ActiveForm;
+
+use advert\forms\Form;
+
 use app\components\Controller;
-use yii\web\NotFoundHttpException;
-use advert\models\Advert;
 
 /**
- * Контроллер для вывода объявлений
+ * Работа с объявлениями
  */
 class AdvertController extends Controller
 {
     /**
-     * Поиск объявлений - список найденных
+     * Добавление объявления
      */
-    public function actionSearch()
+    public function actionAppend()
     {
-        /* @var $searchApi \advert\components\SearchApi */
-        $searchApi = Yii::$app->getModule('advert')->search;
+        /* @var $api \advert\components\AdvertApi */
+        $api = Yii::$app->getModule('advert')->advert;
 
-        /* @var $dataProvider \yii\data\ActiveDataProvider */
-        $dataProvider = $searchApi->searchItems(Yii::$app->request->getQueryParams());
+        $model = new Form();
 
-        return $this->render('list', [
-            'dataProvider' => $dataProvider,
-        ]);
-    }
-
-    /**
-     * Детальная страница объявления
-     */
-    public function actionDetails($id)
-    {
-        /* @var $searchApi \advert\components\SearchApi */
-        $searchApi = Yii::$app->getModule('advert')->search;
-
-        $model = $searchApi->getDetails($id);
-
-        if (!($model instanceof Advert)) {
-            throw new NotFoundHttpException();
+        if (!empty($_POST['ajax']) && Yii::$app->request->isAjax && $model->load($_POST)) {
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            return ActiveForm::validate($model);
         }
 
-        return $this->render('details', [
+        if ($model->load($_POST)) {
+            $model->setScenario('submit');
+            if ($model->validate()) {
+                // сохраняем объявление
+                $advert = $api->appendNotRegisterAdvert($model);
+            }
+        }
+
+        $model->setScenario(Form::SCENARIO_DEFAULT);
+
+        return $this->render('form/index', [
             'model' => $model,
         ]);
     }

@@ -139,3 +139,13 @@ a.desc:after {
     font-size: 12px;
     color: #ccc;
 }
+.block-info {
+    border: 1px solid #eee;
+    padding: 20px;
+    margin: 20px 0px;
+    border-left-width: 5px;
+    border-radius: 3px;
+}
+.block-info-primary {
+    border-left-color: #265a88;
+}

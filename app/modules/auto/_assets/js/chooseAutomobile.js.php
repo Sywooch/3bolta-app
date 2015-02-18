@@ -24,9 +24,12 @@
         'renderItem'            : function(type, jsClass, selected, attributeName, id, name) {}
     };
 
-    var options;
+
+
 
     $.fn.chooseAutomobile = function(method) {
+        var options = $(this).data('chooseAutomobileOptions') ? $(this).data('chooseAutomobileOptions') : {};
+
         var self = this;
 
         /**
@@ -216,6 +219,7 @@
 
         var init = function(params) {
             options = $.extend({}, defaults, options, params);
+            $(self).data('chooseAutomobileOptions', options);
 
             if ($(self).find('.choose-auto-loader').length == 0) {
                 $(self).prepend('<div class="choose-auto-loader"></div>');
