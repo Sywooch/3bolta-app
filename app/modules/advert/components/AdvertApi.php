@@ -15,6 +15,41 @@ use yii\web\UploadedFile;
 class AdvertApi extends \yii\base\Component
 {
     /**
+     * Подтвердить публикацию объявления с кодом подтверждения $code.
+     * Возвращает идентификатор объявления в случае успеха или null.
+     *
+     * @param type $code
+     * @return int|null
+     */
+    public function confirmAdvert($code)
+    {
+        if (!$code) {
+            return null;
+        }
+
+        $ret = null;
+
+        $advert = Advert::find()->where(['confirmation' => $code])->one();
+
+        if ($advert instanceof Advert) {
+            $advert->setAttributes([
+                'active' => true,
+                'published' => date('Y-m-d H:i:s'),
+                'confirmation' => null,
+            ]);
+            try {
+                if ($advert->save(true, ['active', 'published', 'confirmation'])) {
+                    $ret = $advert->id;
+                }
+            } catch (Exception $ex) {
+                $ret = null;
+            }
+        }
+
+        return $ret;
+    }
+
+    /**
      * Добавить новое объявление для неавторизованного пользователя.
      * На вход передается форма заполнения объявления.
      *

@@ -66,7 +66,7 @@ class Advert extends \app\components\ActiveRecord
                 return str_replace(',', '.', $value);
             }],
             [['price'], 'number', 'min' => 1, 'max' => 9999999],
-            [['description'], 'safe'],
+            [['description', 'published'], 'safe'],
             [['user_id', 'condition_id', 'category_id'], 'integer'],
             [['user_name', 'user_phone', 'user_email'], 'required', 'when' => function($model) {
                 // обязательна либо привязка к пользователю, либо координаты пользователя

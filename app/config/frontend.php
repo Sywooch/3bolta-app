@@ -29,6 +29,7 @@ return ArrayHelper::merge(include __DIR__ . '/common.php', [
 
                 // работа с объявлениями
                 '/ads/append' => '/advert/advert/append',
+                '/ads/confirmation/<code:(\w+)>' => '/advert/advert/confirm',
             ],
         ],
         'user' => [

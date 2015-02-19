@@ -7,6 +7,10 @@
 use yii\helpers\Html;
 use advert\assets\AdvertDetail;
 
+use yii\bootstrap\Modal;
+use app\widgets\JS;
+use yii\helpers\Url;
+
 /* @var $searchApi \advert\components\SearchApi */
 $searchApi = Yii::$app->getModule('advert')->search;
 
@@ -91,3 +95,34 @@ AdvertDetail::register($this);
         </div>
     </div>
 </div>
+
+<?php if (($id = Yii::$app->session->getFlash('advert_published')) && $id == $model->id):?>
+    <?php
+    Modal::begin([
+        'id' => 'advertWasPublishedModal',
+        'header' => '<h2 class="primary-title"><span class="glyphicon glyphicon-info-sign"></span> ' . Yii::t('frontend/advert', 'Advert was published') . '</h2>',
+        'toggleButton' => false,
+    ]);
+    ?>
+    Поздравляем, ваше объявление успешно опубликовано!
+    <br /><br />
+    Постоянная ссылка для просмотра объявления:
+    <a href="<?=Url::toRoute(['details', 'id' => $model->id])?>"><?=Url::toRoute(['details', 'id' => $model->id], true)?></a>.<br />
+    <br />
+    После окончания публикации вам придет уведомление с предложением зарегистрироваться на сайте и публиковать
+    объявления без ограничений.<br />
+    Дата окончания публикации: <strong>не определено</strong>.<br />
+    <br /><br />
+    <?php
+    Modal::end();
+    JS::begin();
+    ?>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#advertWasPublishedModal').modal('toggle');
+        });
+    </script>
+    <?php
+    JS::end();
+    ?>
+<?php endif; ?>

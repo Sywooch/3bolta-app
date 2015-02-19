@@ -4,6 +4,8 @@ use yii\bootstrap\ActiveForm;
 use advert\models\Advert;
 use advert\forms\Form;
 use kartik\widgets\FileInput;
+use yii\bootstrap\Modal;
+use app\widgets\JS;
 
 /* @var $form advert\forms\Form */
 /* @var $this yii\base\View */
@@ -21,6 +23,7 @@ use kartik\widgets\FileInput;
 
 <?php
 $form = ActiveForm::begin([
+    'id' => 'create-advert',
     'enableClientValidation' => false,
     'enableAjaxValidation' => true,
 ]);
@@ -107,3 +110,5 @@ $form = ActiveForm::begin([
         <?=Html::submitButton(Yii::t('frontend/advert', 'Create advert'), ['class' => 'btn btn-success']);?>
     </div>
 <?php $form->end(); ?>
+
+<?php print $this->render('_success_created'); ?>
