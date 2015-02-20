@@ -10,8 +10,8 @@ return [
     '/auto/choose/<action:(\w+)>' => '/auto/choose-auto/<action>',
 
     // объявления
-    '/search' => '/advert/catalog/search',
-    '/details/<id:(\d+)>' => '/advert/catalog/details',
+    '/ads/search' => '/advert/catalog/search',
+    '/ads/details/<id:(\d+)>' => '/advert/catalog/details',
 
     // работа с объявлениями
     '/ads/append' => '/advert/advert/append',

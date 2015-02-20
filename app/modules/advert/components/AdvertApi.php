@@ -163,6 +163,8 @@ class AdvertApi extends \yii\base\Component
                     throw new Exception();
                 }
 
+                $advert->updateAutomobiles();
+
                 $this->sendPublishConfirmation($advert);
 
                 $ret = $advert;

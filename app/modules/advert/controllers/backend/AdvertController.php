@@ -74,6 +74,8 @@ class AdvertController extends \app\components\BackendController
                     throw new Exception();
                 }
 
+                $model->updateAutomobiles();
+
                 $transaction->commit();
 
                 Yii::$app->serviceMessage->setMessage('success', Yii::t('backend/advert', 'Success create advert'));
