@@ -13,6 +13,8 @@ use auto\models\Model;
 use auto\models\Serie;
 use auto\models\Modification;
 
+use yii\db\Expression;
+
 use yii\base\Exception;
 
 use yii\web\UploadedFile;
@@ -22,6 +24,11 @@ use yii\web\UploadedFile;
  */
 class Advert extends \app\components\ActiveRecord
 {
+    /**
+     * Количество дней по умолчанию для публикации объявлений
+     */
+    const DEFAULT_PUBLISH_DAYS = 30;
+
     /**
      * Максимальное количество файлов для загрузки
      */
@@ -66,7 +73,7 @@ class Advert extends \app\components\ActiveRecord
                 return str_replace(',', '.', $value);
             }],
             [['price'], 'number', 'min' => 1, 'max' => 9999999],
-            [['description', 'published'], 'safe'],
+            [['description', 'published', 'published_to'], 'safe'],
             [['user_id', 'condition_id', 'category_id'], 'integer'],
             [['user_name', 'user_phone', 'user_email'], 'required', 'when' => function($model) {
                 // обязательна либо привязка к пользователю, либо координаты пользователя
@@ -617,7 +624,12 @@ class Advert extends \app\components\ActiveRecord
         return self::find()->andWhere([
                 'advert.active' => true
             ])
-            ->andWhere(['not', 'advert.published IS NULL']);
+            ->andWhere(['not', 'advert.published IS NULL'])
+            ->andWhere(['or',
+                ['>=', 'advert.published_to', new Expression('NOW()')],
+                'advert.published_to IS NULL'
+            ])
+            ->andWhere(['<=', 'advert.published', new Expression('NOW()')]);
     }
 
     /**

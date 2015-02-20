@@ -3,6 +3,9 @@ namespace advert\components;
 
 use Yii;
 
+use DateInterval;
+use DateTime;
+use yii\helpers\Url;
 use yii\base\Exception;
 use advert\forms\Form;
 use advert\models\Advert;
@@ -31,14 +34,20 @@ class AdvertApi extends \yii\base\Component
 
         $advert = Advert::find()->where(['confirmation' => $code])->one();
 
-        if ($advert instanceof Advert) {
+        if ($advert instanceof Advert && !$advert->active && !$advert->published) {
+            $dateFrom = new DateTime();
+            $dateTo = new DateTime();
+            $dateTo->add(new DateInterval('P' . Advert::DEFAULT_PUBLISH_DAYS . 'D'));
             $advert->setAttributes([
                 'active' => true,
-                'published' => date('Y-m-d H:i:s'),
+                'published' => $dateFrom->format('Y-m-d H:i:s'),
+                'published_to' => $dateTo->format('Y-m-d 23:59:59'),
                 'confirmation' => null,
             ]);
             try {
-                if ($advert->save(true, ['active', 'published', 'confirmation'])) {
+                if ($advert->save(true, [
+                    'active', 'published', 'confirmation', 'published_to'
+                ])) {
                     $ret = $advert->id;
                 }
             } catch (Exception $ex) {
@@ -47,6 +56,52 @@ class AdvertApi extends \yii\base\Component
         }
 
         return $ret;
+    }
+
+    /**
+     * Отправить уведомление о прекращении публикации объявления по причине
+     * истечения срока публикации
+     *
+     * @param Advert $advert
+     * @return boolean
+     */
+    public function sendExpiredConfirmation(Advert $advert)
+    {
+        if ($advert->active && $advert->published) {
+            try {
+                return Yii::$app->mailer->compose('expiredPublishAdvert', [
+                    'advert' => $advert
+                ])
+                ->setTo($advert->user_email)
+                ->setSubject(Yii::t('mail_subjects', 'Publish advert expired'))
+                ->send();
+            }
+            catch (Exception $ex) { }
+        }
+        return false;
+    }
+
+    /**
+     * Отправить уведомление о публикации объявления
+     *
+     * @param Advert $advert
+     * @return boolean
+     * @throws Exception
+     */
+    public function sendPublishConfirmation(Advert $advert)
+    {
+        if (!$advert->active && !$advert->published && !$advert->user_id) {
+            return Yii::$app->mailer->compose('publishNotAuthAdvert', [
+                    'advert' => $advert,
+                    'confirmationLink' => Url::toRoute([
+                        '/advert/advert/confirm', 'code' => $advert->confirmation
+                    ], true)
+                ])
+                ->setTo($advert->user_email)
+                ->setSubject(Yii::t('mail_subjects', 'Publish advert'))
+                ->send();
+        }
+        return false;
     }
 
     /**
@@ -64,7 +119,7 @@ class AdvertApi extends \yii\base\Component
      *
      * @return Advert|null
      */
-    public function appendNotRegisterAdvert(Form $form, $images = [])
+    public function appendNotRegisterAdvert(Form $form)
     {
         $ret = null;
 
@@ -95,7 +150,7 @@ class AdvertApi extends \yii\base\Component
 
                 // привязать файлы
                 $uploadImages = [];
-                foreach ($images as $image) {
+                foreach ($form->getImages() as $image) {
                     if ($image instanceof UploadedFile) {
                         $uploadImages[] = $image;
                     }
@@ -107,6 +162,8 @@ class AdvertApi extends \yii\base\Component
                 if (!$advert->save()) {
                     throw new Exception();
                 }
+
+                $this->sendPublishConfirmation($advert);
 
                 $ret = $advert;
 

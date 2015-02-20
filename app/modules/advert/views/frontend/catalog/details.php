@@ -7,6 +7,7 @@
 use yii\helpers\Html;
 use advert\assets\AdvertDetail;
 
+use app\helpers\Date;
 use yii\bootstrap\Modal;
 use app\widgets\JS;
 use yii\helpers\Url;
@@ -111,7 +112,7 @@ AdvertDetail::register($this);
     <br />
     После окончания публикации вам придет уведомление с предложением зарегистрироваться на сайте и публиковать
     объявления без ограничений.<br />
-    Дата окончания публикации: <strong>не определено</strong>.<br />
+    Дата окончания публикации: <strong><?=Date::formatDate($model->published_to)?></strong>.<br />
     <br /><br />
     <?php
     Modal::end();

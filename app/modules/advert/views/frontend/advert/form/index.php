@@ -26,6 +26,9 @@ $form = ActiveForm::begin([
     'id' => 'create-advert',
     'enableClientValidation' => false,
     'enableAjaxValidation' => true,
+    'options' => [
+        'enctype' => 'multipart/form-data',
+    ]
 ]);
 ?>
     <div class="col-sm-12 col-lg-4">
@@ -46,7 +49,9 @@ $form = ActiveForm::begin([
     </div>
 
     <div class="col-sm-12">
-        <?=$form->field($model, 'uploadImage')->widget(FileInput::className(), [
+        <?=$form->field($model, 'uploadImage', [
+            'template' => '{input}',
+        ])->widget(FileInput::className(), [
             'options' => [
                 'accept' => 'image/*',
                 'multiple' => true,

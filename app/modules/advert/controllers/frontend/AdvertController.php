@@ -2,6 +2,7 @@
 namespace advert\controllers\frontend;
 
 use Yii;
+use yii\web\UploadedFile;
 use yii\web\Response;
 use yii\widgets\ActiveForm;
 
@@ -52,7 +53,12 @@ class AdvertController extends Controller
         }
 
         if ($model->load($_POST)) {
+
             $model->setScenario('submit');
+            if ($files = UploadedFile::getInstances($model, 'uploadImage')) {
+                $model->setUploadImage($files);
+            }
+
             if ($model->validate()) {
                 // сохраняем объявление
                 $advert = $api->appendNotRegisterAdvert($model);

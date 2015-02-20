@@ -13,5 +13,13 @@ return ArrayHelper::merge(include __DIR__ . '/common.php', [
     'modules' => [
         'gii' => 'yii\gii\Module',
     ],
+    'components' => [
+        'urlManager' => [
+            'enablePrettyUrl' => true,
+            'showScriptName' => false,
+            'enableStrictParsing' => true,
+            'rules' => include __DIR__ . '/frontend.routing.php',
+        ],
+    ],
 ], include __DIR__ . '/console.local.php');
 

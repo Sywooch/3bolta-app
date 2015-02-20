@@ -5,6 +5,8 @@ use Yii;
 
 use advert\models\Category;
 
+use advert\models\Advert;
+
 use auto\models\Mark;
 use auto\models\Model;
 use auto\models\Serie;
@@ -28,12 +30,13 @@ class Form extends \yii\base\Model
     protected $_serie = [];
     protected $_modification = [];
 
+    protected $_uploadImage;
+
     /**
      * Максимальная длина описания
      */
     const DESCRIPTION_MAX_LENGTH = 255;
 
-    public $uploadImage;
     public $name;
     public $category_id;
     public $condition_id;
@@ -91,6 +94,12 @@ class Form extends \yii\base\Model
             [['user_email'], 'email', 'when' => function($model) {
                 return empty($model->user_id);
             }],
+
+            [['uploadImage'], 'file',
+                'skipOnEmpty' => true,
+                'extensions' => Advert::$_imageFileExtensions,
+                'maxFiles' => Advert::UPLOAD_MAX_FILES
+            ],
         ];
     }
 
@@ -227,9 +236,39 @@ class Form extends \yii\base\Model
         $ret = parent::attributes();
         if (is_array($ret)) {
             $ret = array_merge($ret, [
-                'mark', 'model', 'serie', 'modification'
+                'mark', 'model', 'serie', 'modification', 'uploadImage',
             ]);
         }
         return $ret;
+    }
+
+
+    /**
+     * Получить изображения для загрузки.
+     * Возвращает всегда null, иначе начинаются глюки в виджете FileInput.
+     * @return null
+     */
+    public function getUploadImage()
+    {
+        return null;
+    }
+
+    /**
+     * Установить изображения для загрузки
+     * @param [] $files
+     */
+    public function setUploadImage($files)
+    {
+        if (is_array($files)) {
+            $this->_uploadImage = $files;
+        }
+        else {
+            $this->_uploadImage = [];
+        }
+    }
+
+    public function getImages()
+    {
+        return $this->_uploadImage;
     }
 }

@@ -26,8 +26,9 @@ class Date
      * - integer.
      *
      * @param mixed $date
+     * @param boolean $allowShort разрешать приставки "сегодня", "завтра" и т.п.
      */
-    public static function formatDate($date)
+    public static function formatDate($date, $allowShort = true)
     {
         if (is_numeric($date) || is_string($date)) {
             $date = new DateTime($date);
@@ -37,13 +38,13 @@ class Date
 
         $diff = $currentDate->diff($date, false);
 
-        if ($diff->y === 0 && $diff->m === 0 && $diff->d === 0) {
+        if ($diff->y === 0 && $diff->m === 0 && $diff->d === 0 && $allowShort) {
             return Yii::t('main', 'today') . ', ' . $date->format('H:i');
         }
-        else if ($diff->y === 0 && $diff->m === 0 && $diff->d === 1) {
+        else if ($diff->y === 0 && $diff->m === 0 && $diff->d === 1 && $allowShort) {
             return Yii::t('main', 'yesterday') . ', ' . $date->format('H:i');
         }
-        else if ($diff->y === 0 && $diff->m === 0 && $diff->d === -1) {
+        else if ($diff->y === 0 && $diff->m === 0 && $diff->d === -1 && $allowShort) {
             return Yii::t('main', 'tomorrow') . ', ' . $date->format('H:i');
         }
         else {

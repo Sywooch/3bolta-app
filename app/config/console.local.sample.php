@@ -5,5 +5,11 @@
  */
 
 return [
+    'components' => [
+        'urlManager' => [
+            'hostInfo' => 'http://3bolta.com',
+            'baseUrl' => '/',
+        ],
+    ],
 ];
 

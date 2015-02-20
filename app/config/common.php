@@ -19,6 +19,17 @@ $config = ArrayHelper::merge([
         '@frontendUrl' => APP_FRONTEND_ABSOLUTE_URL,
     ], include __DIR__ . '/aliases.php'),
     'components' => [
+        'mailer' => [
+            'class' => 'yii\swiftmailer\Mailer',
+            'useFileTransport' => true,
+            'viewPath' => '@app/mail',
+            'messageConfig' => [
+                'charset' => 'UTF-8',
+                'from' => 'info@3bolta.com',
+                'bcc' => 'info@3bolta.com',
+            ],
+            'messageClass' => 'app\components\MailMessage',
+        ],
         'i18n' => [
             'translations' => [
                 '*' => [
@@ -38,14 +49,6 @@ $config = ArrayHelper::merge([
             'class' => 'yii\db\Connection',
             'charset' => 'utf8',
             'tablePrefix' => 'app_',
-        ],
-        'mailer' => [
-            'class' => 'yii\swiftmailer\Mailer',
-            // send all mails to a file by default. You have to set
-            // 'useFileTransport' to false and configure a transport
-            // for the mailer to send real emails.
-            'useFileTransport' => true,
-            'viewPath' => '@app/mail',
         ],
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,
@@ -95,7 +98,9 @@ $config = ArrayHelper::merge([
         ],
     ],
     'params' => [
+        'defaultEmailFrom' => 'info@3bolta.com',
         'siteName' => '3bolta.com',
+        'siteBrand' => '3bolta.com',
     ],
 ], include __DIR__ . '/common.local.php');
 
