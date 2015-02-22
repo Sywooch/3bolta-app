@@ -26,9 +26,7 @@ print Html::tag('p', Html::a(Yii::t('backend', 'Create {modelClass}', [
 
     <?= $form->field($searchModel, 'email') ?>
 
-    <?= $form->field($searchModel, 'last_name') ?>
-
-    <?= $form->field($searchModel, 'first_name') ?>
+    <?= $form->field($searchModel, 'name') ?>
 
     <?= $form->field($searchModel, 'status') ?>
 
@@ -67,8 +65,7 @@ print GridView::widget([
             'format' => 'html',
         ],
         'status',
-        'first_name',
-        'last_name',
+        'name',
         [
             'class' => 'yii\grid\ActionColumn',
             'template' => '{update} {delete}',

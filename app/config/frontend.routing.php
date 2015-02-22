@@ -16,4 +16,7 @@ return [
     // работа с объявлениями
     '/ads/append' => '/advert/advert/append',
     '/ads/confirmation/<code:(\w+)>' => '/advert/advert/confirm',
+
+    // работа с пользователями
+    '/registration' => '/user/user/register',
 ];

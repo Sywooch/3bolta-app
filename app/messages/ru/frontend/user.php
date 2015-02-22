@@ -17,10 +17,12 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'Wrong phone format' => 'Неверный формат телефона',
-    'No' => 'Нет',
-    'Yes' => 'Да',
-    'today' => 'сегодня',
-    'tomorrow' => 'завтра',
-    'yesterday' => 'вчера',
+    'Password not equal' => 'Пароли не совпадают',
+    'Password' => 'Пароль',
+    'Password confirmation' => 'Подтверждение пароля',
+    'Register' => 'Зарегистрироваться',
+    'Registration' => 'Регистрация',
+    'Your email' => 'E-mail',
+    'Your name' => 'Имя',
+    'Your phone' => 'Телефон',
 ];

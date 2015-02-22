@@ -5,9 +5,10 @@
 
 namespace user\models;
 
-use \Yii;
+use Yii;
 use app\components\ActiveRecord;
 use yii\web\IdentityInterface;
+use app\components\PhoneValidator;
 
 class User extends ActiveRecord implements IdentityInterface
 {
@@ -26,10 +27,9 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public $new_password;
 
-    /**
-     * Статус - активен
-     */
-    const STATUS_ACTIVE = 1;
+    const STATUS_ACTIVE = 1; // статус - активен
+    const STATUS_WAIT_CONFIRMATION = 2; // статус - требует активации
+    const STATUS_LOCKED = 3; // статус - заблокирован
 
     public static function tableName()
     {
@@ -39,22 +39,21 @@ class User extends ActiveRecord implements IdentityInterface
     public function rules()
     {
         return [
-            [['first_name', 'last_name', 'email'], 'required'],
+            [['name', 'email'], 'required'],
             [['email'], 'email'],
             [['email'], 'unique'],
             [['status'], 'integer', 'min' => 0],
-            [['second_name', 'last_login', 'roleCodes'], 'safe'],
+            [['last_login', 'roleCodes'], 'safe'],
             [['new_password'], 'required', 'on' => 'create'],
             [['new_password'], 'safe'],
+            [['phone'], PhoneValidator::className(), 'canonicalAttribute' => 'phone_canonical'],
         ];
     }
 
     public function attributeLabels()
     {
         return [
-            'first_name' => Yii::t('user', 'First name'),
-            'last_name' => Yii::t('user', 'Last name'),
-            'second_name' => Yii::t('user', 'Second name'),
+            'name' => Yii::t('user', 'Name'),
             'email' => Yii::t('user', 'Email'),
             'password' => Yii::t('user', 'Password'),
             'status' => Yii::t('user', 'Status'),
@@ -62,6 +61,26 @@ class User extends ActiveRecord implements IdentityInterface
             'roleCodes' => Yii::t('user', 'User roles'),
             'new_password' => Yii::t('user', 'New password'),
         ];
+    }
+
+    /**
+     * Обертка для метода сохранения
+     * @param boolean $runValidation
+     * @param [] $attributeNames
+     * @return boolean
+     */
+    public function save($runValidation = true, $attributeNames = null)
+    {
+        if (is_array($attributeNames) && in_array('phone', $attributeNames)) {
+            // телефон без валидации сохранить невозможно,
+            // т.к. необходимо записать его в канонической форме
+            // через валидатор PhoneValidator
+            $runValidation = true;
+            if (!in_array('phone_canonical', $attributeNames)) {
+                $attributeNames[] = 'phone_canonical';
+            }
+        }
+        return parent::save($runValidation, $attributeNames);
     }
 
     /**
@@ -157,7 +176,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public function getFullUserName()
     {
-        return $this->first_name . ' ' . $this->last_name;
+        return $this->name;
     }
 
     /**
@@ -281,5 +300,24 @@ class User extends ActiveRecord implements IdentityInterface
         }
 
         return $ret;
+    }
+
+    /**
+     * Вернуть запись из таблички подтверждений.
+     * В случае, если ее нет - создает новую.
+     *
+     * @return UserConfirmation
+     */
+    public function getConfirmation()
+    {
+        $res = $this->hasOne(UserConfirmation::className(), ['user_id' => 'id']);
+        if (!$res->exists()) {
+            $confirmation = new UserConfirmation();
+            $confirmation->setAttribute('user_id', $this->id);
+            if ($confirmation->save()) {
+                return $confirmation;
+            }
+        }
+        return $res->one();
     }
 }

@@ -16,8 +16,6 @@ if (!$model->isNewRecord) {
 }
 
 print $form->field($model, 'email')->textInput();
-print $form->field($model, 'first_name')->textInput();
-print $form->field($model, 'last_name')->textInput();
-print $form->field($model, 'second_name')->textInput();
+print $form->field($model, 'name')->textInput();
 
 print $form->field($model, 'new_password')->textInput();
