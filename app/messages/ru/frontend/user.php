@@ -17,9 +17,10 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'Password not equal' => 'Пароли не совпадают',
+    'Success registered' => 'Успешная регистрация',
     'Password' => 'Пароль',
     'Password confirmation' => 'Подтверждение пароля',
+    'Password not equal' => 'Пароли не совпадают',
     'Register' => 'Зарегистрироваться',
     'Registration' => 'Регистрация',
     'Your email' => 'E-mail',

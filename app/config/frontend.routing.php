@@ -19,4 +19,5 @@ return [
 
     // работа с пользователями
     '/registration' => '/user/user/register',
+    '/registration/confirmation/<code:(\w+)>' => '/user/user/confirmation',
 ];
