@@ -17,12 +17,18 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'Success registered' => 'Успешная регистрация',
+    'Account locked' => 'Аккаунт заблокирован',
+    'Authorize' => 'Авторизация',
+    'E-mail' => 'E-mail',
+    'Enter' => 'Войти',
+    'Incorrect username or password.' => 'Неверный логин или пароль',
+    'Need activation' => 'Требуется активация',
     'Password' => 'Пароль',
     'Password confirmation' => 'Подтверждение пароля',
     'Password not equal' => 'Пароли не совпадают',
     'Register' => 'Зарегистрироваться',
     'Registration' => 'Регистрация',
+    'Success registered' => 'Успешная регистрация',
     'Your email' => 'E-mail',
     'Your name' => 'Имя',
     'Your phone' => 'Телефон',

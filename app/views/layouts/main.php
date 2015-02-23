@@ -2,6 +2,7 @@
 use yii\helpers\Html;
 use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
+use user\widgets\LoginModal;
 use yii\widgets\Breadcrumbs;
 use app\assets\FrontendAssets;
 use advert\widgets\TopSearch;
@@ -36,6 +37,13 @@ FrontendAssets::register($this);
             echo Nav::widget([
                 'options' => ['class' => 'navbar-nav navbar-right'],
                 'items' => [
+                    [
+                        'label' => Yii::t('frontend/user', 'Enter'),
+                        'linkOptions' => [
+                            'data-toggle' => 'modal',
+                            'data-target' => '#loginModal',
+                        ],
+                    ],
                     ['label' => '', 'linkOptions' => [
                         'class' => 'glyphicon glyphicon-search',
                         'id' => 'toggleTopSearch'
@@ -59,6 +67,7 @@ FrontendAssets::register($this);
         </div>
     </footer>
 
+    <?php print LoginModal::widget(); ?>
 <?php $this->endBody() ?>
 </body>
 </html>

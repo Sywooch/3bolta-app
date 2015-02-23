@@ -9,6 +9,7 @@ use yii\helpers\Url;
 use yii\base\Exception;
 use advert\forms\Form;
 use advert\models\Advert;
+use user\models\User;
 
 use yii\web\UploadedFile;
 
@@ -17,6 +18,30 @@ use yii\web\UploadedFile;
  */
 class AdvertApi extends \yii\base\Component
 {
+    /**
+     * Прикрепить все неавторизованные объявления к пользователю $user.
+     * Прикрепление происходит по e-mail.
+     * Если у не авторизованных объявлений совпадает e-mail с пользователем - выполняется привязка,
+     * иначе - нет.
+     *
+     * @param User $user пользователь, к которому требуется прикрепить объявления
+     * @return int количество привязанных объявлений
+     */
+    public function attachNotAuthAdvertsToUser(User $user)
+    {
+        $cnt = Advert::getDb()->createCommand()
+            ->update(Advert::tableName(), [
+                'user_id' => $user->id,
+                'user_name' => null,
+                'user_phone' => null,
+                'user_email' => null,
+            ], "user_id IS NULL AND user_email=:user_email", [
+                ':user_email' => $user->email,
+            ])
+            ->execute();
+        return $cnt;
+    }
+
     /**
      * Подтвердить публикацию объявления с кодом подтверждения $code.
      * Возвращает идентификатор объявления в случае успеха или null.

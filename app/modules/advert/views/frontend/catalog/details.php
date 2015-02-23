@@ -41,11 +41,11 @@ AdvertDetail::register($this);
         <div class="panel-body">
             <div class="col-xs-12 col-sm-12 col-lg-12 item-details-row item-details-contacts">
                 <strong><?=Yii::t('frontend/advert', 'Contacts')?>:</strong>
-                <?=Html::encode($model->user_name)?>
+                <?=Html::encode($model->getUserName())?>
                 (<?=Yii::t('frontend/advert', 'private person')?>)
                 <span class="item-details-phone label label-primary">
                     <span class="glyphicon glyphicon-earphone"></span>
-                    <?=Html::encode($model->user_phone)?>
+                    <?=Html::encode($model->getUserPhone())?>
                 </span>
             </div>
             <div class="col-xs-12 col-sm-12 col-lg-6 item-details-row item-details-condition">

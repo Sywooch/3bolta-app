@@ -149,6 +149,9 @@ a.desc:after {
 .block-info-primary {
     border-left-color: #265a88;
 }
+.block-info-error {
+    border-left-color: #a94442;
+}
 .primary-title {
     color: #265a88;
 }

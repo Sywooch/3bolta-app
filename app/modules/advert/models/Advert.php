@@ -53,6 +53,11 @@ class Advert extends \app\components\ActiveRecord
     protected $_uploadImage;
 
     /**
+     * @var User
+     */
+    protected $_user;
+
+    /**
      * Таблица
      * @return string
      */
@@ -217,12 +222,51 @@ class Advert extends \app\components\ActiveRecord
     }
 
     /**
+     * Получить e-mail пользователя
+     * @return string
+     */
+    public function getUserEmail()
+    {
+        if ($this->user_id && $user = $this->getUser()) {
+            return $user->email;
+        }
+        return $this->user_email;
+    }
+
+    /**
+     * Получить контактный телефон
+     * @return string
+     */
+    public function getUserPhone()
+    {
+        if ($this->user_id && $user = $this->getUser()) {
+            return $user->phone;
+        }
+        return $this->user_phone;
+    }
+
+    /**
+     * Получить контактное имя пользователя
+     * @return string
+     */
+    public function getUserName()
+    {
+        if ($this->user_id && $user = $this->getUser()) {
+            return $user->name;
+        }
+        return $this->user_name;
+    }
+
+    /**
      * Получить пользователя
      * @return yii\db\ActiveQuery
      */
     public function getUser()
     {
-        return $this->hasOne(User::className(), ['id' => 'user_id']);
+        if ($this->_user === null) {
+            $this->_user = $this->hasOne(User::className(), ['id' => 'user_id'])->one();
+        }
+        return $this->_user;;
     }
 
     /**

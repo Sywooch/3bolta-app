@@ -20,4 +20,6 @@ return [
     // работа с пользователями
     '/registration' => '/user/user/register',
     '/registration/confirmation/<code:(\w+)>' => '/user/user/confirmation',
+    '/login' => '/user/user/login',
+    '/logout' => '/user/user/logout',
 ];
