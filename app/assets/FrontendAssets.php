@@ -14,6 +14,7 @@ class FrontendAssets extends AssetBundle
         'css/styles.css',
     ];
     public $js = [
+        'js/app.js',
     ];
     public $depends = [
         'yii\web\YiiAsset',

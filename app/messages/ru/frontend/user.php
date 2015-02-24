@@ -17,6 +17,11 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
+    'Enter' => 'Вход',
+    'Exit' => 'Выход',
+    'My adverts' => 'Мои объявления',
+    'Profile' => 'Профиль',
+    'You enter as:' => 'Вы вошли как:',
     'Account locked' => 'Аккаунт заблокирован',
     'Authorize' => 'Авторизация',
     'E-mail' => 'E-mail',

@@ -18,5 +18,6 @@
  */
 return [
     'About project' => 'О проекте',
-    'Parts catalogue' => 'Каталог автозапчастей',
+    'Append advert' => 'Добавить объявление',
+    'Search parts' => 'Поиск автозапчастей',
 ];

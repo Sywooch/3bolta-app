@@ -1,9 +1,10 @@
 <?php
+use user\widgets\UserPanel;
+use yii\helpers\Url;
 use yii\helpers\Html;
 use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
 use user\widgets\LoginModal;
-use yii\widgets\Breadcrumbs;
 use app\assets\FrontendAssets;
 use advert\widgets\TopSearch;
 /* @var $this \yii\web\View */
@@ -26,38 +27,41 @@ FrontendAssets::register($this);
 <?php $this->beginBody() ?>
     <div class="wrap">
         <?php
-            NavBar::begin([
-                'brandLabel' => Yii::$app->params['siteName'],
-                'brandUrl' => Yii::$app->homeUrl,
-                'options' => [
-                    'class' => 'navbar-default main-navbar',
-                ],
-                'renderInnerContainer' => false,
-            ]);
-            echo Nav::widget([
-                'options' => ['class' => 'navbar-nav navbar-right'],
-                'items' => [
-                    [
-                        'label' => Yii::t('frontend/user', 'Enter'),
-                        'linkOptions' => [
-                            'data-toggle' => 'modal',
-                            'data-target' => '#loginModal',
-                        ],
-                    ],
-                    ['label' => '', 'linkOptions' => [
+        NavBar::begin([
+            'brandLabel' => Yii::$app->params['siteName'],
+            'brandUrl' => Yii::$app->homeUrl,
+            'brandOptions' => [
+                'tag' => Url::to() === Yii::$app->homeUrl ? 'span' : 'a',
+            ],
+            'options' => [
+                'class' => 'navbar-default main-navbar',
+            ],
+            'renderInnerContainer' => false,
+        ]);
+        print Nav::widget([
+            'options' => ['class' => 'navbar-nav navbar-left'],
+            'items' => [
+                ['label' => Yii::t('frontend/menu', 'Search parts'), 'url' => ['/advert/catalog/search']],
+                ['label' => Yii::t('frontend/menu', 'Append advert'), 'url' => ['/advert/advert/append']],
+                ['label' => Yii::t('frontend/menu', 'About project'), 'url' => '#'],
+                [
+                    'label' => '',
+                    'linkOptions' => [
                         'class' => 'glyphicon glyphicon-search',
-                        'id' => 'toggleTopSearch'
-                    ], 'url' => '#'],
-                    ['label' => Yii::t('frontend/menu', 'Parts catalogue'), 'url' => '#'],
-                    ['label' => Yii::t('frontend/menu', 'About project'), 'url' => '#'],
-                ],
-            ]);
-            NavBar::end();
-            print TopSearch::widget();
-            ?>
-            <div class="container content-container">
-                <?= $content ?>
-            </div>
+                        'id' => 'toggleTopSearch',
+                        'style' => Url::to() === Url::toRoute(['/advert/catalog/search']) ? 'display:none;' : '',
+                    ],
+                    'url' => '#',
+                ]
+            ],
+        ]);
+        print UserPanel::widget();
+        NavBar::end();
+        print TopSearch::widget();
+        ?>
+        <div class="container content-container">
+            <?= $content ?>
+        </div>
     </div>
 
     <footer class="footer">
@@ -66,8 +70,6 @@ FrontendAssets::register($this);
             <p class="pull-right"><?= Yii::powered() ?></p>
         </div>
     </footer>
-
-    <?php print LoginModal::widget(); ?>
 <?php $this->endBody() ?>
 </body>
 </html>

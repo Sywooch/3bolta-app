@@ -155,3 +155,22 @@ a.desc:after {
 .primary-title {
     color: #265a88;
 }
+.user-panel {
+    margin: 15px 0px;
+    line-height: 20px;
+    float: right;
+}
+.user-panel .user-link {
+    line-height: 12px;
+}
+.user-panel .user-dropdown-menu {
+    position: relative;
+    display: inline-block;
+    vertical-align: middle;
+}
+.collapse.in .user-panel .user-dropdown-menu .dropdown-menu {
+    position: relative;
+}
+.user-panel .dropdown-toggle {
+    text-decoration: none;
+}
