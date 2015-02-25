@@ -17,6 +17,7 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
+    'Restore password' => 'Восстановление пароля',
     'E-mail confirmation' => 'Подтверждение e-mail',
     'Publish advert' => 'Публикация объявления',
     'Publish advert expired' => 'Окончание публикации объявления',

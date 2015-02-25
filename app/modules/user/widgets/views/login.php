@@ -48,6 +48,14 @@ print $form->field($model, 'password')->passwordInput([
 print Html::submitButton(Yii::t('frontend/user', 'Enter'), [
     'class' => 'btn btn-primary'
 ]);
+print Html::beginTag('div', ['class' => 'pull-right']);
+    print Html::a(Yii::t('frontend/user', 'Lost password?'), '#', [
+        'class' => 'lost-password-link',
+        'data-toggle' => 'modal',
+        'data-target' => '#lostPasswordModal',
+        'data-dismiss' => 'modal',
+    ]);
+print Html::endTag('div');
 ActiveForm::end();
 Modal::end();
 

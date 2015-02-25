@@ -17,8 +17,9 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'Wrong phone format' => 'Неверный формат телефона',
+    'Submit' => 'Отправить',
     'No' => 'Нет',
+    'Wrong phone format' => 'Неверный формат телефона',
     'Yes' => 'Да',
     'today' => 'сегодня',
     'tomorrow' => 'завтра',

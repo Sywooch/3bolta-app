@@ -8,6 +8,8 @@ use yii\base\Exception;
 use user\models\User;
 use user\forms\Register;
 use user\models\UserConfirmation;
+use user\forms\LostPassword;
+use user\forms\ChangePassword;
 
 use yii\web\NotFoundHttpException;
 
@@ -159,6 +161,118 @@ class UserApi extends \yii\base\Component
             catch (Exception $ex) {
                 $transaction->rollBack();
                 $ret = null;
+            }
+        }
+
+        return $ret;
+    }
+
+    /**
+     * Восстановление пароля: отправить e-mail уведомление.
+     * На вход передается форма восстановления.
+     * Метод генерирует строку подтверждения и отправляет e-mail уведомление.
+     *
+     * @param LostPassword $form
+     * @return boolean true в случае успеха
+     */
+    public function lostPassword(LostPassword $form)
+    {
+        $ret = false;
+
+        /* @var $user User */
+        $user = $form->getUser();
+
+        /* @var $confirmation UserConfirmation */
+        $confirmation = $user->getConfirmation();
+
+        $transaction = $user->getDb()->beginTransaction();
+
+        try {
+            $confirmation->restore_confirmation = md5(uniqid() . $user->email . $user->id . time());
+            if (!$confirmation->save(true, ['restore_confirmation'])) {
+                throw new Exception();
+            }
+
+            $confirmationLink = Url::toRoute(['/user/user/change-password', 'code' => $confirmation->restore_confirmation], true);
+            $ret = Yii::$app->mailer->compose('userLostPassword', [
+                'user' => $user,
+                'confirmationLink' => $confirmationLink,
+            ])
+            ->setTo($user->email)
+            ->setSubject(Yii::t('mail_subjects', 'Restore password'))
+            ->send();
+
+            $transaction->commit();
+        }
+        catch (Exception $ex) {
+            $transaction->rollBack();
+            $ret = false;
+        }
+
+        return $ret;
+    }
+
+    /**
+     * Получить пользователя по коду подтверждения для восстановления пароля.
+     * Возвращает модель пользователя или null.
+     *
+     * @param string $code код подтверждения
+     * @return User|null
+     */
+    public function getUserByRestoreConfirmation($code)
+    {
+        $ret = null;
+        $code = (string) $code;
+        if (!$code) {
+            return $ret;
+        }
+
+        /* @var $res UserConfirmation */
+        $res = UserConfirmation::find()->where(['restore_confirmation' => $code])->one();
+        if ($res) {
+            $ret = $res->getUser()->one();
+        }
+        return $ret;
+    }
+
+    /**
+     * Изменение пароля пользователя.
+     * Метод устанавливает новый пароль у пользователя и очищает строку
+     * подтверждения для восстановления пароля.
+     * В случае успеха возвращает true.
+     *
+     * @param User $user
+     * @param ChangePassword $form
+     * @return boolean
+     */
+    public function changePassword(User $user, ChangePassword $form)
+    {
+        $ret = false;
+
+        if ($form->validate()) {
+            $transaction = $user->getDb()->beginTransaction();
+
+            try {
+                // очистить строку подтверждения
+                $confirmation = $user->getConfirmation();
+                $confirmation->restore_confirmation = null;
+                if (!$confirmation->save(true, ['restore_confirmation'])) {
+                    throw new Exception();
+                }
+
+                // изменить пароль
+                $user->new_password = $form->password;
+                if (!$user->save()) {
+                    throw new Exception();
+                }
+
+                $transaction->commit();
+
+                $ret = true;
+            }
+            catch (Exception $ex) {
+                $transaction->rollBack();
+                $ret = false;
             }
         }
 

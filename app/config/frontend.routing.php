@@ -22,4 +22,6 @@ return [
     '/registration/confirmation/<code:(\w+)>' => '/user/user/confirmation',
     '/login' => '/user/user/login',
     '/logout' => '/user/user/logout',
+    '/restore/lost-password' => '/user/user/lost-password',
+    '/restore/change-password/<code:(\w+)>' => '/user/user/change-password',
 ];

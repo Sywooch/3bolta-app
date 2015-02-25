@@ -24,7 +24,7 @@ class UserConfirmation extends \yii\db\ActiveRecord
         return [
             [['user_id'], 'required'],
             [['email'], 'email'],
-            [['email', 'email_confirmation'], 'safe'],
+            [['email', 'email_confirmation', 'restore_confirmation'], 'safe'],
         ];
     }
 

@@ -10,6 +10,10 @@ use yii\widgets\ActiveForm;
 use yii\web\Response;
 use user\forms\Register as RegisterForm;
 use user\forms\Login as LoginForm;
+use user\forms\LostPassword as LostPasswordForm;
+use user\forms\ChangePassword as ChangePasswordForm;
+
+use yii\web\ForbiddenHttpException;
 
 class UserController extends \app\components\Controller
 {
@@ -24,7 +28,7 @@ class UserController extends \app\components\Controller
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['confirmation', 'register', 'login'],
+                        'actions' => ['confirmation', 'register', 'login', 'lost-password', 'change-password'],
                         'roles' => ['?'],
                         'allow' => true,
                     ],
@@ -127,5 +131,76 @@ class UserController extends \app\components\Controller
             Yii::$app->user->logout();
         }
         return $this->goBack();
+    }
+
+    /**
+     * Восстановление пароля: выслать e-mail подтверждение
+     */
+    public function actionLostPassword()
+    {
+        if (!Yii::$app->request->isAjax) {
+            throw new ForbiddenHttpException();
+        }
+
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $form = new LostPasswordForm();
+
+        if (!empty($_POST['ajax']) && $form->load($_POST)) {
+            // AJAX-валидация
+            return ActiveForm::validate($form);
+        }
+
+        $result = [
+            'success' => false,
+            'email' => null,
+        ];
+
+        if ((!empty($_POST) && $form->load($_POST)) && $form->validate()) {
+            /* @var $api \user\components\UserApi */
+            $api = Yii::$app->getModule('user')->api;
+            if ($api->lostPassword($form)) {
+                $result['success'] = true;
+                $result['email'] = $form->getUser()->email;
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Восстановление пароля - установка нового пароля
+     * @param string $code код подтверждения
+     */
+    public function actionChangePassword($code)
+    {
+        /* @var $api \user\components\UserApi */
+        $api = Yii::$app->getModule('user')->api;
+
+        if (Yii::$app->session->getFlash('password_success_updated')) {
+            return $this->render('change_password_success');
+        }
+
+        // найти пользователя
+        $user = $api->getUserByRestoreConfirmation($code);
+        if (!($user instanceof User)) {
+            return $this->goHome();
+        }
+
+        $form = new ChangePasswordForm();
+
+        if (Yii::$app->request->isAjax && !empty($_POST['ajax']) && $form->load($_POST)) {
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            return ActiveForm::validate($form);
+        }
+
+        if ($form->load($_POST) && $form->validate() && $api->changePassword($user, $form)) {
+            Yii::$app->session->setFlash('password_success_updated', true);
+            return $this->refresh();
+        }
+
+        return $this->render('change_password', [
+            'model' => $form,
+        ]);
     }
 }
