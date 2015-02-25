@@ -19,6 +19,8 @@ use yii\base\Exception;
 
 use yii\web\UploadedFile;
 
+use app\components\PhoneValidator;
+
 /**
  * Модель объявления
  */
@@ -84,6 +86,8 @@ class Advert extends \app\components\ActiveRecord
                 // обязательна либо привязка к пользователю, либо координаты пользователя
                 return empty($model->user_id);
             }],
+            [['user_phone'], PhoneValidator::className(), 'canonicalAttribute' => 'user_phone_canonical'],
+            [['user_email'], 'filter', 'filter' => 'strtolower'],
             [['user_email'], 'email', 'when' => function($model) {
                 return empty($model->user_id);
             }],

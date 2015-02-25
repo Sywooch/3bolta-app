@@ -25,11 +25,11 @@ use yii\widgets\MaskedInput;
         'enableAjaxValidation' => true,
     ]);
     print $form->field($model, 'name')->textInput([
-            'maxlength' => Register::MAX_NAME_LENGTH,
-        ]);
+        'maxlength' => Register::MAX_NAME_LENGTH,
+    ]);
     print $form->field($model, 'email')->textInput([
-            'maxlength' => Register::MAX_NAME_LENGTH,
-        ]);
+        'maxlength' => Register::MAX_NAME_LENGTH,
+    ]);
     print $form->field($model, 'phone')->widget(MaskedInput::className(), [
         'mask' => PhoneValidator::PHONE_MASK,
     ]);

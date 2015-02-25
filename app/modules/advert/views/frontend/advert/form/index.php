@@ -6,6 +6,8 @@ use advert\forms\Form;
 use kartik\widgets\FileInput;
 use yii\bootstrap\Modal;
 use app\widgets\JS;
+use yii\widgets\MaskedInput;
+use app\components\PhoneValidator;
 
 /* @var $form advert\forms\Form */
 /* @var $this yii\base\View */
@@ -104,11 +106,21 @@ $form = ActiveForm::begin([
     </div>
 
     <div class="col-sm-12 col-lg-4">
-        <?=$form->field($model, 'user_phone')->textInput()?>
+        <?=$form->field($model, 'user_phone', [
+            'errorOptions' => [
+                'encode' => false,
+            ]
+        ])->widget(MaskedInput::className(), [
+            'mask' => PhoneValidator::PHONE_MASK,
+        ])?>
     </div>
 
     <div class="col-sm-12 col-lg-4">
-        <?=$form->field($model, 'user_email')->textInput()?>
+        <?=$form->field($model, 'user_email', [
+            'errorOptions' => [
+                'encode' => false,
+            ]
+        ])->textInput()?>
     </div>
 
     <div class="col-xs-12">

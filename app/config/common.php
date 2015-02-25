@@ -101,6 +101,7 @@ $config = ArrayHelper::merge([
         'defaultEmailFrom' => 'info@3bolta.com',
         'siteName' => '3bolta.com',
         'siteBrand' => '3bolta.com',
+        'rulesRoute' => '#',
     ],
 ], include __DIR__ . '/common.local.php');
 

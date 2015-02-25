@@ -12,6 +12,11 @@ use auto\models\Model;
 use auto\models\Serie;
 use auto\models\Modification;
 
+use app\components\AdvertEmailValidator;
+use app\components\AdvertPhoneValidator;
+
+use app\components\PhoneValidator;
+
 use handbook\models\HandbookValue;
 
 /**
@@ -45,6 +50,7 @@ class Form extends \yii\base\Model
     public $user_name;
     public $user_id;
     public $user_phone;
+    public $user_phone_canonical;
     public $user_email;
 
     /**
@@ -91,6 +97,13 @@ class Form extends \yii\base\Model
                 return trim(str_replace(',', '.', $price));
             }],
             [['price'], 'number'],
+            [['user_phone'], AdvertPhoneValidator::className()],
+            [['user_phone'], PhoneValidator::className(),
+                'canonicalAttribute' => 'user_phone_canonical',
+                'targetClass' => Advert::className(), 'targetAttribute' => 'user_phone_canonical'
+            ],
+            [['user_email'], 'filter', 'filter' => 'strtolower'],
+            [['user_email'], AdvertEmailValidator::className()],
             [['user_email'], 'email', 'when' => function($model) {
                 return empty($model->user_id);
             }],
