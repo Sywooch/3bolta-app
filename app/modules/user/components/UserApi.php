@@ -10,6 +10,7 @@ use user\forms\Register;
 use user\models\UserConfirmation;
 use user\forms\LostPassword;
 use user\forms\ChangePassword;
+use user\forms\Profile;
 
 use yii\web\NotFoundHttpException;
 
@@ -274,6 +275,132 @@ class UserApi extends \yii\base\Component
                 $transaction->rollBack();
                 $ret = false;
             }
+        }
+
+        return $ret;
+    }
+
+    /**
+     * Отправить уведомление пользователю на изменение e-mail.
+     * В случае успеха возвращает true.
+     *
+     * @param User $user
+     * @param Profile $profile
+     * @return boolean
+     */
+    public function setNewUserEmail(User $user, Profile $profile)
+    {
+        $ret = false;
+
+        if (!$profile->validate()) {
+            return $ret;
+        }
+
+        $transaction = User::getDb()->beginTransaction();
+
+        try {
+            // сохранить подтверждение
+            $confirmation = $user->getConfirmation();
+            $confirmation->email = $profile->email;
+            $confirmation->email_confirmation = md5($user->id . $user->email . $profile->email . uniqid());
+            if (!$confirmation->save()) {
+                throw new Exception();
+            }
+
+            // отправить уведомление
+            $confirmationLink = Url::toRoute(['/user/profile/change-email',
+                'code' => $confirmation->email_confirmation
+            ], true);
+            Yii::$app->mailer->compose('userChangeEmailConfirmation', [
+                'user' => $user,
+                'confirmationLink' => $confirmationLink,
+            ])
+            ->setTo($confirmation->email)
+            ->setSubject(Yii::t('mail_subjects', 'E-mail confirmation'))
+            ->send();
+
+            $transaction->commit();
+
+            $ret = true;
+        }
+        catch (Exception $ex) {
+            $transaction->rollBack();
+            $ret = false;
+        }
+
+        return $ret;
+    }
+
+    /**
+     * Изменить e-mail пользователя по коду подтверждения.
+     * В случае ошибки генерирует Exception с описанием ошибки.
+     * В случае успеха возвращает true.
+     *
+     * @param User $user модель пользователя
+     * @param string $code код подтверждения
+     * @throws Exception
+     */
+    public function changeUserEmail(User $user, $code)
+    {
+        $ret = false;
+
+        $confirmation = $user->getConfirmation();
+
+        if ($confirmation->email_confirmation != $code) {
+            throw new Exception(Yii::t('frontend/user', 'Wrong confirmation code'));
+        }
+
+        $transaction = User::getDb()->beginTransaction();
+
+        try {
+            // установить новый e-mail
+            $user->email = $confirmation->email;
+            if (!$user->save(true, ['email'])) {
+                throw new Exception();
+            }
+
+            // очистить код подтверждения
+            $confirmation->email_confirmation = null;
+            $confirmation->email = null;
+            if (!$confirmation->save(true, ['email', 'email_confirmation'])) {
+                throw new Exception();
+            }
+
+            $transaction->commit();
+
+            $ret = true;
+
+        } catch (Exception $ex) {
+            $transaction->rollBack();
+            $ret = false;
+            throw new Exception(Yii::t('frontend/user', 'Error change e-mail'));
+        }
+    }
+
+    /**
+     * Изменить профиль пользователя
+     *
+     * @param User $user
+     * @param Profile $profile
+     * @return boolean
+     */
+    public function updateUserProfile(User $user, Profile $profile)
+    {
+        $ret = false;
+
+        if (!$profile->validate()) {
+            return $ret;
+        }
+
+        try {
+            $user->setAttributes([
+                'name' => $profile->name,
+                'phone' => $profile->phone,
+            ]);
+            $ret = $user->save(true, ['name', 'phone', 'phone_canonical']);
+        }
+        catch (Exception $ex) {
+            $ret = false;
         }
 
         return $ret;

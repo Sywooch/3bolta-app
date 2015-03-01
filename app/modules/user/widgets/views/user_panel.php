@@ -22,7 +22,7 @@ use user\models\User;
                 <i class="caret"></i>
             </a>
             <ul class="dropdown-menu" role="menu">
-                <li><a href="#"><?=Yii::t('frontend/user', 'Profile')?></a></li>
+                <li><a href="<?=Url::toRoute(['/user/profile/index'])?>"><?=Yii::t('frontend/user', 'Profile')?></a></li>
                 <li><a href="#"><?=Yii::t('frontend/user', 'My adverts')?></a></li>
                 <li class="divider"></li>
                 <li><a href="<?=Url::toRoute(['/user/user/logout'])?>"><?=Yii::t('frontend/user', 'Exit')?></a></li>

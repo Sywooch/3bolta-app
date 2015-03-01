@@ -24,4 +24,8 @@ return [
     '/logout' => '/user/user/logout',
     '/restore/lost-password' => '/user/user/lost-password',
     '/restore/change-password/<code:(\w+)>' => '/user/user/change-password',
+
+    // профиль
+    '/profile' => '/user/profile/index',
+    '/profile/change-email/<code:(\w+)>' => '/user/profile/change-email',
 ];

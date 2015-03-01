@@ -174,3 +174,6 @@ a.desc:after {
 .user-panel .dropdown-toggle {
     text-decoration: none;
 }
+.profile .profile-row {
+    margin-bottom: 40px;
+}

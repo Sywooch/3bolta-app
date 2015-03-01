@@ -8,7 +8,6 @@ use Yii;
  */
 class ChangePassword extends \yii\base\Model
 {
-    public $code;
     public $password;
     public $password_confirmation;
 
