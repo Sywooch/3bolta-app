@@ -17,9 +17,17 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
+    'Begin publication' => 'Опубликовано',
+    'Complete publication' => 'Завершена публикация',
+    'Edit' => 'Редактировать',
+    'My adverts' => 'Мои объявления',
+    'Publish to {date}' => 'Опубликовать до {date}',
+    'Published to' => 'Опубликовано до',
+    'Unpublished' => 'Неопубликовано',
+    'View' => 'Просмотреть',
+    'Advert description' => 'Описание',
     'Advert was created' => 'Объявление создано',
     'Advert was published' => 'Объявление опубликовано',
-    'Advert description' => 'Описание',
     'Append advert' => 'Добавить объявление',
     'Apply to' => 'Подходит для',
     'Automobiles' => 'Автомобили',

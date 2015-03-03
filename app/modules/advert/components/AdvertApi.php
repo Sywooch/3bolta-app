@@ -43,6 +43,33 @@ class AdvertApi extends \yii\base\Component
     }
 
     /**
+     * Обновить дату публикации объявления на DEFAULT_PUBLISH_DAYS дней.
+     *
+     * @param Advert $advert
+     * @return boolean true в случае успеха
+     */
+    public function updatePublication(Advert $advert)
+    {
+        $ret = false;
+
+        if ($advert->active && strtotime($advert->published_to) < time()) {
+            try {
+                $date = new DateTime();
+                $date->add(new DateInterval('P' . Advert::DEFAULT_PUBLISH_DAYS . 'D'));
+                $advert->published = date('Y-m-d H:i:s');
+                $advert->published_to = $date->format('Y-m-d H:i:s');
+                if ($advert->save(true, ['published', 'published_to'])) {
+                    $ret = true;
+                }
+            }
+            catch (Exception $ex) {
+                $ret = false;
+            }
+        }
+
+        return $ret;
+    }
+    /**
      * Подтвердить публикацию объявления с кодом подтверждения $code.
      * Возвращает идентификатор объявления в случае успеха или null.
      *

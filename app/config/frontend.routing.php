@@ -28,4 +28,8 @@ return [
     // профиль
     '/profile' => '/user/profile/index',
     '/profile/change-email/<code:(\w+)>' => '/user/profile/change-email',
+
+    // объявления пользователя
+    '/my-adverts' => '/advert/user-advert/list',
+    '/my-adverts/update-publication/<id:(\d+)>' => '/advert/user-advert/update-publication'
 ];

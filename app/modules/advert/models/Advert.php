@@ -664,6 +664,24 @@ class Advert extends \app\components\ActiveRecord
     }
 
     /**
+     * Поиск объявлений авторизованного пользователя
+     *
+     * @return \yii\db\ActiveQuery
+     * @throws Exception в случае, если пользователь не авторизован
+     */
+    public static function findUserList()
+    {
+        if (Yii::$app->user->isGuest) {
+            // если пользователь неавторизован - выполнять метод невозможно
+            throw new Exception();
+        }
+
+        return self::find()->andWhere([
+            'advert.user_id' => Yii::$app->user->getId()
+        ])->orderBy('advert.published DESC');
+    }
+
+    /**
      * Поиск активных и опубликованных объявлений
      * @return \yii\db\ActiveQuery
      */
@@ -737,6 +755,19 @@ class Advert extends \app\components\ActiveRecord
         $ret = '';
         if ($this->published) {
             $ret = DateHelper::formatDate($this->published);
+        }
+        return $ret;
+    }
+
+    /**
+     * Возвращает отформатированную дату публикации до
+     * @return string
+     */
+    public function getPublishedToFormatted()
+    {
+        $ret = '';
+        if ($this->published_to) {
+            $ret = DateHelper::formatDate($this->published_to);
         }
         return $ret;
     }

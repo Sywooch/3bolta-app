@@ -19,7 +19,7 @@ use advert\forms\Search;
         $form = ActiveForm::begin([
             'id' => 'topSearch',
             'method' => 'get',
-            'action' => Url::toRoute(['/advert/advert/search']),
+            'action' => Url::toRoute(['/advert/catalog/search']),
             'enableAjaxValidation' => false,
             'enableClientValidation' => false,
         ]);
