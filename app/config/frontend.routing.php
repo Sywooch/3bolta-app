@@ -30,7 +30,8 @@ return [
     '/profile/change-email/<code:(\w+)>' => '/user/profile/change-email',
 
     // объявления пользователя
-    '/my-adverts' => '/advert/user-advert/list',
-    '/my-adverts/update-publication/<id:(\d+)>' => '/advert/user-advert/update-publication',
-    '/my-adverts/edit/<id:(\d+)>' => '/advert/user-advert/edit',
+    '/my-ads' => '/advert/user-advert/list',
+    '/my-ads/update-publication/<id:(\d+)>' => '/advert/user-advert/update-publication',
+    '/my-ads/edit/<id:(\d+)>' => '/advert/user-advert/edit',
+    '/my-ads/append' => '/advert/user-advert/append',
 ];

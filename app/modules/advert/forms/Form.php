@@ -3,6 +3,8 @@ namespace advert\forms;
 
 use Yii;
 
+use user\models\User;
+
 use advert\models\Category;
 
 use advert\models\Advert;
@@ -343,5 +345,18 @@ class Form extends \yii\base\Model
     public function getUserId()
     {
         return $this->_user_id;
+    }
+
+    /**
+     * Создать новое объявление для существующего пользователя
+     *
+     * @param \user\models\User $user
+     * @return self
+     */
+    public static function createNewForUser(User $user)
+    {
+        $ret = new self();
+        $ret->_user_id = $user->id;
+        return $ret;
     }
 }

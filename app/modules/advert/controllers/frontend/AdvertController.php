@@ -42,6 +42,11 @@ class AdvertController extends Controller
      */
     public function actionAppend()
     {
+        // авторизованного пользователя перенаправляем на другой контроллер
+        if (!Yii::$app->user->isGuest) {
+            return $this->redirect(['/advert/user-advert/append']);
+        }
+
         /* @var $api \advert\components\AdvertApi */
         $api = Yii::$app->getModule('advert')->advert;
 

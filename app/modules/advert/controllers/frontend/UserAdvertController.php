@@ -80,6 +80,55 @@ class UserAdvertController extends \app\components\Controller
     }
 
     /**
+     * Добавить объявление
+     */
+    public function actionAppend()
+    {
+        /* @var $user \user\models\User */
+        $user = Yii::$app->user->getIdentity();
+
+        $model = Form::createNewForUser($user);
+
+        if (Yii::$app->request->isAjax && !empty($_POST['ajax']) && $model->load($_POST)) {
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            return ActiveForm::validate($model);
+        }
+
+        if ($model->load($_POST) && $model->validate()) {
+            $model->setScenario('submit');
+            if ($files = UploadedFile::getInstances($model, 'uploadImage')) {
+                $model->setUploadImage($files);
+            }
+
+            /* @var $advertApi \advert\components\AdvertApi */
+            $advertApi = Yii::$app->getModule('advert')->advert;
+            if ($advert = $advertApi->appendRegisterAdvert($model)) {
+                $link = Url::toRoute(['/advert/catalog/details', 'id' => $advert->id], true);
+                Yii::$app->serviceMessage->setMessage(
+                    'success',
+                    'Объявление успешно создано.<br />'
+                    . 'Вы можете просмотреть его по адресу <a href="' . $link . '">' . $link . '</a>',
+                    Yii::t('frontend/advert', 'Append advert')
+                );
+                return $this->redirect(['list']);
+            }
+            else {
+                Yii::$app->serviceMessage->setMessage(
+                    'danger',
+                    'При создании объявления произошла ошибка<br />'
+                    . 'Пожалуйста, обратитесь в службу поддержки',
+                    Yii::t('frontend/advert', 'Append advert')
+                );
+            }
+        }
+
+        return $this->render('append', [
+            'model' => $model,
+            'user' => $user,
+        ]);
+    }
+
+    /**
      * Редактировать объявление
      *
      * @param int $id
@@ -102,7 +151,7 @@ class UserAdvertController extends \app\components\Controller
             return ActiveForm::validate($model);
         }
 
-        if ($model->load($_POST)) {
+        if ($model->load($_POST) && $model->validate()) {
             $model->setScenario('submit');
             if ($files = UploadedFile::getInstances($model, 'uploadImage')) {
                 $model->setUploadImage($files);

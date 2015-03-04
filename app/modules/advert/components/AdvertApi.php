@@ -192,6 +192,54 @@ class AdvertApi extends \yii\base\Component
     }
 
     /**
+     * Добавить новое объявление для авторизованного пользователя.
+     * На вход передается форма заполнения объявления.
+     * В форме уже должен быть установлен идентификатор пользователя.
+     *
+     * Если объявление было успешно создано - объявление сразу же публикуется.
+     *
+     * В случае успеха возвращает новую модель объявления.
+     *
+     * @param Form $form
+     *
+     * @return Advert|null
+     */
+    public function appendRegisterAdvert(Form $form)
+    {
+        $ret = null;
+
+        if ($form->validate()) {
+            $transaction = Advert::getDb()->beginTransaction();
+
+            try {
+                $advert = new Advert();
+
+                $advert->user_id = $form->getUserId();
+                $advert->active = true;
+
+                $this->setDataFromForm($form, $advert);
+
+                if (!$advert->save()) {
+                    throw new Exception();
+                }
+
+                $advert->updateAutomobiles();
+
+                $this->updatePublication($advert);
+
+                $ret = $advert;
+
+                $transaction->commit();
+            } catch (Exception $ex) {
+                $transaction->rollback();
+                $ret = null;
+            }
+        }
+
+        return $ret;
+    }
+
+    /**
      * Добавить новое объявление для неавторизованного пользователя.
      * На вход передается форма заполнения объявления.
      *
@@ -202,7 +250,6 @@ class AdvertApi extends \yii\base\Component
      * В случае успеха возвращает новую модель объявления.
      *
      * @param Form $form
-     * @param [] $images массив загружаемых фотографий, каждый элемент - UploadedFile
      *
      * @return Advert|null
      */
@@ -258,7 +305,7 @@ class AdvertApi extends \yii\base\Component
         $ret = false;
 
         $advert = $form->getExists();
-        if (!($advert instanceof Advert)) {
+        if (!($advert instanceof Advert) || !$form->validate()) {
             return $ret;
         }
 
