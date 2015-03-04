@@ -19,7 +19,7 @@ class ServiceMessage extends \yii\base\Component
      * @param int $messageType
      * @param string $message
      */
-    public function setMessage($messageType, $message)
+    public function setMessage($messageType, $message, $title = null)
     {
         $class = 'alert-' . $messageType;
 
@@ -27,7 +27,8 @@ class ServiceMessage extends \yii\base\Component
             'body' => $message,
             'options' => [
                 'class' => $class
-            ]
+            ],
+            'title' => $title
         ]);
     }
 }

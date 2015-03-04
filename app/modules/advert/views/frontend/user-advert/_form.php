@@ -1,27 +1,29 @@
 <?php
-use yii\helpers\Html;
-use yii\bootstrap\ActiveForm;
-use advert\models\Advert;
+/**
+ * Форма редактирования/добавления объявления
+ */
+
+use yii\helpers\Url;
 use advert\forms\Form;
 use kartik\widgets\FileInput;
-use yii\widgets\MaskedInput;
-use app\components\PhoneValidator;
+use advert\models\Advert;
+use yii\bootstrap\ActiveForm;
+use yii\helpers\Html;
 
-/* @var $form advert\forms\Form */
-/* @var $this yii\base\View */
-/* @var $form yii\bootstrap\ActiveForm */
-?>
-<div class="col-xs-12">
-    <?=Html::tag('h2', Yii::t('frontend/advert', 'Append advert'))?>
-</div>
+/* @var $this \yii\base\View */
+/* @var $model \advert\forms\Form */
+/* @var $user \user\models\User */
 
-<div class="col-xs-12 block-info block-info-primary">
-    Вы не авторизованы на сайте.<br />
-    Неавторизованные пользователи могут опубликовать только одно объявление на ограниченный срок без возможности продления. Подробнее <a href="#">здесь</a>.<br />
-    Вы можете <a href="#">зарегистрироваться</a> или <a href="#">авторизоваться</a> на сайте, чтобы публиковать объявления без ограничений.
-</div>
+$existImages = [];
+if ($advert = $model->getExists()) {
+    foreach ($advert->getImages()->all() as $file) {
+        /* @var $file \advert\models\AdvertImage */
+        $existImages[] = Html::img($file->getFile()->getUrl(), [
+            'class' => 'file-preview-image',
+        ]);
+    }
+}
 
-<?php
 $form = ActiveForm::begin([
     'id' => 'create-advert',
     'enableClientValidation' => false,
@@ -58,6 +60,7 @@ $form = ActiveForm::begin([
                 'name' => Html::getInputName($model, 'uploadImage') . '[]',
             ],
             'pluginOptions' => [
+                'initialPreview' => $existImages,
                 'uploadUrl' => 'ss',
                 'multiple' => 'multiple',
                 'maxFileCount' => Advert::UPLOAD_MAX_FILES,
@@ -85,7 +88,7 @@ $form = ActiveForm::begin([
     </div>
 
     <div class="col-sm-12">
-        <?=$this->render('_choose_auto', [
+        <?=$this->render('_form_choose_auto', [
             'form' => $form,
             'model' => $model,
         ])?>
@@ -99,31 +102,25 @@ $form = ActiveForm::begin([
         <?=Html::tag('h3', Yii::t('frontend/advert', 'Contacts'))?>
     </div>
 
-    <div class="col-sm-12 col-lg-4">
-        <?=$form->field($model, 'user_name')->textInput()?>
-    </div>
+    <div class="col-xs-12">
+        <div class="form-group">
+            <div class="col-xs-12 block-info block-info-primary">
+                В объявлении будет отображаться следующая контактная информация:<br />
 
-    <div class="col-sm-12 col-lg-4">
-        <?=$form->field($model, 'user_phone', [
-            'errorOptions' => [
-                'encode' => false,
-            ]
-        ])->widget(MaskedInput::className(), [
-            'mask' => PhoneValidator::PHONE_MASK,
-        ])?>
-    </div>
+                <strong><?=$model->getAttributeLabel('user_name')?></strong><br />
+                <?=Html::encode($user->name)?><br />
+                <strong><?=$model->getAttributeLabel('user_phone')?></strong><br />
+                <?=Html::encode($user->phone)?><br />
 
-    <div class="col-sm-12 col-lg-4">
-        <?=$form->field($model, 'user_email', [
-            'errorOptions' => [
-                'encode' => false,
-            ]
-        ])->textInput()?>
+                Для редактирования контактной информации используйте <a href="<?=Url::toRoute(['/user/profile/index'])?>">профиль</a>.
+            </div>
+        </div>
     </div>
 
     <div class="col-xs-12">
-        <?=Html::submitButton(Yii::t('frontend/advert', 'Create advert'), ['class' => 'btn btn-success']);?>
+        <?php
+        $button = $model->getExists() ? Yii::t('frontend/advert', 'Update advert') : Yii::t('frontend/advert', 'Create advert');
+        ?>
+        <?=Html::submitButton($button, ['class' => 'btn btn-success'])?>
     </div>
 <?php $form->end(); ?>
-
-<?php print $this->render('_success_created'); ?>

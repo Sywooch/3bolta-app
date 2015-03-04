@@ -31,5 +31,6 @@ return [
 
     // объявления пользователя
     '/my-adverts' => '/advert/user-advert/list',
-    '/my-adverts/update-publication/<id:(\d+)>' => '/advert/user-advert/update-publication'
+    '/my-adverts/update-publication/<id:(\d+)>' => '/advert/user-advert/update-publication',
+    '/my-adverts/edit/<id:(\d+)>' => '/advert/user-advert/edit',
 ];

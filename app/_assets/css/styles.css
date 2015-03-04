@@ -153,11 +153,23 @@ a.desc:after {
 .block-info-primary {
     border-left-color: #265a88;
 }
+.block-info-danger {
+    border-left-color: #a94442;
+}
+.block-info-success {
+    border-left-color: #3c763d;
+}
 .block-info-error {
     border-left-color: #a94442;
 }
 .primary-title {
     color: #265a88;
+}
+.success-title {
+    color: #3c763d;
+}
+.danger-title {
+    color: #a94442;
 }
 .user-panel {
     margin: 15px 0px;

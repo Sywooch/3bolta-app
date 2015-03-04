@@ -157,6 +157,41 @@ class AdvertApi extends \yii\base\Component
     }
 
     /**
+     * Установить данные из формы в объявление
+     *
+     * @param Form $form
+     * @param Advert $advert
+     */
+    protected function setDataFromForm(Form $form, Advert $advert)
+    {
+        $advert->setAttributes([
+            'advert_name' => $form->name,
+            'price' => $form->price,
+            'description' => $form->description,
+            'category_id' => $form->category_id,
+            'condition_id' => $form->condition_id,
+            'confirmation' => md5(uniqid() . $form->name . time()),
+        ]);
+
+        // привязать автомобили
+        $advert->setMarks($form->getMark());
+        $advert->setModels($form->getModel());
+        $advert->setSeries($form->getSerie());
+        $advert->setModifications($form->getModification());
+
+        // привязать файлы
+        $uploadImages = [];
+        foreach ($form->getImages() as $image) {
+            if ($image instanceof UploadedFile) {
+                $uploadImages[] = $image;
+            }
+        }
+        if (!empty($uploadImages)) {
+            $advert->setUploadImage($uploadImages);
+        }
+    }
+
+    /**
      * Добавить новое объявление для неавторизованного пользователя.
      * На вход передается форма заполнения объявления.
      *
@@ -181,35 +216,15 @@ class AdvertApi extends \yii\base\Component
             try {
                 $advert = new Advert();
 
+                $advert->active = false;
+
                 $advert->setAttributes([
-                    'active' => false,
-                    'advert_name' => $form->name,
+                    'user_email' => $form->user_email,
                     'user_name' => $form->user_name,
                     'user_phone' => $form->user_phone,
-                    'price' => $form->price,
-                    'description' => $form->description,
-                    'user_email' => $form->user_email,
-                    'category_id' => $form->category_id,
-                    'condition_id' => $form->condition_id,
-                    'confirmation' => md5(uniqid() . $form->name . time()),
                 ]);
 
-                // привязать автомобили
-                $advert->setMarks($form->getMark());
-                $advert->setModels($form->getModel());
-                $advert->setSeries($form->getSerie());
-                $advert->setModifications($form->getModification());
-
-                // привязать файлы
-                $uploadImages = [];
-                foreach ($form->getImages() as $image) {
-                    if ($image instanceof UploadedFile) {
-                        $uploadImages[] = $image;
-                    }
-                }
-                if (!empty($uploadImages)) {
-                    $advert->setUploadImage($uploadImages);
-                }
+                $this->setDataFromForm($form, $advert);
 
                 if (!$advert->save()) {
                     throw new Exception();
@@ -226,6 +241,44 @@ class AdvertApi extends \yii\base\Component
                 $transaction->rollback();
                 $ret = null;
             }
+        }
+
+        return $ret;
+    }
+
+    /**
+     * Обновить объявление из формы.
+     * На вход передается форма, в ней уже должно быть зашито объявление
+     *
+     * @param Form $form
+     * @return boolean true в случае успеха
+     */
+    public function updateAdvert(Form $form)
+    {
+        $ret = false;
+
+        $advert = $form->getExists();
+        if (!($advert instanceof Advert)) {
+            return $ret;
+        }
+
+        $transaction = Advert::getDb()->beginTransaction();
+
+        try {
+            $this->setDataFromForm($form, $advert);
+            if (!$advert->save()) {
+                throw new Exception();
+            }
+
+            $advert->updateAutomobiles();
+
+            $transaction->commit();
+
+            $ret = true;
+        }
+        catch (Exception $ex) {
+            $transaction->rollBack();
+            $ret = false;
         }
 
         return $ret;

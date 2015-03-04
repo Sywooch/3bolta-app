@@ -38,6 +38,13 @@ class Form extends \yii\base\Model
     protected $_uploadImage;
 
     /**
+     * @var Advert
+     */
+    protected $_exists;
+
+    protected $_user_id;
+
+    /**
      * Максимальная длина описания
      */
     const DESCRIPTION_MAX_LENGTH = 255;
@@ -48,7 +55,6 @@ class Form extends \yii\base\Model
     public $description;
     public $price;
     public $user_name;
-    public $user_id;
     public $user_phone;
     public $user_phone_canonical;
     public $user_email;
@@ -91,7 +97,7 @@ class Form extends \yii\base\Model
             [['category_id', 'condition_id'], 'integer'],
             [['description'], 'string', 'max' => self::DESCRIPTION_MAX_LENGTH],
             [['user_name', 'user_phone', 'user_email'], 'required', 'when' => function($model) {
-                return empty($model->user_id);
+                return !$model->getUserId();
             }],
             [['price'], 'filter', 'filter' => function($price) {
                 return trim(str_replace(',', '.', $price));
@@ -100,12 +106,16 @@ class Form extends \yii\base\Model
             [['user_phone'], AdvertPhoneValidator::className()],
             [['user_phone'], PhoneValidator::className(),
                 'canonicalAttribute' => 'user_phone_canonical',
-                'targetClass' => Advert::className(), 'targetAttribute' => 'user_phone_canonical'
+                'targetClass' => Advert::className(), 'targetAttribute' => 'user_phone_canonical', 'when' => function($model) {
+                    return !$model->getUserId();
+                }
             ],
             [['user_email'], 'filter', 'filter' => 'strtolower'],
-            [['user_email'], AdvertEmailValidator::className()],
+            [['user_email'], AdvertEmailValidator::className(), 'when' => function($model) {
+                return !$model->getUserId();
+            }],
             [['user_email'], 'email', 'when' => function($model) {
-                return empty($model->user_id);
+                return !$model->getUserId();
             }],
 
             [['uploadImage'], 'file',
@@ -283,5 +293,55 @@ class Form extends \yii\base\Model
     public function getImages()
     {
         return $this->_uploadImage;
+    }
+
+    /**
+     * Получить модель существующего объявления (по умолчанию-null)
+     * @return Advert|null
+     */
+    public function getExists()
+    {
+        return $this->_exists;
+    }
+
+    /**
+     * Создать форму на основе существующего объявления.
+     * @param Advert $advert
+     * @return \self
+     */
+    public static function createFromExists(Advert $advert)
+    {
+        $ret = new self();
+
+        $ret->_exists = $advert;
+
+        $ret->_user_id = $advert->user_id;
+
+        $ret->setAttributes([
+            'user_name' => $advert->user_name,
+            'user_email' => $advert->user_email,
+            'user_phone' => $advert->user_phone,
+            'name' => $advert->advert_name,
+            'price' => $advert->price,
+            'description' => $advert->description,
+            'category_id' => $advert->category_id,
+            'condition_id' => $advert->condition_id,
+        ]);
+
+        $ret->setMark($advert->getMarks());
+        $ret->setModel($advert->getModels());
+        $ret->setSerie($advert->getSeries());
+        $ret->setModification($advert->getModifications());
+
+        return $ret;
+    }
+
+    /**
+     * Получить идентификатор пользователя
+     * @return int
+     */
+    public function getUserId()
+    {
+        return $this->_user_id;
     }
 }

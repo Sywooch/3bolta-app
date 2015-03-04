@@ -44,6 +44,9 @@ return ArrayHelper::merge(include __DIR__ . '/common.php', [
 
             ],
         ],
+        'serviceMessage' => [
+            'class' => 'app\components\ServiceMessage',
+        ]
     ],
 ], include __DIR__ . '/frontend.local.php');
 

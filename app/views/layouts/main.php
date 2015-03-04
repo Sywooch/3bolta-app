@@ -4,7 +4,7 @@ use yii\helpers\Url;
 use yii\helpers\Html;
 use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
-use user\widgets\LoginModal;
+use app\widgets\ServiceMessage;
 use app\assets\FrontendAssets;
 use advert\widgets\TopSearch;
 /* @var $this \yii\web\View */
@@ -70,6 +70,7 @@ FrontendAssets::register($this);
             <p class="pull-right"><?= Yii::powered() ?></p>
         </div>
     </footer>
+    <?=ServiceMessage::widget()?>
 <?php $this->endBody() ?>
 </body>
 </html>

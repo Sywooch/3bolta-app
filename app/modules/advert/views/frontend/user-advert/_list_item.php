@@ -33,7 +33,7 @@ $preview = $model->getPreview();
                 </strong>
             <?php endif;?>
             <strong>
-                <a href="<?=Url::toRoute(['edit', 'id' => $model->id])?>" target="_blank"><?=Yii::t('frontend/advert', 'Edit')?></a>
+                <a href="<?=Url::toRoute(['edit', 'id' => $model->id])?>"><?=Yii::t('frontend/advert', 'Edit')?></a>
             </strong>
         </div>
         <div class="col-sm-2 col-xs-12 col-lg-12 list-item-date">
