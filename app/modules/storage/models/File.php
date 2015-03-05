@@ -59,7 +59,7 @@ class File extends \app\components\ActiveRecord
      */
     protected static function setUploadedAddr(File $file)
     {
-        $userAddress = \Yii::$app->request->getUserIP();
+        $userAddress = \Yii::$app->id != 'console' ? \Yii::$app->request->getUserIP() : '127.0.0.1';
         if (empty($userAddress)) {
             $userAddress = '127.0.0.1';
         }
