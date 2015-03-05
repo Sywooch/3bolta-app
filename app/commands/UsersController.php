@@ -19,12 +19,12 @@ class UsersController extends Controller
     /**
      * @var string имя нового пользователя
      */
-    public $firstName;
+    public $name;
 
     /**
-     * @var string фамилия нового пользователя
+     * @var string телефон в формате +7 (xxx) xxx-xx-xx
      */
-    public $lastName;
+    public $phone;
 
     /**
      * @var string пароль нового пользователя
@@ -35,7 +35,7 @@ class UsersController extends Controller
     {
         $options = [
             'admin-create' => [
-                'password', 'email', 'firstName', 'lastName',
+                'password', 'email', 'name', 'phone',
             ],
         ];
 
@@ -53,8 +53,8 @@ class UsersController extends Controller
 
         $user->setAttributes([
             'email' => $this->email,
-            'first_name' => $this->firstName,
-            'last_name' => $this->lastName,
+            'name' => $this->name,
+            'phone' => $this->phone,
             'new_password' => $this->password,
             'status' => User::STATUS_ACTIVE
         ]);
