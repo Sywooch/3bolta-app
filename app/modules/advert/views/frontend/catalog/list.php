@@ -14,7 +14,7 @@ AdvertList::register($this);
 $models = $dataProvider->getModels();
 foreach ($models as $model) {
     print Html::beginTag('div', [
-        'class' => 'col-lg-8 col-xs-12 col-md-6 col-sm-12 list-item'
+        'class' => 'col-lg-6 col-sm-12 col-md-6 list-item'
     ]);
         print $this->render('_list_item', [
             'model' => $model,

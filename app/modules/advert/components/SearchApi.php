@@ -23,8 +23,8 @@ class SearchApi extends \yii\base\Component
     {
         if ($q) {
             $query->andFilterWhere(['or',
-                ['like', 'name', $q],
-                ['like', 'description', $q],
+                ['like', 'advert.advert_name', $q],
+                ['like', 'advert.description', $q],
             ]);
         }
     }
