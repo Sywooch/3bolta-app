@@ -66,19 +66,19 @@ $chooseAutomobile = ChooseAutomobile::begin([
         <?=$form->field($model, 'a3')->hiddenInput()?>
         <?=$form->field($model, 'a4')->hiddenInput()?>
     </div>
-    <div class="col-xs-3 col-sm-3">
+    <div class="col-lg-3 col-sm-12">
         <label clas="control-label"><?=Yii::t('advert', 'Choose mark')?></label>
         <div class="list-group choose-auto-mark"></div>
     </div>
-    <div class="col-xs-3 col-sm-3">
+    <div class="col-lg-3 col-sm-12">
         <label clas="control-label"><?=Yii::t('advert', 'Choose model')?></label>
         <div class="list-group choose-auto-model"></div>
     </div>
-    <div class="col-xs-3 col-sm-3">
+    <div class="col-lg-3 col-sm-12">
         <label clas="control-label"><?=Yii::t('advert', 'Choose serie')?></label>
         <div class="list-group choose-auto-serie"></div>
     </div>
-    <div class="col-xs-3 col-sm-3">
+    <div class="col-lg-3 col-sm-12">
         <label clas="control-label"><?=Yii::t('advert', 'Choose modification')?></label>
         <div class="list-group choose-auto-modification"></div>
     </div>

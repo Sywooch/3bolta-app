@@ -193,3 +193,11 @@ a.desc:after {
 .profile .profile-row {
     margin-bottom: 40px;
 }
+@media (max-width: 767px) {
+    .top-search-choose-auto {
+        height: 650px;
+    }
+    .top-search-choose-auto .list-group {
+        height: 120px;
+    }
+}
