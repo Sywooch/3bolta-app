@@ -23,6 +23,8 @@ foreach ($models as $model) {
     print Html::endTag('div');
 }
 
-print Html::beginTag('div', ['class' => 'list-pager']);
-print LinkPager::widget(['pagination' => $dataProvider->pagination]);
-print Html::endTag('div');
+if ($dataProvider->pagination->getPageCount() > 1) {
+    print Html::beginTag('div', ['class' => 'list-pager']);
+    print LinkPager::widget(['pagination' => $dataProvider->pagination]);
+    print Html::endTag('div');
+}

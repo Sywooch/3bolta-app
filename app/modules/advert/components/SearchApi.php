@@ -108,6 +108,7 @@ class SearchApi extends \yii\base\Component
         }
 
         // своя сортировка
+        $query->groupBy('advert.id');
         $query->orderBy('advert.published DESC');
 
         return new ActiveDataProvider([

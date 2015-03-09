@@ -156,7 +156,7 @@ a.desc:after {
 .block-info-danger {
     border-left-color: #a94442;
 }
-.block-info-success {
+.block-info-succes  s {
     border-left-color: #3c763d;
 }
 .block-info-error {
@@ -199,5 +199,11 @@ a.desc:after {
     }
     .top-search-choose-auto .list-group {
         height: 120px;
+    }
+    .content-container {
+        max-width: 100%;
+        width: 100%;
+        padding: 0;
+        margin: 0;
     }
 }

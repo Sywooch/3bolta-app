@@ -85,7 +85,7 @@ class Search extends \yii\base\Model
             'a3' => Yii::t('frontend/advert', 'Serie'),
             'a4' => Yii::t('frontend/advert', 'Modification'),
             'cat' => Yii::t('frontend/advert', 'Category'),
-            'cont' => Yii::t('frontend/advert', 'Condition'),
+            'con' => Yii::t('frontend/advert', 'Condition'),
             'q' => Yii::t('frontend/advert', 'Part name'),
         ];
     }
