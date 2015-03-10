@@ -44,7 +44,7 @@
             $.each(data, function(i, item) {
                 html += options.renderItem(
                     type, item.jsClass,
-                    exists && exists.indexOf(item.id) !== -1,
+                    exists && (exists.indexOf(item.id) !== -1 || exists.indexOf(item.id.toString()) !== -1),
                     attributeName, item.id, item.name, item.full_name
                 );
             });

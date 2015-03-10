@@ -5,6 +5,11 @@ use Yii;
 
 use advert\models\Advert;
 
+use auto\models\Mark;
+use auto\models\Model;
+use auto\models\Serie;
+use auto\models\Modification;
+
 /**
  * Форма поиска вверху
  */
@@ -88,5 +93,30 @@ class Search extends \yii\base\Model
             'con' => Yii::t('frontend/advert', 'Condition'),
             'q' => Yii::t('frontend/advert', 'Part name'),
         ];
+    }
+
+    /**
+     * Получить полное название искомого автомобиля
+     *
+     * @return string
+     */
+    public function getAutomobileFullName()
+    {
+        $ret = null;
+
+        if ($this->a4 && $modification = Modification::find()->andWhere(['id' => $this->a4])->one()) {
+            $ret = $modification->full_name;
+        }
+        else if ($this->a3 && $serie = Serie::find()->andWhere(['id' => $this->a3])->one()) {
+            $ret = $serie->full_name;
+        }
+        else if ($this->a2 && $model = Model::find()->andWhere(['id' => $this->a2])->one()) {
+            $ret = $model->full_name;
+        }
+        else if ($this->a1 && $mark = Mark::find()->andWhere(['id' => $this->a1])->one()) {
+            $ret = $mark->full_name;
+        }
+
+        return $ret;
     }
 }

@@ -65,4 +65,34 @@ class Serie extends ActiveRecord
     {
         return $this->hasMany(Modification::className(), ['serie_id' => 'id']);
     }
+
+    /**
+     * Получить имя для формирования в модальном окне поиска
+     * Состоит из поколения и годов
+     *
+     * @return string
+     */
+    public function getSearchName()
+    {
+        $ret = $this->name;
+
+        $generation = $this->generation_id ? $this->getGeneration()->one() : null;
+        $model = $this->getModel()->one();
+
+        if ($generation && $generation->name && trim($model->name) != trim($generation->name)) {
+            $ret = $generation->name . ' ' . $ret;
+        }
+        else if ($generation && $generation->year_begin) {
+            $ret .= ' (' . $generation->year_begin . '-';
+            if ($generation->year_end) {
+                $ret .= $generation->year_end;
+            }
+            else {
+                $ret .= '...';
+            }
+            $ret .= ')';
+        }
+
+        return $ret;
+    }
 }

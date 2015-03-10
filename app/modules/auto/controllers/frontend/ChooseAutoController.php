@@ -34,7 +34,7 @@ class ChooseAutoController extends \app\components\Controller
         return ArrayHelper::map($res, 'id', function($data, $default) {
             if ($data instanceof \auto\models\ActiveRecord) {
                 return [
-                    'name' => $data->name,
+                    'name' => $data instanceof Serie ? $data->getSearchName() : $data->name,
                     'full_name' => $data->full_name,
                 ];
             }

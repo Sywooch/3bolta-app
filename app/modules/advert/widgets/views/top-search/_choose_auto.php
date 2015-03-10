@@ -89,6 +89,11 @@ $chooseAutomobile = ChooseAutomobile::begin([
     $(function() {
         var chooser = $('#<?=$chooseAutomobile->id?>');
 
+        var markName = '<?=$chooseAutomobile->pluginOptions['markName']?>';
+        var modelName = '<?=$chooseAutomobile->pluginOptions['modelName']?>';
+        var serieName = '<?=$chooseAutomobile->pluginOptions['serieName']?>';
+        var modificationName = '<?=$chooseAutomobile->pluginOptions['modificationName']?>';
+
         // клик по автомобилю
         chooser.on('click', 'a.list-group-item', function(e) {
             e.preventDefault();
@@ -109,6 +114,16 @@ $chooseAutomobile = ChooseAutomobile::begin([
             }
             $('.top-search-choose-auto-button').text($(this).data('full-name'));
             $('#topSearch input[name="' + attribute + '"]').val(id);
+
+            if (['mark', 'model', 'serie'].indexOf(type) !== -1) {
+                $('#topSearch input[name="' + modificationName + '"]').val('');
+            }
+            if (['mark', 'model'].indexOf(type) !== -1) {
+                $('#topSearch input[name="' + serieName + '"]').val('');
+            }
+            if (type == 'mark') {
+                $('#topSearch input[name="' + modelName + '"]').val('');
+            }
         });
     });
 </script>
@@ -118,5 +133,5 @@ $modal->end();
 ?>
 <div class="form-group">
     <label class="control-label"><?=Yii::t('frontend/advert', 'Part for')?>:</label>
-    <a href="#" class="top-search-choose-auto-button" data-toggle="modal" data-target="#topSearchChooseAuto"><?=Yii::t('frontend/advert', 'Choose automobile...')?></a>
+    <a href="#" class="top-search-choose-auto-button" data-toggle="modal" data-target="#topSearchChooseAuto"><?php if ($automobile = $model->getAutomobileFullName()):?><?=$automobile?><?php else:?><?=Yii::t('frontend/advert', 'Choose automobile...')?><?php endif;?></a>
 </div>
