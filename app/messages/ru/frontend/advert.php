@@ -17,7 +17,7 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'Update advert' => 'Обновить объявление',
+    'Related adverts' => 'Похожие объявления',
     'Advert description' => 'Описание',
     'Advert was created' => 'Объявление создано',
     'Advert was published' => 'Объявление опубликовано',
@@ -62,6 +62,7 @@ return [
     'Seller type' => 'Продавец',
     'Serie' => 'Серия',
     'Unpublished' => 'Неопубликовано',
+    'Update advert' => 'Обновить объявление',
     'User id' => 'Пользователь',
     'View' => 'Просмотреть',
     'and {n, plural, =0{automobiles} =1{automobile} one{# automobile} few{# few automobiles} many{# automobiles} other{# automobiles}}' => 'и еще {n, plural, =0{автомобилей} =1{автомобиля} one{# автомобиля} few{# few автомобилей} many{# автомобилей} other{# автомобилей}}',

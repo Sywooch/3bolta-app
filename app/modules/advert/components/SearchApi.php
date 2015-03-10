@@ -32,14 +32,15 @@ class SearchApi extends \yii\base\Component
     /**
      * Cформировать запрос по автомобилям
      * @param ActiveQuery $query
-     * @param int $mark
-     * @param int $model
-     * @param int $serie
-     * @param int $modification
+     * @param mixed $mark массив идентификаторов или идентификатор
+     * @param mixed $model массив идентификаторов или идентификатор
+     * @param mixed $serie массив идентификаторов или идентификатор
+     * @param mixed $modification массив идентификаторов или идентификатор
+     * @param boolean $any искать совпадение по любому автомобилю
      */
-    protected function makeAutoQuery(ActiveQuery $query, $mark, $model, $serie, $modification)
+    protected function makeAutoQuery(ActiveQuery $query, $mark, $model, $serie, $modification, $any = false)
     {
-        $or = ['or'];
+        $or = [$any ? 'or' : 'and'];
         if ($mark) {
             $query->joinWith('mark');
             $or[] = ['mark.id' => $mark];
@@ -217,5 +218,45 @@ class SearchApi extends \yii\base\Component
     public function getDetails($id)
     {
         return Advert::findActiveAndPublished()->andWhere(['id' => $id])->one();
+    }
+
+    /**
+     * Для объявления $advert возвращает похожие объявления.
+     * Сравнение объявлений:
+     * - по автомобилям;
+     * - по категории.
+     *
+     * @param Advert $advert объявление, для которого требуется получить похожие
+     * @param int $limit ограничение на вывод
+     * @return ActiveDataProvider
+     */
+    public function getRelated(Advert $advert, $limit = 4)
+    {
+        $query = Advert::findActiveAndPublished();
+
+        $query->andWhere(['<>', 'advert.id', $advert->id]);
+
+        // сформировать запрос по автомобилям
+        $this->makeAutoQuery($query,
+            $advert->getMarks(),
+            $advert->getModels(),
+            $advert->getSeries(),
+            $advert->getModifications()
+        );
+
+        // сформировать запрос по категории
+        $this->makeCategoryQuery($query, $advert->category_id);
+
+        $query->groupBy('advert.id');
+        $query->orderBy('advert.published DESC');
+
+        // установить лимиты
+        $query->limit($limit)->offset(0);
+
+        return new ActiveDataProvider([
+            'query' => $query,
+            'pagination' => false,
+            'sort' => false,
+        ]);
     }
 }

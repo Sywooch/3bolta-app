@@ -15,6 +15,9 @@ use yii\helpers\Url;
 /* @var $searchApi \advert\components\SearchApi */
 $searchApi = Yii::$app->getModule('advert')->search;
 
+/* @var $related \yii\data\ActiveDataProvider */
+$related = $searchApi->getRelated($model);
+
 // ссылки на автомобили
 $automobiles = $searchApi->getAutomobilesLink(['search'], $model);
 
@@ -37,64 +40,75 @@ AdvertDetail::register($this);
             <?=$model->getPriceFormated()?>
         </span>
     </div>
-    <div class="panel panel-default">
-        <div class="panel-body">
-            <div class="col-xs-12 col-sm-12 col-lg-12 item-details-row item-details-contacts">
-                <strong><?=Yii::t('frontend/advert', 'Contacts')?>:</strong>
-                <?=Html::encode($model->getUserName())?>
-                (<?=Yii::t('frontend/advert', 'private person')?>)
-                <span class="item-details-phone label label-primary">
-                    <span class="glyphicon glyphicon-earphone"></span>
-                    <?=Html::encode($model->getUserPhone())?>
-                </span>
-            </div>
-            <div class="col-xs-12 col-sm-12 col-lg-6 item-details-row item-details-condition">
-                <strong><?=Yii::t('frontend/advert', 'Condition')?>:</strong>
-                <?=$model->getConditionName()?>
-            </div>
-            <div class="col-xs-12 col-sm-12 col-lg-6 item-details-row item-details-condition">
-                <strong><?=Yii::t('frontend/advert', 'Category')?>:</strong>
-                <?=implode(', ', $model->getCategoriesTree())?>
-            </div>
-            <?php if (!empty($automobiles)):?>
-                <div class="col-xs-12 col-sm-12 col-lg-12 item-details-row item-details-automobiles">
-                    <strong><?=Yii::t('frontend/advert', 'Apply to')?>:</strong>
-                    <?=implode(', ', $automobiles)?>
-                </div>
-            <?php endif;?>
+    <div class="item-details-row item-details-contacts">
+        <strong><?=Yii::t('frontend/advert', 'Contacts')?>:</strong>
+        <?=Html::encode($model->getUserName())?>
+        (<?=Yii::t('frontend/advert', 'private person')?>)
+        <span class="item-details-phone label label-primary">
+            <span class="glyphicon glyphicon-earphone"></span>
+            <?=Html::encode($model->getUserPhone())?>
+        </span>
+    </div>
+    <div class="item-details-row item-details-condition">
+        <strong><?=Yii::t('frontend/advert', 'Condition')?>:</strong>
+        <?=$model->getConditionName()?>
+    </div>
+    <div class="item-details-row item-details-condition">
+        <strong><?=Yii::t('frontend/advert', 'Category')?>:</strong>
+        <?=implode(', ', $model->getCategoriesTree())?>
+    </div>
+    <?php if (!empty($automobiles)):?>
+        <div class="item-details-row item-details-automobiles">
+            <strong><?=Yii::t('frontend/advert', 'Apply to')?>:</strong>
+            <?=implode(', ', $automobiles)?>
+        </div>
+    <?php endif;?>
 
-            <?php if ($images = $model->getImages()->all()):?>
-                <div class="col-xs-12 col-sm-12 col-lg-12 item-details-images item-details-row">
-                    <div class="item-details-images-full">
-                        <?=Html::img(reset($images)->getFile()->getUrl(), [
-                            'class' => 'full-image',
-                        ])?>
-                    </div>
-                    <?php if (count($images) > 1):?>
-                        <div class="item-details-images-list">
-                            <?php foreach ($images as $image):?>
-                                <?php
-                                /* @var $image \advert\models\AdvertImage */
-                                ?>
-                                <div class="col-lg-2 col-xs-4">
-                                    <a href="<?=$image->getFile()->getUrl()?>" class="thumbnail">
-                                        <?=Html::img($image->getThumbnail()->getUrl())?>
-                                    </a>
-                                </div>
-                            <?php endforeach;?>
+    <?php if ($images = $model->getImages()->all()):?>
+        <div class="item-details-images item-details-row">
+            <div class="item-details-images-full">
+                <?=Html::img(reset($images)->getFile()->getUrl(), [
+                    'class' => 'full-image',
+                ])?>
+            </div>
+            <?php if (count($images) > 1):?>
+                <div class="item-details-images-list">
+                    <?php foreach ($images as $image):?>
+                        <?php
+                        /* @var $image \advert\models\AdvertImage */
+                        ?>
+                        <div class="col-lg-2 col-xs-4">
+                            <a href="<?=$image->getFile()->getUrl()?>" class="thumbnail">
+                                <?=Html::img($image->getThumbnail()->getUrl())?>
+                            </a>
                         </div>
-                    <?php endif;?>
-                </div>
-            <?php endif;?>
-
-            <?php if (!empty($model->description)):?>
-                <div class="col-xs-12 col-sm-12 col-lg-12 item-details-row item-details-description">
-                    <strong><?=Yii::t('frontend/advert', 'Description')?>:</strong><br />
-                    <?=nl2br(Html::encode($model->description))?>
+                    <?php endforeach;?>
                 </div>
             <?php endif;?>
         </div>
-    </div>
+    <?php endif;?>
+
+    <?php if (!empty($model->description)):?>
+        <div class="item-details-row item-details-description">
+            <strong><?=Yii::t('frontend/advert', 'Description')?>:</strong><br />
+            <?=nl2br(Html::encode($model->description))?>
+        </div>
+    <?php endif;?>
+    <?php if ($related->getCount() > 0 && $relatedList = $related->getModels()):?>
+        <?php advert\assets\AdvertList::register($this); ?>
+        <div class="col-lg-12"><h2><?=Yii::t('frontend/advert', 'Related adverts')?></h2></div>
+        <div class="item-details-related">
+            <?php foreach ($relatedList as $advert):?>
+                <div class="col-lg-6 col-sm-12 col-md-6 list-item">
+                    <?=$this->render('_list_item', [
+                        'model' => $advert,
+                        'dataProvider' => $related,
+                        'hideDropDown' => true,
+                    ])?>
+                </div>
+            <?php endforeach;?>
+        </div>
+    <?php endif;?>
 </div>
 
 <?php if (($id = Yii::$app->session->getFlash('advert_published')) && $id == $model->id):?>
