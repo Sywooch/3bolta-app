@@ -80,7 +80,7 @@ class AdvertImage extends \yii\db\ActiveRecord
 
         $transaction = File::getDb()->beginTransaction();
         try {
-            Image::thumbnail($file->getPath(), $width, $height, ManipulatorInterface::THUMBNAIL_INSET)
+            Image::thumbnail($file->getPath(), $width, $height, ManipulatorInterface::THUMBNAIL_OUTBOUND)
                 ->save($path, ['quality' => 80]);
             if (!is_file($path)) {
                 throw new Exception();
@@ -186,7 +186,7 @@ class AdvertImage extends \yii\db\ActiveRecord
      */
     public function getPreview()
     {
-        $this->hasOne(File::className(), ['id' => 'preview_id']);
+        return $this->hasOne(File::className(), ['id' => 'preview_id']);
     }
 
     /**

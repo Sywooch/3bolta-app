@@ -26,7 +26,7 @@ $preview = $model->getPreview();
 <?php if (!$hideDropDown):?>
     <div class="panel panel-default list-item-hover">
         <div class="panel-body">
-            <div class="col-sm-12">
+            <div class="<?php if ($preview):?>col-lg-8<?php endif;?> col-sm-12">
                 <div class="list-item-title">
                     <h3><?=Html::a(
                         Html::encode($model->advert_name),
@@ -50,28 +50,29 @@ $preview = $model->getPreview();
                     <strong><?=Yii::t('frontend/advert', 'Seller type')?>:</strong>
                     <?=Yii::t('frontend/advert', 'private person')?>
                 </div>
-                <?php if ($preview):?>
-                    <div class="col-sm-12 list-item-image">
-                        <?=Html::img($preview->getUrl())?>
-                    </div>
-                <?php endif;?>
-                <?php if (!empty($automobiles)):?>
-                    <div class="list-item-row list-item-automobiles">
-                        <strong><?=Yii::t('frontend/advert', 'Apply to')?>:</strong>
-                        <?php if (count($automobiles) > 10):?>
-                            <?=implode(', ', array_slice($automobiles, 0, 8))?>,
-                            <?=Html::a(
-                                Yii::t('frontend/advert', 'and {n, plural, =0{automobiles} =1{automobile} one{# automobile} few{# few automobiles} many{# automobiles} other{# automobiles}}', [
-                                    'n'=> count($automobiles) - 2
-                                ]) . '...',
-                                Url::toRoute(['details', 'id' => $model->id])
-                            );?>
-                        <?php else:?>
-                            <?=implode(', ', $automobiles)?>
-                        <?php endif;?>
-                    </div>
-                <?php endif;?>
             </div>
+            <?php if ($preview):?>
+                <div class="list-item-internal-preview col-lg-4 col-sm-12">
+                    <?=Html::img($preview->getUrl())?>
+                </div>
+            <?php endif;?>
+
+            <?php if (!empty($automobiles)):?>
+                <div class="col-lg-12 list-item-row list-item-automobiles">
+                    <strong><?=Yii::t('frontend/advert', 'Apply to')?>:</strong>
+                    <?php if (count($automobiles) > 10):?>
+                        <?=implode(', ', array_slice($automobiles, 0, 8))?>,
+                        <?=Html::a(
+                            Yii::t('frontend/advert', 'and {n, plural, =0{automobiles} =1{automobile} one{# automobile} few{# few automobiles} many{# automobiles} other{# automobiles}}', [
+                                'n'=> count($automobiles) - 2
+                            ]) . '...',
+                            Url::toRoute(['details', 'id' => $model->id])
+                        );?>
+                    <?php else:?>
+                        <?=implode(', ', $automobiles)?>
+                    <?php endif;?>
+                </div>
+            <?php endif;?>
         </div>
     </div>
 <?php endif;?>

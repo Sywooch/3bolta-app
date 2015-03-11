@@ -314,6 +314,7 @@ class Advert extends \app\components\ActiveRecord
         $ret = null;
         foreach ($this->images as $image) {
             if ($image->is_preview) {
+                /* @var $image \advert\models\AdvertImage */
                 $ret = $image->preview;
             }
         }
