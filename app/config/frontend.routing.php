@@ -32,6 +32,7 @@ return [
     // объявления пользователя
     '/my-ads' => '/advert/user-advert/list',
     '/my-ads/update-publication/<id:(\d+)>' => '/advert/user-advert/update-publication',
+    '/my-ads/stop-publication/<id:(\d+)>' => '/advert/user-advert/stop-publication',
     '/my-ads/edit/<id:(\d+)>' => '/advert/user-advert/edit',
     '/my-ads/append' => '/advert/user-advert/append',
 ];

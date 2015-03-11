@@ -43,6 +43,29 @@ class AdvertApi extends \yii\base\Component
     }
 
     /**
+     * Остановить публикацию объявления текущей датой
+     *
+     * @param Advert $advert
+     * @return boolean true, в случае успеха
+     */
+    public function stopPublication(Advert $advert)
+    {
+        $ret = false;
+
+        if ($advert->active && $advert->published && strtotime($advert->published_to) > time()) {
+            try {
+                $advert->published_to = date('Y-m-d H:i:s');
+                $ret = $advert->save();
+            }
+            catch (Exception $ex) {
+                $ret = false;
+            }
+        }
+
+        return $ret;
+    }
+
+    /**
      * Обновить дату публикации объявления на DEFAULT_PUBLISH_DAYS дней.
      *
      * @param Advert $advert

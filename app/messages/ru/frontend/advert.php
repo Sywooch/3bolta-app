@@ -17,7 +17,7 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'Related adverts' => 'Похожие объявления',
+    'Stop advert publication' => 'Завершить публикацию',
     'Advert description' => 'Описание',
     'Advert was created' => 'Объявление создано',
     'Advert was published' => 'Объявление опубликовано',
@@ -57,6 +57,7 @@ return [
     'Publish to {date}' => 'Опубликовать до {date}',
     'Published at' => 'Опубликовано',
     'Published to' => 'Опубликовано до',
+    'Related adverts' => 'Похожие объявления',
     'Required field' => 'Поле обязательно для заполнения',
     'Search' => 'Найти',
     'Seller type' => 'Продавец',

@@ -59,6 +59,27 @@ class UserAdvertController extends \app\components\Controller
     }
 
     /**
+     * Остановить публикацию объявления
+     *
+     * @param int $id
+     * @throw NotFoundHttpException
+     */
+    public function actionStopPublication($id)
+    {
+        $advert = Advert::findUserList()->andWhere(['id' => $id])->one();
+        if (!($advert instanceof Advert)) {
+            throw new NotFoundHttpException();
+        }
+
+        /* @var $advertApi \advert\components\AdvertApi */
+        $advertApi = Yii::$app->getModule('advert')->advert;
+
+        $advertApi->stopPublication($advert);
+
+        return $this->redirect(['list']);
+    }
+
+    /**
      * Обновить публикацию объявления пользователя до ближайшей доступной даты
      *
      * @param int $id

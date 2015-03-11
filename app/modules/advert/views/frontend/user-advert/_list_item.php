@@ -35,6 +35,9 @@ $preview = $model->getPreview();
             <strong>
                 <a href="<?=Url::toRoute(['edit', 'id' => $model->id])?>"><?=Yii::t('frontend/advert', 'Edit')?></a>
             </strong>
+            <strong>
+                <a href="<?=Url::toRoute(['stop-publication', 'id' => $model->id])?>"><?=Yii::t('frontend/advert', 'Stop advert publication')?></a>
+            </strong>
         </div>
         <div class="col-sm-2 col-xs-12 col-lg-12 list-item-date">
             <?php if ($model->active && $model->published_to && strtotime($model->published_to) > time()):?>
