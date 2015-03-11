@@ -129,8 +129,8 @@ class SearchApi extends \yii\base\Component
     protected function getAdvertAutomobileTree(Advert $advert)
     {
         $r = ArrayHelper::map(array_merge(
-            $advert->getMark()->all(), $advert->getModel()->all(),
-            $advert->getSerie()->all(), $advert->getModification()->all()
+            $advert->mark, $advert->model,
+            $advert->serie, $advert->modification
         ), 'id', function($data) {
             /* @var $data \yii\db\ActiveRecord */
             $queryParam = strtolower(StringHelper::basename($data->className()));
@@ -200,6 +200,20 @@ class SearchApi extends \yii\base\Component
             foreach ($items as $k2 => $i) {
                 $r = $route;
                 foreach ($i['query'] as $key => $value) {
+                    switch ($key) {
+                        case 'mark':
+                            $key = 'a1';
+                            break;
+                        case 'model':
+                            $key = 'a2';
+                            break;
+                        case 'serie':
+                            $key = 'a3';
+                            break;
+                        case 'modification':
+                            $key = 'a4';
+                            break;
+                    }
                     $key = Html::getInputName($searchModel, $key);
                     $r[$key] = $value;
                 }

@@ -20,7 +20,7 @@ use yii\widgets\DetailView;
                 'id',
                 'handbook_code' => [
                     'attribute' => 'handbook_code',
-                    'value' => $model->getHandbook()->name,
+                    'value' => $model->handbook->name,
                 ]
             ]
         ]);

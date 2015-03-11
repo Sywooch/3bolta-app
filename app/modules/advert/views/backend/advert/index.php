@@ -95,9 +95,8 @@ print GridView::widget([
             'attribute' => 'category_id',
             'value' => function($data) {
                 /* @var $data \advert\models\Advert */
-                $category = $data->getCategory()->one();
-                if ($category) {
-                    return $category->name;
+                if ($data->category_id && $data->category instanceof \advert\models\Category) {
+                    return $data->category->name;
                 }
             }
         ],
@@ -105,8 +104,7 @@ print GridView::widget([
             'attribute' => 'condition_id',
             'value' => function($data) {
                 /* @var $data \advert\models\Advert */
-                $condition = $data->getCondition()->one();
-                if ($condition) {
+                if ($data->condition_id && $condition = $data->condition) {
                     return $condition->name;
                 }
             }

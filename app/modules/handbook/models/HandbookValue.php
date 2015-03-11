@@ -42,9 +42,13 @@ class HandbookValue extends ActiveRecord
         ];
     }
 
+    /**
+     * Получить справочник
+     * @return \yii\db\ActiveQuery
+     */
     public function getHandbook()
     {
-        return $this->hasOne(Handbook::className(), ['code' => 'handbook_code'])->one();
+        return $this->hasOne(Handbook::className(), ['code' => 'handbook_code']);
     }
 
     /**

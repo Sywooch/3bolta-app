@@ -173,30 +173,28 @@ class AdvertImage extends \yii\db\ActiveRecord
 
     /**
      * Получить файл
-     * @return File
+     * @return \yii\db\ActiveQuery
      */
     public function getFile()
     {
-        return $this->hasOne(File::className(), ['id' => 'file_id'])->one();
+        return $this->hasOne(File::className(), ['id' => 'file_id']);
     }
 
     /**
      * Получить превью
-     * @return File|null
+     * @return \yii\db\ActiveQuery
      */
     public function getPreview()
     {
-        return $this->preview_id ?
-            $this->hasOne(File::className(), ['id' => 'preview_id'])->one() :
-            null;
+        $this->hasOne(File::className(), ['id' => 'preview_id']);
     }
 
     /**
      * Получить иконку
-     * @return File
+     * @return \yii\db\ActiveQuery
      */
     public function getThumbnail()
     {
-        return $this->hasOne(File::className(), ['id' => 'thumb_id'])->one();
+        return $this->hasOne(File::className(), ['id' => 'thumb_id']);
     }
 }

@@ -47,7 +47,7 @@ class UserApi extends \yii\base\Component
         }
 
         /* @var $user User */
-        $user = $confirmation->getUser()->one();
+        $user = $confirmation->user;
         if (!$user || $user->status != User::STATUS_WAIT_CONFIRMATION) {
             // пользователь не найден
             throw new NotFoundHttpException();
@@ -231,7 +231,7 @@ class UserApi extends \yii\base\Component
         /* @var $res UserConfirmation */
         $res = UserConfirmation::find()->where(['restore_confirmation' => $code])->one();
         if ($res) {
-            $ret = $res->getUser()->one();
+            $ret = $res->user;
         }
         return $ret;
     }

@@ -270,7 +270,7 @@ class Advert extends \app\components\ActiveRecord
         if ($this->_user === null) {
             $this->_user = $this->hasOne(User::className(), ['id' => 'user_id'])->one();
         }
-        return $this->_user;;
+        return $this->_user;
     }
 
     /**
@@ -298,10 +298,8 @@ class Advert extends \app\components\ActiveRecord
      */
     public function getConditionName()
     {
-        $handbook = $this->hasOne(HandbookValue::className(), ['id' => 'condition_id'])
-                ->where(['handbook_code' => 'part_condition'])->one();
-        if ($handbook instanceof HandbookValue) {
-            return $handbook->name;
+        if ($this->condition_id && $this->condition instanceof HandbookValue) {
+            return $this->condition->name;
         }
 
         return '';
@@ -313,9 +311,11 @@ class Advert extends \app\components\ActiveRecord
      */
     public function getPreview()
     {
-        $ret = $this->getImages()->andWhere(['is_preview' => true])->one();
-        if ($ret) {
-            $ret = $ret->getPreview();
+        $ret = null;
+        foreach ($this->images as $image) {
+            if ($image->is_preview) {
+                $ret = $image->preview;
+            }
         }
         return $ret;
     }
@@ -558,9 +558,7 @@ class Advert extends \app\components\ActiveRecord
     public function getMarks()
     {
         if ($this->_marks === null) {
-            $this->_marks = [];
-            $res = $this->getMark()->all();
-            $this->_marks = array_values(ArrayHelper::map($res, 'id', 'id'));
+            $this->_marks = array_values(ArrayHelper::map($this->mark, 'id', 'id'));
         }
         return $this->_marks;
     }
@@ -572,9 +570,7 @@ class Advert extends \app\components\ActiveRecord
     public function getModels()
     {
         if ($this->_models === null) {
-            $this->_models = [];
-            $res = $this->getModel()->all();
-            $this->_models = array_values(ArrayHelper::map($res, 'id', 'id'));
+            $this->_models = array_values(ArrayHelper::map($this->model, 'id', 'id'));
         }
         return $this->_models;
     }
@@ -586,9 +582,7 @@ class Advert extends \app\components\ActiveRecord
     public function getSeries()
     {
         if ($this->_series === null) {
-            $this->_series = [];
-            $res = $this->getSerie()->all();
-            $this->_series = array_values(ArrayHelper::map($res, 'id', 'id'));
+            $this->_series = array_values(ArrayHelper::map($this->serie, 'id', 'id'));
         }
         return $this->_series;
     }
@@ -600,9 +594,7 @@ class Advert extends \app\components\ActiveRecord
     public function getModifications()
     {
         if ($this->_modifications === null) {
-            $this->_modifications = [];
-            $res = $this->getModification()->all();
-            $this->_modifications = array_values(ArrayHelper::map($res, 'id', 'id'));
+            $this->_modifications = array_values(ArrayHelper::map($this->modification, 'id', 'id'));
         }
         return $this->_modifications;
     }
@@ -720,9 +712,7 @@ class Advert extends \app\components\ActiveRecord
     {
         $ret = [];
 
-        $category = $this->getCategory()->one();
-
-        if ($category) {
+        if ($this->category_id && $category = $this->category) {
             $ret[$category->id] = $category->name;
             $previewDepth = $category->depth;
             if ($previewDepth > 1) {

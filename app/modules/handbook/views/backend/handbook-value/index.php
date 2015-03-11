@@ -5,7 +5,7 @@ use yii\widgets\ActiveForm;
 use yii\helpers\Url;
 
 /* @var $this yii\web\View */
-$this->title = Yii::t('backend/handbook', 'Value list') . ' "' . $searchModel->getHandbook()->name . '"';
+$this->title = Yii::t('backend/handbook', 'Value list') . ' "' . $searchModel->handbook->name . '"';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="page-index">

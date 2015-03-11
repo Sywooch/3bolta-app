@@ -72,12 +72,12 @@ class ChooseAutoController extends \app\components\Controller
             throw new NotFoundHttpException();
         }
 
-        $model = $serie->getModel()->one();
+        $model = $serie->model;
         if (!($model instanceof Model)) {
             throw new NotFoundHttpException();
         }
 
-        $mark = $model->getMark()->one();
+        $mark = $model->mark;
         if (!($mark instanceof Mark)) {
             throw new NotFoundHttpException();
         }
@@ -111,7 +111,7 @@ class ChooseAutoController extends \app\components\Controller
             throw new NotFoundHttpException();
         }
 
-        $mark = $model->getMark()->one();
+        $mark = $model->mark;
         if (!($mark instanceof Mark)) {
             throw new NotFoundHttpException();
         }

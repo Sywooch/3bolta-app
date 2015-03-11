@@ -16,9 +16,9 @@ use yii\helpers\Html;
 
 $existImages = [];
 if ($advert = $model->getExists()) {
-    foreach ($advert->getImages()->all() as $file) {
+    foreach ($advert->images as $file) {
         /* @var $file \advert\models\AdvertImage */
-        $existImages[] = Html::img($file->getFile()->getUrl(), [
+        $existImages[] = Html::img($file->file->getUrl(), [
             'class' => 'file-preview-image',
         ]);
     }

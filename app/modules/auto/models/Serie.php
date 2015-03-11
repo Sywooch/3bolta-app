@@ -76,8 +76,8 @@ class Serie extends ActiveRecord
     {
         $ret = $this->name;
 
-        $generation = $this->generation_id ? $this->getGeneration()->one() : null;
-        $model = $this->getModel()->one();
+        $generation = $this->generation_id ? $this->generation : null;
+        $model = $this->model;
 
         if ($generation && $generation->name && trim($model->name) != trim($generation->name)) {
             $ret = $generation->name . ' ' . $ret;

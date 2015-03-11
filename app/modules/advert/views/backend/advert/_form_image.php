@@ -12,7 +12,7 @@ $exists = [];
 
 foreach ($model->getImages()->all() as $file) {
     /* @var $file \advert\models\AdvertImage */
-    $exists[] = Html::img($file->getFile()->getUrl(), [
+    $exists[] = Html::img($file->file->getUrl(), [
         'class' => 'file-preview-image',
     ]);
 }

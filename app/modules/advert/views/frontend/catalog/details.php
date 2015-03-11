@@ -64,10 +64,10 @@ AdvertDetail::register($this);
         </div>
     <?php endif;?>
 
-    <?php if ($images = $model->getImages()->all()):?>
+    <?php if ($images = $model->images):?>
         <div class="item-details-images item-details-row">
             <div class="item-details-images-full">
-                <?=Html::img(reset($images)->getFile()->getUrl(), [
+                <?=Html::img(reset($images)->file->getUrl(), [
                     'class' => 'full-image',
                 ])?>
             </div>
@@ -78,8 +78,8 @@ AdvertDetail::register($this);
                         /* @var $image \advert\models\AdvertImage */
                         ?>
                         <div class="col-lg-2 col-xs-4">
-                            <a href="<?=$image->getFile()->getUrl()?>" class="thumbnail">
-                                <?=Html::img($image->getThumbnail()->getUrl())?>
+                            <a href="<?=$image->file->getUrl()?>" class="thumbnail">
+                                <?=Html::img($image->thumbnail->getUrl())?>
                             </a>
                         </div>
                     <?php endforeach;?>
