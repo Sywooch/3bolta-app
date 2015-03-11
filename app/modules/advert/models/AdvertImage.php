@@ -14,8 +14,8 @@ use Imagine\Image\ManipulatorInterface;
  */
 class AdvertImage extends \yii\db\ActiveRecord
 {
-    const PREVIEW_WIDTH = 200;
-    const PREVIEW_HEIGHT = 200;
+    const PREVIEW_WIDTH = 123;
+    const PREVIEW_HEIGHT = 123;
 
     const THUMB_WIDTH = 100;
     const THUMB_HEIGHT = 100;
