@@ -34,17 +34,17 @@ class Date
             $date = new DateTime($date);
         }
 
-        $currentDate = new DateTime();
+        $currentDate = new DateTime(date('Y-m-d 00:00:00'));
 
         $diff = $currentDate->diff($date, false);
 
         if ($diff->y === 0 && $diff->m === 0 && $diff->d === 0 && $allowShort) {
             return Yii::t('main', 'today') . ', ' . $date->format('H:i');
         }
-        else if ($diff->y === 0 && $diff->m === 0 && $diff->d === 1 && $allowShort) {
+        else if ($diff->y === 0 && $diff->m === 0 && $diff->d === -1 && $allowShort) {
             return Yii::t('main', 'yesterday') . ', ' . $date->format('H:i');
         }
-        else if ($diff->y === 0 && $diff->m === 0 && $diff->d === -1 && $allowShort) {
+        else if ($diff->y === 0 && $diff->m === 0 && $diff->d === 1 && $allowShort) {
             return Yii::t('main', 'tomorrow') . ', ' . $date->format('H:i');
         }
         else {

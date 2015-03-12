@@ -73,6 +73,9 @@ $config = ArrayHelper::merge([
         'handbook' => [
             'class' => 'handbook\Module',
         ],
+        'partner' => [
+            'class' => 'partner\Module',
+        ],
         'storage' => [
             'class' => 'storage\Module',
             'repository' => [
