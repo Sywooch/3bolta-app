@@ -47,6 +47,9 @@ class User extends ActiveRecord implements IdentityInterface
             [['new_password'], 'required', 'on' => 'create'],
             [['new_password'], 'safe'],
             [['phone'], PhoneValidator::className(), 'canonicalAttribute' => 'phone_canonical'],
+
+            ['name', 'string', 'max' => 50],
+            ['email', 'string', 'max' => 100],
         ];
     }
 

@@ -39,6 +39,9 @@ class Register extends \yii\base\Model
             [['password'], 'string', 'min' => 6],
             [['password_confirmation'], 'compare', 'compareAttribute' => 'password', 'message' => Yii::t('frontend/user', 'Password not equal')],
             [['email'], 'unique', 'targetClass' => User::className(), 'targetAttribute' => 'email'],
+
+            ['name', 'string', 'max' => 50],
+            ['email', 'string', 'max' => 100],
         ];
     }
 

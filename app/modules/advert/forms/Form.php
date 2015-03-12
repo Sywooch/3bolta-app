@@ -101,10 +101,16 @@ class Form extends \yii\base\Model
             [['user_name', 'user_phone', 'user_email'], 'required', 'when' => function($model) {
                 return !$model->getUserId();
             }],
-            [['price'], 'filter', 'filter' => function($price) {
-                return trim(str_replace(',', '.', $price));
+            ['price', 'filter', 'filter' => function($value) {
+                return str_replace(',', '.', $value);
             }],
-            [['price'], 'number'],
+            [['price'], 'number', 'min' => 1, 'max' => 9999999,
+                'numberPattern' => '#^[-]?[0-9]{1,7}[\.|\,]?[0-9]{0,2}$#',
+            ],
+            [['user_name', 'name'], 'string', 'max' => 50],
+            ['user_email', 'string', 'max' => 100],
+            ['user_phone_canonical', 'string', 'max' => 11],
+            ['user_phone', 'string', 'max' => 19],
             [['user_phone'], AdvertPhoneValidator::className()],
             [['user_phone'], PhoneValidator::className(),
                 'canonicalAttribute' => 'user_phone_canonical',

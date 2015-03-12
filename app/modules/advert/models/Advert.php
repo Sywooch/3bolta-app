@@ -76,10 +76,12 @@ class Advert extends \app\components\ActiveRecord
     {
         return [
             [['advert_name', 'price', 'condition_id', 'category_id'], 'required'],
-            [['price'], 'filter', 'filter' => function($value) {
+            ['price', 'filter', 'filter' => function($value) {
                 return str_replace(',', '.', $value);
             }],
-            [['price'], 'number', 'min' => 1, 'max' => 9999999],
+            [['price'], 'number', 'min' => 1, 'max' => 9999999,
+                'numberPattern' => '#^[0-9]{1,7}[\.|\,]?[0-9]{0,2}$#',
+            ],
             [['description', 'published', 'published_to'], 'safe'],
             [['user_id', 'condition_id', 'category_id'], 'integer'],
             [['user_name', 'user_phone', 'user_email'], 'required', 'when' => function($model) {
@@ -87,6 +89,10 @@ class Advert extends \app\components\ActiveRecord
                 return empty($model->user_id);
             }],
             [['user_phone'], PhoneValidator::className(), 'canonicalAttribute' => 'user_phone_canonical'],
+            [['user_name', 'advert_name'], 'string', 'max' => 50],
+            ['user_email', 'string', 'max' => 100],
+            ['user_phone_canonical', 'string', 'max' => 11],
+            ['user_phone', 'string', 'max' => 19],
             [['user_email'], 'filter', 'filter' => 'strtolower'],
             [['user_email'], 'email', 'when' => function($model) {
                 return empty($model->user_id);
