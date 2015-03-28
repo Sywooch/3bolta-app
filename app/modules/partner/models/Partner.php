@@ -32,6 +32,7 @@ class Partner extends \yii\db\ActiveRecord
         return [
             [['user_id', 'name', 'company_type'], 'required'],
             ['company_type', 'in', 'range' => array_keys(self::getCompanyTypes())],
+            ['user_id', 'integer'],
             ['user_id', 'unique'],
             ['name', 'string', 'max' => 100],
         ];
@@ -41,7 +42,7 @@ class Partner extends \yii\db\ActiveRecord
      * Подписи атрибутов
      * @return []
      */
-    public static function attributeLabels()
+    public function attributeLabels()
     {
         return [
             'user_id' => Yii::t('partner', 'Owner'),
@@ -65,10 +66,35 @@ class Partner extends \yii\db\ActiveRecord
      */
     public static function getCompanyTypes()
     {
-        return ArrayHelper::map(
-            HandbookValue::find()->andWhere(['handbook_code' => 'part_condition'])->all(),
+        $ret = ArrayHelper::map(
+            HandbookValue::find()->andWhere(['handbook_code' => 'company_type'])->all(),
             'id', 'name'
         );
+        $ret[''] = '';
+        ksort($ret);
+        return $ret;
+    }
+
+    /**
+     * Получить название типа компании
+     * @return string
+     */
+    public function getCompanyType()
+    {
+        $values = self::getCompanyTypes();
+        if (isset($values[$this->company_type])) {
+            return $values[$this->company_type];
+        }
+        return '';
+    }
+
+    /**
+     * Получить торговые точки
+     * @return \yii\db\ActiveQuery
+     */
+    public function getTradePoints()
+    {
+        return $this->hasMany(TradePoint::className(), ['partner_id' => 'id']);
     }
 
     public function beforeSave($insert)

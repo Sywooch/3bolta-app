@@ -52,6 +52,9 @@ return ArrayHelper::merge(include __DIR__ . '/common.php', [
                 '/auto/serie/<model_id:(\d+)>' => '/auto/auto/serie',
                 '/auto/modification/<model_id:(\d+)>/<serie_id:(\d+)>' => '/auto/auto/modification',
                 '/auto/choose/<action:(\w+)>' => '/auto/choose-auto/<action>',
+
+                // partner actions
+                '/partner/partner/<action:(\w+)>' => '/partner/partner/<action>',
             ],
         ],
         'assetManager' => [

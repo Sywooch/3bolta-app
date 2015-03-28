@@ -5,10 +5,9 @@ use app\components\PhoneValidator;
 use yii\db\Expression;
 
 /**
- * Модель адреса партнера.
- * Адрес в обязательном порядке должен быть прикреплен к партнеру.
+ * Модель торговой точки партнера. Привязывается к модели Partner
  */
-class Address extends \yii\db\ActiveRecord
+class TradePoint extends \yii\db\ActiveRecord
 {
     /**
      * Название таблицы
@@ -16,7 +15,7 @@ class Address extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return '{{%partner_address}}';
+        return '{{%partner_trade_point}}';
     }
 
     /**

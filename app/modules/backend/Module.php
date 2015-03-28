@@ -81,6 +81,13 @@ class Module extends \app\components\Module
                 ]
             ],
             [
+                'label' => Yii::t('backend', 'Partners'),
+                'icon' => '',
+                'url' => ['/partner/partner/index'],
+                'visible' => $user->can('backendViewPartners'),
+                'active' => !empty(Yii::$app->controller->module) && Yii::$app->controller->module->id == 'partner',
+            ],
+            [
                 'label' => Yii::t('backend', 'Handbook'),
                 'icon' => '',
                 'visible' => $user->can('backendViewHandbookValues'),
