@@ -45,6 +45,8 @@ class Partner extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
+            'created' => Yii::t('main', 'Created'),
+            'edited' => Yii::t('main', 'Edited'),
             'user_id' => Yii::t('partner', 'Owner'),
             'name' => Yii::t('partner', 'Partner name'),
             'company_type' => Yii::t('partner', 'Company type'),

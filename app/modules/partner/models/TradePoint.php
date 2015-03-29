@@ -1,6 +1,8 @@
 <?php
 namespace partner\models;
 
+use Yii;
+
 use app\components\PhoneValidator;
 use yii\db\Expression;
 
@@ -26,7 +28,7 @@ class TradePoint extends \yii\db\ActiveRecord
     {
         return [
             [['partner_id', 'latitude', 'longitude', 'address', 'phone'], 'required'],
-            [['latitude', 'longitude'], 'min' => 0, 'max' => 180],
+            [['latitude', 'longitude'], 'number', 'min' => 0, 'max' => 180],
             ['address', 'string', 'max' => 255],
             [['phone'], PhoneValidator::className(), 'canonicalAttribute' => 'phone_canonical'],
         ];
@@ -36,9 +38,11 @@ class TradePoint extends \yii\db\ActiveRecord
      * Подписи атрибутов
      * @return []
      */
-    public static function attributeLabels()
+    public function attributeLabels()
     {
         return [
+            'created' => Yii::t('main', 'Created'),
+            'edited' => Yii::t('main', 'Edited'),
             'partner_id' => Yii::t('partner', 'Partner'),
             'latitude' => Yii::t('partner', 'Latitude'),
             'longitude' => Yii::t('partner', 'Longitude'),

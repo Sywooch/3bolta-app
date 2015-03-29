@@ -55,6 +55,7 @@ return ArrayHelper::merge(include __DIR__ . '/common.php', [
 
                 // partner actions
                 '/partner/partner/<action:(\w+)>' => '/partner/partner/<action>',
+                '/partner/trade-point/<action:(\w+)>' => '/partner/trade-point/<action>',
             ],
         ],
         'assetManager' => [

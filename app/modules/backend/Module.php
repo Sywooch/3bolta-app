@@ -84,8 +84,27 @@ class Module extends \app\components\Module
                 'label' => Yii::t('backend', 'Partners'),
                 'icon' => '',
                 'url' => ['/partner/partner/index'],
-                'visible' => $user->can('backendViewPartners'),
+                'visible' => $user->can('backendViewPartners') || $user->can('backendViewTradePoints'),
+                'options'=>['class'=>'treeview'],
                 'active' => !empty(Yii::$app->controller->module) && Yii::$app->controller->module->id == 'partner',
+                'items' => [
+                    [
+                        'label' => Yii::t('backend', 'Partners list'),
+                        'icon' => '',
+                        'url' => ['/partner/partner/index'],
+                        'visible' => $user->can('backendViewPartners'),
+                        'options'=>[],
+                        'active' => !empty(Yii::$app->controller) && Yii::$app->controller->id == 'partner',
+                    ],
+                    [
+                        'label' => Yii::t('backend', 'Trade points list'),
+                        'icon' => '',
+                        'url' => ['/partner/trade-point/index'],
+                        'visible' => $user->can('backendViewTradePoints'),
+                        'options'=>[],
+                        'active' => !empty(Yii::$app->controller) && Yii::$app->controller->id == 'trade-point',
+                    ],
+                ]
             ],
             [
                 'label' => Yii::t('backend', 'Handbook'),

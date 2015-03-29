@@ -17,10 +17,13 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
+    'Partners' => 'Партнеры',
+    'Partners list' => 'Список партнеров',
+    'Trade points list' => 'Список торговых точек',
     'Advert' => 'Объявления',
-    'Adverts list' => 'Список объявлений',
     'Advert categories' => 'Категории объявлений',
     'Advert categories list' => 'Список категорий объявлений',
+    'Adverts list' => 'Список объявлений',
     'Apply' => 'Применить',
     'Automobiles' => 'Автомобили',
     'Create {modelClass}' => 'Создать {modelClass}',
