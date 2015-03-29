@@ -38,7 +38,7 @@ use app\components\PhoneValidator;
             ]
         ])->widget(MaskedInput::className(), [
             'mask' => PhoneValidator::PHONE_MASK,
-        ])
+        ]);
         ?>
         <div class="form-group">
             <?=Html::submitButton(Yii::t('backend', 'Save'), ['class' => 'btn btn-success', 'name' => 'save'])?>

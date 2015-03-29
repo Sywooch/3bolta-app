@@ -81,6 +81,7 @@ class Advert extends \app\components\ActiveRecord
             }],
             [['price'], 'number', 'min' => 1, 'max' => 9999999,
                 'numberPattern' => '#^[0-9]{1,7}[\.|\,]?[0-9]{0,2}$#',
+                'enableClientValidation' => false,
             ],
             [['description', 'published', 'published_to'], 'safe'],
             [['user_id', 'condition_id', 'category_id'], 'integer'],

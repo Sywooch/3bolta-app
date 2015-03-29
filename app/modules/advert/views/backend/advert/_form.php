@@ -1,8 +1,6 @@
 <?php
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
-use yii\widgets\DetailView;
-use advert\models\Category;
 use yii\bootstrap\Tabs;
 
 /* @var $this yii\web\View */
