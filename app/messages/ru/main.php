@@ -17,10 +17,11 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'Created' => 'Создано',
-    'Edited' => 'Отредактировано',
+    'Phone already exists' => 'Телефон уже используется',
     'Can\'t create advert to this e-mail. <a href="{url}">Details...</a>' => 'Для публикации объявления на этот e-mail необходимо зарегистрироваться. <a href="{url}">Подробнее</a>',
     'Can\'t create advert to this phone. <a href="{url}">Details...</a>' => 'Для публикации объявления на этот телефон необходимо зарегистрироваться. <a href="{url}">Подробнее</a>',
+    'Created' => 'Создано',
+    'Edited' => 'Отредактировано',
     'No' => 'Нет',
     'Submit' => 'Отправить',
     'Wrong phone format' => 'Неверный формат телефона',
