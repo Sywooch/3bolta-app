@@ -4,6 +4,7 @@ use yii\bootstrap\ActiveForm;
 use yii\widgets\DetailView;
 use yii\widgets\MaskedInput;
 use app\components\PhoneValidator;
+use app\widgets\SelectMapLocation;
 
 /* @var $this yii\web\View */
 /* @var $model partner\models\TradePoint */
@@ -29,9 +30,19 @@ use app\components\PhoneValidator;
             ]);
         }
         print $form->field($model, 'partner_id')->textInput();
-        print $form->field($model, 'latitude')->textInput();
-        print $form->field($model, 'longitude')->textInput();
         print $form->field($model, 'address')->textInput();
+        print SelectMapLocation::widget([
+            'wrapperOptions'        => [
+                'class' => 'form-control',
+            ],
+            'address'               => '#' . Html::getInputId($model, 'address'),
+            'setLatitude'           => '#' . Html::getInputId($model, 'latitude'),
+            'setLongitude'          => '#' . Html::getInputId($model, 'longitude'),
+            'getLatitude'           => '#' . Html::getInputId($model, 'latitude'),
+            'getLongitude'          => '#' . Html::getInputId($model, 'longitude'),
+        ]);
+        print $form->field($model, 'longitude')->textInput();
+        print $form->field($model, 'latitude')->textInput();
         print $form->field($model, 'phone', [
             'errorOptions' => [
                 'encode' => false,
