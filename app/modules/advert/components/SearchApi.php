@@ -9,6 +9,7 @@ use advert\forms\Search;
 use yii\data\ActiveDataProvider;
 use advert\models\Advert;
 use yii\db\ActiveQuery;
+use auto\models\Mark;
 
 /**
  * API для поиска запчастей
@@ -200,21 +201,7 @@ class SearchApi extends \yii\base\Component
             foreach ($items as $k2 => $i) {
                 $r = $route;
                 foreach ($i['query'] as $key => $value) {
-                    switch ($key) {
-                        case 'mark':
-                            $key = 'a1';
-                            break;
-                        case 'model':
-                            $key = 'a2';
-                            break;
-                        case 'serie':
-                            $key = 'a3';
-                            break;
-                        case 'modification':
-                            $key = 'a4';
-                            break;
-                    }
-                    $key = Html::getInputName($searchModel, $key);
+                    $key = Html::getInputName($searchModel, $searchModel->getAutoParam($key));
                     $r[$key] = $value;
                 }
                 $result[] = Html::a(Html::encode($i['name']), Url::toRoute($r));
@@ -272,5 +259,19 @@ class SearchApi extends \yii\base\Component
             'pagination' => false,
             'sort' => false,
         ]);
+    }
+
+    /**
+     * Получить массив марок, привязаных к объявлениям
+     * @return Mark[]
+     */
+    public function getDistinctMark()
+    {
+        return Mark::find()
+            ->select('mark.*')
+            ->leftJoin(Advert::TABLE_MARK . ' advert_mark', 'mark.id = advert_mark.mark_id')
+            ->groupBy('mark.id')
+            ->orderBy('mark.name ASC')
+            ->all();
     }
 }

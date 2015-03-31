@@ -119,4 +119,31 @@ class Search extends \yii\base\Model
 
         return $ret;
     }
+
+    /**
+     * По человекопонятному параметру (model, mark, serie, modification)
+     * возвращает параметр для поиска (a1, a2, a3, a4).
+     *
+     * @param string $key
+     * @return string
+     */
+    public static function getAutoParam($key)
+    {
+        switch ($key) {
+            case 'mark':
+                $key = 'a1';
+                break;
+            case 'model':
+                $key = 'a2';
+                break;
+            case 'serie':
+                $key = 'a3';
+                break;
+            case 'modification':
+                $key = 'a4';
+                break;
+        }
+
+        return $key;
+    }
 }

@@ -67,7 +67,16 @@ FrontendAssets::register($this);
     <footer class="footer">
         <div class="container">
             <p class="pull-left">&copy; <?=Yii::$app->params['siteName']?> <?= date('Y') ?></p>
-            <p class="pull-right"><?= Yii::powered() ?></p>
+            <p class="pull-right">
+                <?=Nav::widget([
+                    'options' => ['class' => 'navbar-nav navbar-right bottom-menu'],
+                    'items' => [
+                        ['label' => Yii::t('frontend/menu', 'Search parts'), 'url' => ['/advert/catalog/search']],
+                        ['label' => Yii::t('frontend/menu', 'Append advert'), 'url' => ['/advert/advert/append']],
+                        ['label' => Yii::t('frontend/menu', 'About project'), 'url' => '#'],
+                    ],
+                ])?>
+            </p>
         </div>
     </footer>
     <?=ServiceMessage::widget()?>

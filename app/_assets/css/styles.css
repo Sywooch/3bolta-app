@@ -207,3 +207,16 @@ a.desc:after {
         margin: 0;
     }
 }
+.bottom-menu.navbar-nav>li>a {
+    display: inline;
+    padding-bottom: 0px;
+    padding-top: 0px;
+}
+.bottom-menu {
+    display: none;
+}
+@media (min-width: 767px) {
+    .bottom-menu {
+        display: inline;
+    }
+}

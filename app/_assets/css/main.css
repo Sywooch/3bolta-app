@@ -1,0 +1,76 @@
+
+.list-group-item {
+        border:0;
+}
+.list-item-row {
+        margin-bottom: 10px;
+}
+.list-item-price {
+        font-size: 20px;
+        margin-bottom: 20px;
+}
+.list-item-condition {
+        font-size: 12px;
+            margin-left: 12px;
+}
+.list-item h3 {
+    margin-top: 3px;
+    margin-bottom: 0px; 
+    font-size: 20px;
+}
+.list-item-image {
+    height: 200px;
+}
+.list-item-date {
+    padding-top: 0px;
+}
+.list-item-hover {
+    display: none;
+}
+.list-item-internal {
+    display: block;
+}
+.list-item-internal-preview img {
+    max-width: 123px;
+    max-height: 123px;
+}
+.list-item-image img {
+    max-width: 100%;
+}
+@media (min-width: 1200px) {
+    .list-item-hover {
+        display: none;
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        z-index: 999;
+        max-width: 100%;
+        margin-left: 15px;
+        margin-right: 15px;
+        box-shadow:5px 5px 12px #c3c3c3;
+        -moz-box-shadow:5px 5px 12px #c3c3c3;
+        -webkit-box-shadow:5px 5px 12px #c3c3c3;
+    }
+    .list-item:hover .list-item-hover {
+        display: block;
+    }
+    .list-item-internal {
+        display: block;
+    }
+    .list-item-internal h3 {
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+    }
+}
+.main-mark {
+    margin: 20px 0px;
+}
+.index-automobiles {
+    display: none;
+}
+@media (min-width: 768px) {
+    .index-automobiles {
+        display: block;
+    }
+}

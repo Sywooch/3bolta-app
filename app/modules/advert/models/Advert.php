@@ -26,6 +26,11 @@ use app\components\PhoneValidator;
  */
 class Advert extends \app\components\ActiveRecord
 {
+    const TABLE_MARK = '{{%advert_mark}}';
+    const TABLE_MODEL = '{{%advert_model}}';
+    const TABLE_MODIFICATION = '{{%advert_modification}}';
+    const TABLE_SERIE = '{{%advert_serie}}';
+
     /**
      * Количество дней по умолчанию для публикации объявлений
      */
@@ -344,7 +349,7 @@ class Advert extends \app\components\ActiveRecord
     public function getMark()
     {
         return $this->hasMany(Mark::className(), ['id' => 'mark_id'])
-            ->viaTable('{{%advert_mark}}', ['advert_id' => 'id']);
+            ->viaTable(self::TABLE_MARK, ['advert_id' => 'id']);
     }
 
     /**
@@ -354,7 +359,7 @@ class Advert extends \app\components\ActiveRecord
     public function getModel()
     {
         return $this->hasMany(Model::className(), ['id' => 'model_id'])
-            ->viaTable('{{%advert_model}}', ['advert_id' => 'id']);
+            ->viaTable(self::TABLE_MODEL, ['advert_id' => 'id']);
     }
 
     /**
@@ -364,7 +369,7 @@ class Advert extends \app\components\ActiveRecord
     public function getSerie()
     {
         return $this->hasMany(Serie::className(), ['id' => 'serie_id'])
-            ->viaTable('{{%advert_serie}}', ['advert_id' => 'id']);
+            ->viaTable(self::TABLE_SERIE, ['advert_id' => 'id']);
     }
 
     /**
@@ -374,7 +379,7 @@ class Advert extends \app\components\ActiveRecord
     public function getModification()
     {
         return $this->hasMany(Modification::className(), ['id' => 'modification_id'])
-            ->viaTable('{{%advert_modification}}', ['advert_id' => 'id']);
+            ->viaTable(self::TABLE_MODIFICATION, ['advert_id' => 'id']);
     }
 
     /**
@@ -394,16 +399,16 @@ class Advert extends \app\components\ActiveRecord
         $xrefColumn = '';
 
         switch ($tableName) {
-            case '{{%advert_mark}}':
+            case self::TABLE_MARK:
                 $xrefColumn = 'mark_id';
                 break;
-            case '{{%advert_model}}':
+            case self::TABLE_MODEL:
                 $xrefColumn = 'model_id';
                 break;
-            case '{{%advert_serie}}':
+            case self::TABLE_SERIE:
                 $xrefColumn = 'serie_id';
                 break;
-            case '{{%advert_modification}}':
+            case self::TABLE_MODIFICATION:
                 $xrefColumn = 'modification_id';
                 break;
             default:
@@ -484,7 +489,7 @@ class Advert extends \app\components\ActiveRecord
      */
     public function attachMark($markIds)
     {
-        $this->attachAutomobile('{{%advert_mark}}', $markIds);
+        $this->attachAutomobile(self::TABLE_MARK, $markIds);
     }
 
     /**
@@ -494,7 +499,7 @@ class Advert extends \app\components\ActiveRecord
      */
     public function attachModel($modelIds)
     {
-        $this->attachAutomobile('{{%advert_model}}', $modelIds);
+        $this->attachAutomobile(self::TABLE_MODEL, $modelIds);
     }
 
     /**
@@ -504,7 +509,7 @@ class Advert extends \app\components\ActiveRecord
      */
     public function attachSerie($serieIds)
     {
-        $this->attachAutomobile('{{%advert_serie}}', $serieIds);
+        $this->attachAutomobile(self::TABLE_SERIE, $serieIds);
     }
 
     /**
@@ -514,7 +519,7 @@ class Advert extends \app\components\ActiveRecord
      */
     public function attachModification($modificationIds)
     {
-        $this->attachAutomobile('{{%advert_modification}}', $modificationIds);
+        $this->attachAutomobile(self::TABLE_MODIFICATION, $modificationIds);
     }
 
     /**
