@@ -26,10 +26,22 @@ FrontendAssets::register($this);
 
 <?php $this->beginBody() ?>
     <div class="wrap">
+        <div class="logo-head">
+            <div class="logo"><a href="/">&nbsp;&nbsp;</a></div>
+            <div class="slogan"><i>Автозапчасти на одном сайте</i></div>
+            <div class="logo-buttons">
+                <div class="top-logo-search">
+                    <a href="#" id="toggleTopSearch" class="top-logo-search-btn"><span class="glyphicon glyphicon-search"></span></a>
+                </div>
+                <div class="top-logo-add-advert">
+                    <a href="#" class="btn btn-primary btn-top-add-advert">Подать объявление</a>
+                </div>
+            </div>
+        </div>
         <?php
         NavBar::begin([
-            'brandLabel' => Yii::$app->params['siteName'],
-            'brandUrl' => Yii::$app->homeUrl,
+            'brandLabel' => false,
+            'brandUrl' => '',
             'brandOptions' => [
                 'tag' => Url::to() === Yii::$app->homeUrl ? 'span' : 'a',
             ],

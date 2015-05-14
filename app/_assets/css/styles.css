@@ -1,3 +1,73 @@
+.logo-head {
+    width: 100%;
+    height: 76px;
+    background-color: #823333;
+}
+.logo-head .logo {
+    width: 239px;
+    height: 100%;
+    background-image: url(../img/logo.png);
+    float: left;
+}
+.logo-head .slogan {
+    width: 243px;
+    height: 100%;
+    line-height: 76px;
+    margin-left: 20px;
+    font-size: 17px;
+    color: #f0ede4;
+    float: left;
+    font-weight: normal;
+}
+.logo-head .logo a {
+    display: block;
+    border: 0px;
+    text-decoration: none;
+    width: 100%;
+    height: 100%;
+}
+.logo-head .btn-top-add-advert {
+    padding: 10px 25px;
+    border-radius: 3px;
+    border: 0px;
+    background-image: none;
+    background-color: #af3a3a;
+}
+.logo-head .logo-buttons {
+    float: right;
+    height: 76px;
+}
+.logo-head .top-logo-search, .logo-head .top-logo-add-advert {
+    float: right;
+}
+.logo-head .top-logo-search {
+    height: 100%;
+    width: 68px;
+    background-color: #792c2c;
+    color: #cf6464;
+}
+.logo-head .top-logo-search a {
+    color: #cf6464;
+    font-size: 28px;
+    display: block;
+    text-align: center;
+    line-height: 76px;
+}
+.logo-head .top-logo-add-advert {
+    height: 100%;
+    min-width: 200px;
+    line-height: 76px;
+}
+.navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav>.active>a {
+    box-shadow: none;
+    -webkit-box-shadow: none;
+    text-decoration: underline;
+}
+.navbar-default {
+    background-image: none;
+    background-color: #e2e2e2;
+    min-height: 40px;
+}
 .choose-auto .choose-auto-panel {
         border: 0px;
 }               
@@ -172,7 +242,7 @@ a.desc:after {
     color: #a94442;
 }
 .user-panel {
-    margin: 15px 0px;
+    margin: 10px 0px;
     line-height: 20px;
     float: right;
 }
