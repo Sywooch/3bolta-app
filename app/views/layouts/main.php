@@ -34,9 +34,31 @@ FrontendAssets::register($this);
                     <a href="#" id="toggleTopSearch" class="top-logo-search-btn"><span class="glyphicon glyphicon-search"></span></a>
                 </div>
                 <div class="top-logo-add-advert">
-                    <a href="#" class="btn btn-primary btn-top-add-advert">Подать объявление</a>
+                    <a href="<?=Url::toRoute(['/advert/advert/append'])?>" class="btn btn-primary btn-top-add-advert"><?=Yii::t('frontend/menu', 'Append advert')?></a>
+                </div>
+                <div class="top-logo-menu">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#mobile-top-nav">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                    </div>
                 </div>
             </div>
+        </div>
+        <div id="mobile-top-nav" class="collapse">
+            <?php
+            print Nav::widget([
+                'options' => ['class' => 'navbar-nav navbar-left', 'id' => ''],
+                'items' => [
+                    ['label' => Yii::t('frontend/menu', 'Search parts'), 'url' => ['/advert/catalog/search']],
+                    ['label' => Yii::t('frontend/menu', 'Append advert'), 'url' => ['/advert/advert/append']],
+                    ['label' => Yii::t('frontend/menu', 'About project'), 'url' => '#'],
+                ],
+            ]);
+            ?>
         </div>
         <?php
         NavBar::begin([
@@ -54,17 +76,7 @@ FrontendAssets::register($this);
             'options' => ['class' => 'navbar-nav navbar-left'],
             'items' => [
                 ['label' => Yii::t('frontend/menu', 'Search parts'), 'url' => ['/advert/catalog/search']],
-                ['label' => Yii::t('frontend/menu', 'Append advert'), 'url' => ['/advert/advert/append']],
                 ['label' => Yii::t('frontend/menu', 'About project'), 'url' => '#'],
-                [
-                    'label' => '',
-                    'linkOptions' => [
-                        'class' => 'glyphicon glyphicon-search',
-                        'id' => 'toggleTopSearch',
-                        'style' => Url::to() === Url::toRoute(['/advert/catalog/search']) ? 'display:none;' : '',
-                    ],
-                    'url' => '#',
-                ]
             ],
         ]);
         print UserPanel::widget();
