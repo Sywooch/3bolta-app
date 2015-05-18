@@ -11,7 +11,7 @@
 .logo-head {
     width: 100%;
     height: 76px;
-    background-color: #823333;
+    background-color: #993333;
 }
 .logo-head .logo {
     width: 239px;
@@ -50,8 +50,8 @@
 .logo-head .top-logo-search {
     height: 100%;
     width: 68px;
-    background-color: #792c2c;
-    color: #cf6464;
+    background-color: #8e3333;
+    color: #cc6666;
 }
 .logo-head .top-logo-search a {
     color: #cf6464;
@@ -113,7 +113,7 @@
     }
     .top-logo-menu .navbar-default {
         min-height: 76px;
-        background-color: #823333;
+        background-color: #993333;
     }
     .top-logo-menu .navbar-toggle .icon-bar {
         background-color: #FFF;
