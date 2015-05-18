@@ -431,3 +431,30 @@ a.desc:after {
 .list-pager .pagination li.active a {
     text-decoration: none;
 }
+.site-index {
+    margin: -15px -20px 0px -20px;
+    float: left;
+}
+.index-automobiles {
+    background-color: #576676;
+    color: #fff;
+    float: left;
+    padding: 0px 20px;
+}
+.index-automobiles h3 {
+    color: #fff;
+}
+.index-automobiles a, .index-automobiles a:hover, .index-automobiles a:focus {
+    color: #fff;
+}
+.index-automobiles a {
+    text-decoration: underline;
+}
+.index-automobiles a:hover {
+    text-decoration: none;
+}
+@media (max-width: 767px) {
+    .site-index{
+        margin: 0px;
+    }
+}

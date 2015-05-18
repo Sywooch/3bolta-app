@@ -16,7 +16,7 @@ $markParam = Html::getInputName(new Search(), Search::getAutoParam('mark'));
 ?>
 <div class="site-index">
     <div class="index-automobiles">
-        <div class="col-xs-12"><h3>Запчасти для автомобилей</h3></div>
+        <div class="col-xs-12"><h3><?=Yii::t('main', 'Parts for automobiles')?></h3></div>
         <?php foreach ($marks as $mark):?>
             <div class="col-lg-2 main-mark">
                 <a href="<?=Url::toRoute(['/advert/catalog/search', $markParam => $mark->id])?>"><?=Html::encode($mark->name)?></a>
@@ -40,7 +40,7 @@ $markParam = Html::getInputName(new Search(), Search::getAutoParam('mark'));
     </div>
     <?php if (!empty($lastAdverts)):?>
         <div class="index-last-adverts">
-            <div class="col-lg-12"><h3>Последние объявления</h3></div>
+            <div class="col-lg-12"><h3><?=Yii::t('main', 'Last adverts')?></h3></div>
             <?php foreach ($lastAdverts as $model):?>
                 <?php
                 // получить превью
