@@ -1,3 +1,12 @@
+.page-wrap {
+    width: 1000px;
+    margin: 0 auto;
+}
+@media (max-width: 1000px) {
+    .page-wrap {
+        width: 100%;
+    }
+}
 /** HEAD **/
 .logo-head {
     width: 100%;
@@ -29,10 +38,6 @@
 }
 .logo-head .btn-top-add-advert {
     padding: 10px 25px;
-    border-radius: 3px;
-    border: 0px;
-    background-image: none;
-    background-color: #af3a3a;
     cursor: pointer;
 }
 .logo-head .logo-buttons {
@@ -73,6 +78,16 @@
 }
 .logo-main-navbar {
     display: none;
+}
+.top-search {
+    background-color: #576676;
+    color: #fff;
+    border: 0px;
+    box-shadow: none;
+    -webkit-box-shadow: none;
+}
+.top-search a {
+    color: #ff5757;
 }
 @media (max-width: 767px) {
     .logo-main-navbar {
@@ -256,7 +271,10 @@ a.desc:after {
 }
 .top-search-choose-auto-button {
      cursor: pointer;
-     border-bottom: 1px dotted #23527c;
+    color: #ff5757;
+    font-style: italic;
+    font-weight: normal;
+    text-decoration: underline;
 }
 .list-pager {
     clear: both;
@@ -340,9 +358,68 @@ a.desc:after {
 }
 .bottom-menu {
     display: none;
+    margin-right: 15px;
 }
 @media (min-width: 767px) {
     .bottom-menu {
         display: inline;
     }
+}
+.main-navbar {
+    margin: 0px;
+    border: 0px;
+}
+.main-navbar .collapse {
+    margin: 0px;
+    padding-left: 0px;
+}
+.navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav>.active>a {
+    background-image: none;
+}
+.navbar-default {
+    box-shadow: none;
+    -webkit-box-shadow: none;
+}
+.btn {
+    border-radius: 3px;
+    -webkit-border-radius: 3px;
+    box-shadow: none;
+    -webkit-box-shadow: none;
+    border-color: none;
+    background-image: none;
+    cursor: pointer;
+    border: 0px;
+}
+.bottom-menu a, .bottom-menu a:hover, .bottom-menu a:focus {
+    color: #3f3f3f;
+    text-decoration: underline;
+}
+.bottom-menu a:hover, .bottom-menu a:focus {
+    text-decoration: none;
+}
+.footer {
+    color: #3f3f3f;
+    border: 0px;
+    padding-top: 0px;
+    height: 62px;
+    line-height: 62px;
+    font-size: 13px;
+}
+.footer p {
+    margin: 0px;
+}
+.footer .pull-left {
+    margin-left: 15px;
+}
+.footer .logo {
+    width: 193px;
+    height: 62px;
+    background-image: url(../img/logo-footer.png);
+    float: left;
+}
+.footer .logo a {
+    display: block;
+    line-height: 62px;
+    border: 0px;
+    text-decoration: none;
 }

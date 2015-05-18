@@ -25,7 +25,7 @@ FrontendAssets::register($this);
 <body>
 
 <?php $this->beginBody() ?>
-    <div class="wrap">
+    <div class="wrap page-wrap">
         <div class="logo-head">
             <div class="logo"><a href="/">&nbsp;&nbsp;</a></div>
             <div class="slogan"><i>Автозапчасти на одном сайте</i></div>
@@ -88,20 +88,19 @@ FrontendAssets::register($this);
         </div>
     </div>
 
-    <footer class="footer">
-        <div class="container">
-            <p class="pull-left">&copy; <?=Yii::$app->params['siteName']?> <?= date('Y') ?></p>
-            <p class="pull-right">
-                <?=Nav::widget([
-                    'options' => ['class' => 'navbar-nav navbar-right bottom-menu'],
-                    'items' => [
-                        ['label' => Yii::t('frontend/menu', 'Search parts'), 'url' => ['/advert/catalog/search']],
-                        ['label' => Yii::t('frontend/menu', 'Append advert'), 'url' => ['/advert/advert/append']],
-                        ['label' => Yii::t('frontend/menu', 'About project'), 'url' => '#'],
-                    ],
-                ])?>
-            </p>
+    <footer class="footer page-wrap">
+        <div class="logo">
+            <a href="/"></a>
         </div>
+        <p class="pull-left">&copy; <?=Yii::$app->params['siteName']?> <?= date('Y') ?></p>
+        <?=Nav::widget([
+            'options' => ['class' => 'navbar-nav navbar-right bottom-menu'],
+            'items' => [
+                ['label' => Yii::t('frontend/menu', 'Search parts'), 'url' => ['/advert/catalog/search']],
+                ['label' => Yii::t('frontend/menu', 'Append advert'), 'url' => ['/advert/advert/append']],
+                ['label' => Yii::t('frontend/menu', 'About project'), 'url' => '#'],
+            ],
+        ])?>
     </footer>
     <?=ServiceMessage::widget()?>
 <?php $this->endBody() ?>

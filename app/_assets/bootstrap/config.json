@@ -6,7 +6,7 @@
     "@gray": "#9da4ac",
     "@gray-light": "#e2e2e2",
     "@gray-lighter": "lighten(@gray-base, 93.5%)",
-    "@brand-primary": "#823333",
+    "@brand-primary": "#af3a3a",
     "@brand-success": "#5cb85c",
     "@brand-info": "#5bc0de",
     "@brand-warning": "#f0ad4e",
@@ -16,7 +16,7 @@
     "@link-color": "#af3a3a",
     "@link-hover-color": "darken(@link-color, 15%)",
     "@link-hover-decoration": "underline",
-    "@font-family-sans-serif": "\"Helvetica Neue\", Helvetica, Arial, sans-serif",
+    "@font-family-sans-serif": "sans-serif, Arial, \"Helvetica Neue\", Helvetica",
     "@font-family-serif": "Georgia, \"Times New Roman\", Times, serif",
     "@font-family-monospace": "Menlo, Monaco, Consolas, \"Courier New\", monospace",
     "@font-family-base": "@font-family-sans-serif",
@@ -149,8 +149,8 @@
     "@navbar-default-link-color": "#3a4858",
     "@navbar-default-link-hover-color": "@brand-primary",
     "@navbar-default-link-hover-bg": "transparent",
-    "@navbar-default-link-active-color": "#af3a3a",
-    "@navbar-default-link-active-bg": "transparent",
+    "@navbar-default-link-active-color": "#fff",
+    "@navbar-default-link-active-bg": "#576676",
     "@navbar-default-link-disabled-color": "@gray-light",
     "@navbar-default-link-disabled-bg": "transparent",
     "@navbar-default-brand-color": "@navbar-default-link-color",
@@ -176,7 +176,7 @@
     "@navbar-inverse-toggle-icon-bar-bg": "#fff",
     "@navbar-inverse-toggle-border-color": "#333",
     "@nav-link-padding": "10px 15px",
-    "@nav-link-hover-bg": "@gray-lighter",
+    "@nav-link-hover-bg": "transparent",
     "@nav-disabled-link-color": "@gray-light",
     "@nav-disabled-link-hover-color": "@gray-light",
     "@nav-tabs-border-color": "#ddd",
@@ -426,5 +426,5 @@
     "scrollspy.js",
     "transition.js"
   ],
-  "customizerUrl": "http://getbootstrap.com/customize/?id=446b0711ccee26bb2952"
+  "customizerUrl": "http://getbootstrap.com/customize/?id=55eb0386f588e9d186c7"
 }
