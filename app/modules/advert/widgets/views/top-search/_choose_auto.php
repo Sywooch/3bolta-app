@@ -131,7 +131,7 @@ $chooseAutomobile = ChooseAutomobile::begin([
 JS::end();
 $modal->end();
 ?>
-<div class="form-group">
+<div class="form-group top-search-auto">
     <label class="control-label"><?=Yii::t('frontend/advert', 'Part for')?>:</label>
     <a href="#" class="top-search-choose-auto-button" data-toggle="modal" data-target="#topSearchChooseAuto"><?php if ($automobile = $model->getAutomobileFullName()):?><?=$automobile?><?php else:?><?=Yii::t('frontend/advert', 'Choose automobile...')?><?php endif;?></a>
 </div>

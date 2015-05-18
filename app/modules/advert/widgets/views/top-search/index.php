@@ -33,13 +33,13 @@ use advert\forms\Search;
             </div>
         </div>
         <div class="row">
-            <div class="col-lg-2 col-sm-12">
+            <div class="col-lg-6 col-sm-12">
                 <?=$form->field($model, 'con')->dropDownList(Advert::getConditionDropDownList())?>
             </div>
-            <div class="col-lg-3 col-sm-12">
+            <div class="col-lg-6 col-sm-12">
                 <?=$form->field($model, 'cat')->dropDownList(Advert::getCategoryDropDownList(true))?>
             </div>
-            <div class="col-lg-5 col-sm-12">
+            <div class="col-lg-12 col-sm-12">
                 <?=$form->field($model, 'q')->textInput(['maxlength' => Search::MAX_QUERY_LENGTH])?>
             </div>
             <div class="col-lg-2 col-sm-12">
