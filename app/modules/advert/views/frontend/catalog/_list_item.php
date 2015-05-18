@@ -34,13 +34,13 @@ $preview = $model->getPreview();
                     )?></h3>
                 </div>
                 <div class="list-item-date">
-                    <span class="publish-date">
+                    <i class="publish-date">
                         <?=Yii::t('frontend/advert', 'Published at')?>
                         <?=$model->getPublishedFormatted()?>
-                    </span>
+                    </i>
                 </div>
                 <div class="list-item-row list-item-price">
-                    <span class="label label-success">
+                    <span class="label label-primary">
                         <span class="glyphicon glyphicon-ruble"></span>
                         <?=$model->getPriceFormated()?>
                     </span>
@@ -86,13 +86,13 @@ $preview = $model->getPreview();
                 )?></h3>
             </div>
             <div class="list-item-date">
-                <span class="publish-date">
+                <i class="publish-date">
                     <?=Yii::t('frontend/advert', 'Published at')?>
                     <?=$model->getPublishedFormatted()?>
-                </span>
+                </i>
             </div>
             <div class="list-item-row list-item-price">
-                <span class="label label-success">
+                <span class="label label-primary">
                     <span class="glyphicon glyphicon-ruble"></span>
                     <?=$model->getPriceFormated()?>
                 </span>

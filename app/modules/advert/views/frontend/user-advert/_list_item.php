@@ -70,7 +70,7 @@ $preview = $model->getPreview();
         <?php endif;?>
         <div class="col-lg-<?=$preview ? '8' : '12'?>">
             <div class="list-item-row list-item-price">
-                <span class="label label-success">
+                <span class="label label-primary">
                     <span class="glyphicon glyphicon-ruble"></span>
                     <?=$model->getPriceFormated()?>
                 </span>

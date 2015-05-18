@@ -255,8 +255,7 @@ a.desc:after {
     margin: 0 0 15px 0;
 }
 .content-container {
-    width: 90%;
-    margin: 0 auto;
+    width: 100%;
 }
 .top-search-choose-auto {
      height:300px;
@@ -421,5 +420,14 @@ a.desc:after {
     display: block;
     line-height: 62px;
     border: 0px;
+    text-decoration: none;
+}
+.list-pager .pagination li>a {
+    text-decoration: underline;
+}
+.list-pager .pagination li>a:hover, .list-pager .pagination li>a:focus {
+    text-decoration: none;
+}
+.list-pager .pagination li.active a {
     text-decoration: none;
 }

@@ -37,6 +37,9 @@
 .list-item-image img {
     max-width: 100%;
 }
+.list-item-automobiles a {
+    font-style: italic;
+}
 @media (min-width: 1200px) {
     .list-item-hover {
         display: none;

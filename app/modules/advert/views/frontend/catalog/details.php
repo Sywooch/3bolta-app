@@ -29,13 +29,13 @@ AdvertDetail::register($this);
         <h2><?=Html::encode($model->advert_name)?></h2>
     </div>
     <div class="item-details-row item-details-date">
-        <span class="publish-date">
+        <i class="publish-date">
             <?=Yii::t('frontend/advert', 'Published at')?>
             <?=$model->getPublishedFormatted()?>
-        </span>
+        </i>
     </div>
     <div class="item-details-row item-details-price">
-        <span class="label label-success">
+        <span class="label label-primary">
             <span class="glyphicon glyphicon-ruble"></span>
             <?=$model->getPriceFormated()?>
         </span>
