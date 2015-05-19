@@ -1,6 +1,10 @@
+body {
+    background-color: #cccccc;
+}
 .page-wrap {
     width: 1000px;
     margin: 0 auto;
+    background-color: #fff;
 }
 @media (max-width: 1000px) {
     .page-wrap {
@@ -181,7 +185,7 @@ body {
 
 .footer {
     height: 60px;
-    background-color: #f5f5f5;
+    background-color: #e2e2e2;
     border-top: 1px solid #ddd;
     padding-top: 20px;
 }
