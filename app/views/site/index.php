@@ -14,7 +14,7 @@ $this->title = '3bolta.com';
 // параметр для установки марки в запрос
 $markParam = Html::getInputName(new Search(), Search::getAutoParam('mark'));
 ?>
-<div class="site-index">
+<div class="site-index no-content-margin">
     <div class="index-automobiles">
         <div class="col-xs-12"><h3><?=Yii::t('main', 'Parts for automobiles')?></h3></div>
         <?php foreach ($marks as $mark):?>

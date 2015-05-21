@@ -1,0 +1,72 @@
+.advert-form-wrapper {
+    float: left;
+    width: 100%;
+}
+.advert-form-common {
+    width: 100%;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    float: left;
+    background-color: #4e5d6d;
+    color: #fff;
+    padding-top: 20px;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+.advert-form-auto {
+    background-color: #ccd1d5;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    margin-bottom: 0px;
+}
+.advert-form-auto-widget {
+    background-color: transparent;
+}
+.advert-form-auto-widget .choose-auto-panel {
+    background-color: transparent;
+    box-shadow: none;
+    -webkit-box-shadow: none;
+    border: none;
+    width: 20%;
+}
+.advert-form-auto-widget .choose-auto-panel-body {
+    height: 250px;
+    overflow-y: scroll;
+}
+.advert-form-contacts {
+    background-color: #993333;
+    float: left;
+    width: 100%;
+    padding-left: 20px;
+    padding-right: 20px;
+    color: #FFF;
+    padding-bottom: 40px;
+}
+.advert-form-contacts h3 {
+    color: #FFF;
+}
+.wrap > .content-container {
+    padding-bottom: 0px;
+}
+.advert-form-block-info {
+    background-image: repeating-linear-gradient(-70deg,#e2e2e2,#e2e2e2 30px,#e9e9e9 30px,#e9e9e9 60px);
+    background-color: #d5d5d5;
+    padding: 20px 40px;
+}
+.advert-form-block-info img {
+    margin-right: 20px;
+}
+.has-success .form-control {
+    box-shadow: 1px 1px 10px rgba(60, 118, 61, 20);
+    -webkit-box-shadow: 1px 1px 10px rgba(60, 118, 61, 50);
+}
+.has-error .form-control {
+    box-shadow: 1px 1px 10px rgba(169, 68, 66, 20);
+    -webkit-box-shadow: 1px 1px 10px rgba(169, 68, 66, 50);
+}
+.content-container .has-error .help-block-error {
+    color: #ff0000;
+}
+.advert-form-contacts .help-block-error {
+    background-color: #660000;
+}

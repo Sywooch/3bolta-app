@@ -7,18 +7,30 @@ use kartik\widgets\FileInput;
 use yii\widgets\MaskedInput;
 use app\components\PhoneValidator;
 
+use advert\assets\AdvertForm;
+
+use app\assets\FrontendAssets;
+
+$frontendAssets = new FrontendAssets();
+$assetsUrl = Yii::$app->assetManager->getPublishedUrl($frontendAssets->sourcePath);
+
+AdvertForm::register($this);
+
 /* @var $form advert\forms\Form */
 /* @var $this yii\base\View */
 /* @var $form yii\bootstrap\ActiveForm */
 ?>
 <div class="col-xs-12">
-    <?=Html::tag('h2', Yii::t('frontend/advert', 'Append advert'))?>
+    <?=Html::tag('h1', Yii::t('frontend/advert', 'Append advert'))?>
 </div>
 
-<div class="col-xs-12 block-info block-info-primary">
-    Вы не авторизованы на сайте.<br />
-    Неавторизованные пользователи могут опубликовать только одно объявление на ограниченный срок без возможности продления. Подробнее <a href="#">здесь</a>.<br />
-    Вы можете <a href="#">зарегистрироваться</a> или <a href="#">авторизоваться</a> на сайте, чтобы публиковать объявления без ограничений.
+<div class="no-content-margin">
+    <div class="col-xs-12 advert-form-block-info">
+        <img src="<?=$assetsUrl?>/img/warning-1.png" align="left" />
+        Вы не авторизованы на сайте.<br />
+        Неавторизованные пользователи могут опубликовать только одно объявление на ограниченный срок без возможности продления. Подробнее <a href="#">здесь</a>.<br />
+        Вы можете <a href="#">зарегистрироваться</a> или <a href="#">авторизоваться</a> на сайте, чтобы публиковать объявления без ограничений.
+    </div>
 </div>
 
 <?php
@@ -31,17 +43,21 @@ $form = ActiveForm::begin([
     ]
 ]);
 ?>
-    <div class="col-sm-12 col-lg-4">
-        <?=$form->field($model, 'name')->textInput()?>
-    </div>
-    <div class="col-sm-12 col-lg-4">
-        <?=$form->field($model, 'category_id')->dropDownList(Advert::getCategoryDropDownList(true))?>
-    </div>
-    <div class="col-sm-12 col-lg-2">
-        <?=$form->field($model, 'condition_id')->dropDownList(Advert::getConditionDropDownList(true))?>
-    </div>
-    <div class="col-sm-12 col-lg-2">
-        <?=$form->field($model, 'price')->textInput()?>
+    <div class="no-content-margin">
+        <div class="advert-form-common">
+            <div class="col-lg-12">
+                <?=$form->field($model, 'name')->textInput()?>
+            </div>
+            <div class="col-sm-12 col-lg-12">
+                <?=$form->field($model, 'category_id')->dropDownList(Advert::getCategoryDropDownList(true))?>
+            </div>
+            <div class="col-sm-12 col-lg-6">
+                <?=$form->field($model, 'condition_id')->dropDownList(Advert::getConditionDropDownList(true))?>
+            </div>
+            <div class="col-sm-12 col-lg-6">
+                <?=$form->field($model, 'price')->textInput()?>
+            </div>
+        </div>
     </div>
 
     <div class="col-xs-12">
@@ -74,55 +90,64 @@ $form = ActiveForm::begin([
         <?=Html::tag('h3', Yii::t('frontend/advert', 'Automobiles'))?>
     </div>
 
-    <div class="col-xs-12 block-info block-info-primary">
-        Обязательным выбором обладает марка. Вы можете выбрать не более 10 марок автомобилей и не более 10 моделей. На кузова и двигатели ограчений нет.
-    </div>
-
     <div class="col-xs-12">
         <?=$form->field($model, 'mark', [
             'template' => '{input}{error}',
         ])->hiddenInput(['value' => ''])?>
     </div>
 
-    <div class="col-sm-12">
-        <?=$this->render('_choose_auto', [
-            'form' => $form,
-            'model' => $model,
-        ])?>
+    <div class="no-content-margin">
+        <div class="col-xs-12 advert-form-block-info">
+            <img src="<?=$assetsUrl?>/img/warning-2.png" align="left" />
+            Обязательным выбором обладает марка. Вы можете выбрать не более 10 марок автомобилей и не более 10 моделей. На кузова и двигатели ограчений нет.
+        </div>
     </div>
 
-    <div class="col-sm-12">
-        <?=$form->field($model, 'description')->textarea(['maxlength' => Form::DESCRIPTION_MAX_LENGTH])?>
+    <div class="no-content-margin">
+        <div class="col-sm-12 advert-form-auto">
+            <?=$this->render('_choose_auto', [
+                'form' => $form,
+                'model' => $model,
+            ])?>
+
+            <div class="col-sm-12">
+                <?=$form->field($model, 'description')->textarea(['maxlength' => Form::DESCRIPTION_MAX_LENGTH])?>
+            </div>
+        </div>
     </div>
 
-    <div class="col-xs-12">
-        <?=Html::tag('h3', Yii::t('frontend/advert', 'Contacts'))?>
-    </div>
+    <div class="no-content-margin">
+        <div class="advert-form-contacts">
+            <div class="col-xs-12">
+                <?=Html::tag('h3', Yii::t('frontend/advert', 'Contacts'))?>
+            </div>
 
-    <div class="col-sm-12 col-lg-4">
-        <?=$form->field($model, 'user_name')->textInput()?>
-    </div>
+            <div class="col-sm-12 col-lg-4">
+                <?=$form->field($model, 'user_name')->textInput()?>
+            </div>
 
-    <div class="col-sm-12 col-lg-4">
-        <?=$form->field($model, 'user_phone', [
-            'errorOptions' => [
-                'encode' => false,
-            ]
-        ])->widget(MaskedInput::className(), [
-            'mask' => PhoneValidator::PHONE_MASK,
-        ])?>
-    </div>
+            <div class="col-sm-12 col-lg-4">
+                <?=$form->field($model, 'user_phone', [
+                    'errorOptions' => [
+                        'encode' => false,
+                    ]
+                ])->widget(MaskedInput::className(), [
+                    'mask' => PhoneValidator::PHONE_MASK,
+                ])?>
+            </div>
 
-    <div class="col-sm-12 col-lg-4">
-        <?=$form->field($model, 'user_email', [
-            'errorOptions' => [
-                'encode' => false,
-            ]
-        ])->textInput()?>
-    </div>
+            <div class="col-sm-12 col-lg-4">
+                <?=$form->field($model, 'user_email', [
+                    'errorOptions' => [
+                        'encode' => false,
+                    ]
+                ])->textInput()?>
+            </div>
 
-    <div class="col-xs-12">
-        <?=Html::submitButton(Yii::t('frontend/advert', 'Create advert'), ['class' => 'btn btn-success']);?>
+            <div class="col-xs-12">
+                <?=Html::submitButton(Yii::t('frontend/advert', 'Create advert'), ['class' => 'btn btn-primary']);?>
+            </div>
+        </div>
     </div>
 <?php $form->end(); ?>
 

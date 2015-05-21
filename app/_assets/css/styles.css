@@ -293,7 +293,8 @@ a.desc:after {
 .block-info {
     border: 1px solid #eee;
     padding: 20px;
-    margin: 20px 0px;
+    margin: 0px;
+    margin-top: 20px;
     border-left-width: 5px;
     border-radius: 3px;
 }
@@ -436,7 +437,8 @@ a.desc:after {
     text-decoration: none;
 }
 .site-index {
-    margin: -15px -20px 0px -20px;
+    margin-top: -15px;
+    margin-bottom: 0px;
     float: left;
 }
 .index-automobiles {
@@ -461,4 +463,16 @@ a.desc:after {
     .site-index{
         margin: 0px;
     }
+}
+@media (min-width: 767px) {
+    .no-content-margin {
+        margin-left: -20px;
+        margin-right: -20px;
+    }
+}
+h2, h3, h4, h5, h6 {
+    color: #000;
+}
+.has-success .control-label, .has-error .control-label {
+    color: inherit;
 }
