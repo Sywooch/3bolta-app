@@ -4,8 +4,6 @@
  */
 
 use yii\helpers\Url;
-use user\widgets\LoginModal;
-use user\widgets\LostPasswordModal;
 use yii\helpers\Html;
 use user\models\User;
 
@@ -34,7 +32,5 @@ use user\models\User;
         <a href="<?=Url::toRoute(['/user/user/register'])?>"><?=Yii::t('frontend/user', 'Registration')?></a>
         /
         <a href="#" data-dismiss="modal" data-toggle="modal" data-target="#loginModal"><?=Yii::t('frontend/user', 'Enter')?></a>
-        <?=LoginModal::widget()?>
-        <?=LostPasswordModal::widget()?>
     <?php endif; ?>
 </div>

@@ -9,6 +9,8 @@ use app\assets\FrontendAssets;
 use advert\widgets\TopSearch;
 /* @var $this \yii\web\View */
 /* @var $content string */
+use user\widgets\LoginModal;
+use user\widgets\LostPasswordModal;
 
 FrontendAssets::register($this);
 ?>
@@ -107,6 +109,8 @@ FrontendAssets::register($this);
             ],
         ])?>
     </footer>
+    <?=LoginModal::widget()?>
+    <?=LostPasswordModal::widget()?>
     <?=ServiceMessage::widget()?>
 <?php $this->endBody() ?>
 </body>
