@@ -54,7 +54,7 @@ $markParam = Html::getInputName(new Search(), Search::getAutoParam('mark'));
                                 <div class="list-item-title list-item-title-internal">
                                     <h3><?=Html::a(
                                         Html::encode($model->advert_name),
-                                        Url::toRoute(['details', 'id' => $model->id])
+                                        Url::toRoute(['/advert/catalog/details', 'id' => $model->id])
                                     )?></h3>
                                 </div>
                                 <div class="list-item-date">
