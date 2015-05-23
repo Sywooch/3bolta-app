@@ -20,12 +20,12 @@ AdvertForm::register($this);
 /* @var $this yii\base\View */
 /* @var $form yii\bootstrap\ActiveForm */
 ?>
-<div class="col-xs-12">
+<div class="col-lg-12">
     <?=Html::tag('h1', Yii::t('frontend/advert', 'Append advert'))?>
 </div>
 
 <div class="no-content-margin">
-    <div class="col-xs-12 advert-form-block-info">
+    <div class="col-lg-12 advert-form-block-info">
         <img src="<?=$assetsUrl?>/img/warning-1.png" align="left" />
         Вы не авторизованы на сайте.<br />
         Неавторизованные пользователи могут опубликовать только одно объявление на ограниченный срок без возможности продления. Подробнее <a href="#">здесь</a>.<br />
@@ -44,7 +44,7 @@ $form = ActiveForm::begin([
 ]);
 ?>
     <div class="no-content-margin">
-        <div class="advert-form-common">
+        <div class="advert-form-common col-lg-12">
             <div class="col-lg-12">
                 <?=$form->field($model, 'name')->textInput()?>
             </div>
