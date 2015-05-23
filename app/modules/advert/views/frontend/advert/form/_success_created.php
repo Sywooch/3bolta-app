@@ -17,7 +17,7 @@ if ($id = Yii::$app->session->getFlash('advert_success_created')) {
 if ($model instanceof Advert && !$model->user_id) {
     Modal::begin([
         'id' => 'advertWasCreatedModal',
-        'header' => '<h2 class="primary-title"><span class="glyphicon glyphicon-info-sign"></span> ' . Yii::t('frontend/advert', 'Advert was created') . '</h2>',
+        'header' => '<h2><span class="glyphicon glyphicon-info-sign"></span> ' . Yii::t('frontend/advert', 'Advert was created') . '</h2>',
         'toggleButton' => false,
     ]);
     ?>

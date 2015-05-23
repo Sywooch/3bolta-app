@@ -46,7 +46,7 @@ use yii\widgets\MaskedInput;
 <?php if ($registeredUser instanceof User) {
     Modal::begin([
         'id' => 'userConfirmationSend',
-        'header' => '<h2 class="primary-title"><span class="glyphicon glyphicon-info-sign"></span> ' . Yii::t('frontend/user', 'Success registered') . '</h2>',
+        'header' => '<h2><span class="glyphicon glyphicon-info-sign"></span> ' . Yii::t('frontend/user', 'Success registered') . '</h2>',
         'toggleButton' => false,
     ]);
     ?>

@@ -13,7 +13,7 @@ use app\widgets\JS;
 /* @var $modal \user\forms\LostPassword */
 Modal::begin([
     'id' => 'lostPasswordModal',
-    'header' => '<h2 class="primary-title">' . Yii::t('frontend/user', 'Restore password') . '</h2>',
+    'header' => '<h2>' . Yii::t('frontend/user', 'Restore password') . '</h2>',
     'toggleButton' => false,
 ]);
 $form = ActiveForm::begin([

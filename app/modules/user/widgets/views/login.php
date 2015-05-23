@@ -13,7 +13,7 @@ use yii\bootstrap\Modal;
 /* @var $modal \user\forms\Login */
 Modal::begin([
     'id' => 'loginModal',
-    'header' => '<h2 class="primary-title"><span class="glyphicon glyphicon-hand-right"></span> ' . Yii::t('frontend/user', 'Authorize') . '</h2>',
+    'header' => '<h2><span class="glyphicon glyphicon-hand-right"></span> ' . Yii::t('frontend/user', 'Authorize') . '</h2>',
     'toggleButton' => false,
 ]);
 $form = ActiveForm::begin([

@@ -115,7 +115,7 @@ AdvertDetail::register($this);
     <?php
     Modal::begin([
         'id' => 'advertWasPublishedModal',
-        'header' => '<h2 class="primary-title"><span class="glyphicon glyphicon-info-sign"></span> ' . Yii::t('frontend/advert', 'Advert was published') . '</h2>',
+        'header' => '<h2><span class="glyphicon glyphicon-info-sign"></span> ' . Yii::t('frontend/advert', 'Advert was published') . '</h2>',
         'toggleButton' => false,
     ]);
     ?>

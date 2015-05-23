@@ -19,14 +19,14 @@ class ServiceMessage extends \yii\base\Widget
             $title = ArrayHelper::getValue(Yii::$app->session->getFlash('alert'), 'title');
 
             $class = 'block-info-primary';
-            $classTitle = 'primary-title';
+            $classTitle = '';
             if (!empty($options['class']) && $options['class'] == 'alert-success') {
                 $class = 'block-info-success';
-                $classTitle = 'success-title';
+                $classTitle = '';
             }
             else if (!empty($options['class']) && $options['class'] == 'alert-danger') {
                 $class = 'block-info-danger';
-                $classTitle = 'danger-title';
+                $classTitle = '';
             }
 
             if ($title) {

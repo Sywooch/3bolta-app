@@ -314,6 +314,7 @@ a.desc:after {
     padding: 20px;
     margin: 0px;
     margin-top: 20px;
+    margin-bottom: 20px;
     border-left-width: 5px;
     border-radius: 3px;
 }
@@ -495,3 +496,12 @@ h2, h3, h4, h5, h6 {
 .has-success .control-label, .has-error .control-label {
     color: inherit;
 }
+.has-success .form-control {
+    box-shadow: 1px 1px 10px rgba(60, 118, 61, 20);
+    -webkit-box-shadow: 1px 1px 10px rgba(60, 118, 61, 50);
+}
+.has-error .form-control {
+    box-shadow: 1px 1px 10px rgba(169, 68, 66, 20);
+    -webkit-box-shadow: 1px 1px 10px rgba(169, 68, 66, 50);
+}
+
