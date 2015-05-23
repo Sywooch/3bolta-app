@@ -6,12 +6,9 @@
     width: 100%;
     margin-top: 0px;
     margin-bottom: 0px;
-    float: left;
     background-color: #4e5d6d;
     color: #fff;
-    padding-top: 20px;
-    padding-left: 20px;
-    padding-right: 20px;
+    padding: 20px;
 }
 .advert-form-auto {
     background-color: #ccd1d5;
