@@ -67,7 +67,7 @@ class ChooseAutomobile extends \yii\base\Widget
      */
     public function renderPanel($class, $label)
     {
-        $panelClass = $this->panelClass ? $this->panelClass : 'panel panel-default choose-auto-panel col-xs-3 col-sm-3';
+        $panelClass = $this->panelClass ? $this->panelClass : 'panel panel-default choose-auto-panel col-sm-12 col-md-3';
         print Html::beginTag('div', [
             'class' => $panelClass,
         ]);

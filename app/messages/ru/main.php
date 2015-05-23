@@ -22,6 +22,7 @@ return [
     'Can\'t create advert to this e-mail. <a href="{url}">Details...</a>' => 'Для публикации объявления на этот e-mail необходимо зарегистрироваться. <a href="{url}">Подробнее</a>',
     'Can\'t create advert to this phone. <a href="{url}">Details...</a>' => 'Для публикации объявления на этот телефон необходимо зарегистрироваться. <a href="{url}">Подробнее</a>',
     'Created' => 'Создано',
+    'Drag & drop files here for upload' => 'Для загрузки перетащите файлы в это окно',
     'Edited' => 'Отредактировано',
     'No' => 'Нет',
     'Phone already exists' => 'Телефон уже используется',

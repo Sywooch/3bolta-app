@@ -33,6 +33,14 @@
     height: 250px;
     overflow-y: scroll;
 }
+@media (max-width: 767px) {
+    .advert-form-auto-widget .choose-auto-panel {
+        width: 100%;
+    }
+    .advert-form-auto-widget .choose-auto-panel-body {
+        height: 100px;
+    }
+}
 .advert-form-contacts {
     background-color: #993333;
     float: left;
@@ -69,4 +77,9 @@
 }
 .advert-form-contacts .help-block-error {
     background-color: #660000;
+}
+@media (max-width: 767px) {
+    .field-form-uploadimage .file-preview {
+        display: none;
+    }
 }

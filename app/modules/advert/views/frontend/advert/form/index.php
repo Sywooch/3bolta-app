@@ -81,36 +81,38 @@ $form = ActiveForm::begin([
                 'layoutTemplates' => [
                     'actions' => '{delete}',
                 ],
+                'showUpload' => false,
                 'overwriteInitial' => false,
+                'dropZoneTitle' => Yii::t('main', 'Drag & drop files here for upload'),
             ],
         ])?>
     </div>
 
-    <div class="col-xs-12">
+    <div class="col-lg-12">
         <?=Html::tag('h3', Yii::t('frontend/advert', 'Automobiles'))?>
     </div>
 
-    <div class="col-xs-12">
+    <div class="col-lg-12">
         <?=$form->field($model, 'mark', [
             'template' => '{input}{error}',
         ])->hiddenInput(['value' => ''])?>
     </div>
 
     <div class="no-content-margin">
-        <div class="col-xs-12 advert-form-block-info">
+        <div class="col-lg-12 advert-form-block-info">
             <img src="<?=$assetsUrl?>/img/warning-2.png" align="left" />
             Обязательным выбором обладает марка. Вы можете выбрать не более 10 марок автомобилей и не более 10 моделей. На кузова и двигатели ограчений нет.
         </div>
     </div>
 
     <div class="no-content-margin">
-        <div class="col-sm-12 advert-form-auto">
+        <div class="col-lg-12 advert-form-auto">
             <?=$this->render('_choose_auto', [
                 'form' => $form,
                 'model' => $model,
             ])?>
 
-            <div class="col-sm-12">
+            <div class="col-lg-12">
                 <?=$form->field($model, 'description')->textarea(['maxlength' => Form::DESCRIPTION_MAX_LENGTH])?>
             </div>
         </div>
@@ -118,7 +120,7 @@ $form = ActiveForm::begin([
 
     <div class="no-content-margin">
         <div class="advert-form-contacts">
-            <div class="col-xs-12">
+            <div class="col-lg-12">
                 <?=Html::tag('h3', Yii::t('frontend/advert', 'Contacts'))?>
             </div>
 
