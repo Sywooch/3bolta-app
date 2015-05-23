@@ -11,9 +11,9 @@ use user\models\User;
 
 /* @var $user \user\models\User */
 ?>
-<div class="user-panel pull-right">
+<div class="user-panel">
     <?php if ($user instanceof User):?>
-        <?=Yii::t('frontend/user', 'You enter as:')?>
+        <span class="caption"><?=Yii::t('frontend/user', 'You enter as:')?></span>
         <div class="user-dropdown-menu">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                 <i class="glyphicon glyphicon-user"></i>

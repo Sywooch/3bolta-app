@@ -79,11 +79,16 @@ FrontendAssets::register($this);
                 ['label' => Yii::t('frontend/menu', 'About project'), 'url' => '#'],
             ],
         ]);
-        print UserPanel::widget();
+        ?>
+        <div class="pull-right"><?=UserPanel::widget()?></div>
+        <?php
         NavBar::end();
         print TopSearch::widget();
         ?>
         <div class="container content-container">
+            <div class="mobile-top-user col-lg-12">
+                <?=UserPanel::widget()?>
+            </div>
             <?= $content ?>
         </div>
     </div>
