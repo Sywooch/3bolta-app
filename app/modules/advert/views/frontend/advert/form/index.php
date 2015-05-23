@@ -60,11 +60,11 @@ $form = ActiveForm::begin([
         </div>
     </div>
 
-    <div class="col-xs-12">
+    <div class="col-lg-12">
         <?=Html::tag('h3', Yii::t('frontend/advert', 'Images'))?>
     </div>
 
-    <div class="col-sm-12">
+    <div class="col-lg-12">
         <?=$form->field($model, 'uploadImage', [
             'template' => '{input}',
         ])->widget(FileInput::className(), [

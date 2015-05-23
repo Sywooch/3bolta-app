@@ -9,10 +9,18 @@ use kartik\widgets\FileInput;
 use advert\models\Advert;
 use yii\bootstrap\ActiveForm;
 use yii\helpers\Html;
+use advert\assets\AdvertForm;
+
+use app\assets\FrontendAssets;
+
+$frontendAssets = new FrontendAssets();
+$assetsUrl = Yii::$app->assetManager->getPublishedUrl($frontendAssets->sourcePath);
 
 /* @var $this \yii\base\View */
 /* @var $model \advert\forms\Form */
 /* @var $user \user\models\User */
+
+AdvertForm::register($this);
 
 $existImages = [];
 if ($advert = $model->getExists()) {
@@ -33,24 +41,28 @@ $form = ActiveForm::begin([
     ]
 ]);
 ?>
-    <div class="col-sm-12 col-lg-4">
-        <?=$form->field($model, 'name')->textInput()?>
-    </div>
-    <div class="col-sm-12 col-lg-4">
-        <?=$form->field($model, 'category_id')->dropDownList(Advert::getCategoryDropDownList(true))?>
-    </div>
-    <div class="col-sm-12 col-lg-2">
-        <?=$form->field($model, 'condition_id')->dropDownList(Advert::getConditionDropDownList(true))?>
-    </div>
-    <div class="col-sm-12 col-lg-2">
-        <?=$form->field($model, 'price')->textInput()?>
+    <div class="no-content-margin">
+        <div class="advert-form-common">
+            <div class="col-lg-12">
+                <?=$form->field($model, 'name')->textInput()?>
+            </div>
+            <div class="col-sm-12 col-lg-12">
+                <?=$form->field($model, 'category_id')->dropDownList(Advert::getCategoryDropDownList(true))?>
+            </div>
+            <div class="col-sm-12 col-lg-6">
+                <?=$form->field($model, 'condition_id')->dropDownList(Advert::getConditionDropDownList(true))?>
+            </div>
+            <div class="col-sm-12 col-lg-6">
+                <?=$form->field($model, 'price')->textInput()?>
+            </div>
+        </div>
     </div>
 
-    <div class="col-xs-12">
+    <div class="col-lg-12">
         <?=Html::tag('h3', Yii::t('frontend/advert', 'Images'))?>
     </div>
 
-    <div class="col-sm-12">
+    <div class="col-lg-12">
         <?=$form->field($model, 'uploadImage', [
             'template' => '{input}',
         ])->widget(FileInput::className(), [
@@ -60,7 +72,6 @@ $form = ActiveForm::begin([
                 'name' => Html::getInputName($model, 'uploadImage') . '[]',
             ],
             'pluginOptions' => [
-                'initialPreview' => $existImages,
                 'uploadUrl' => 'ss',
                 'multiple' => 'multiple',
                 'maxFileCount' => Advert::UPLOAD_MAX_FILES,
@@ -68,59 +79,68 @@ $form = ActiveForm::begin([
                 'layoutTemplates' => [
                     'actions' => '{delete}',
                 ],
+                'showUpload' => false,
                 'overwriteInitial' => false,
+                'dropZoneTitle' => Yii::t('main', 'Drag & drop files here for upload'),
             ],
         ])?>
     </div>
 
-    <div class="col-xs-12">
+    <div class="col-lg-12">
         <?=Html::tag('h3', Yii::t('frontend/advert', 'Automobiles'))?>
     </div>
 
-    <div class="col-xs-12 block-info block-info-primary">
-        Обязательным выбором обладает марка. Вы можете выбрать не более 10 марок автомобилей и не более 10 моделей. На кузова и двигатели ограчений нет.
-    </div>
-
-    <div class="col-xs-12">
+    <div class="col-lg-12">
         <?=$form->field($model, 'mark', [
             'template' => '{input}{error}',
         ])->hiddenInput(['value' => ''])?>
     </div>
 
-    <div class="col-sm-12">
-        <?=$this->render('_form_choose_auto', [
-            'form' => $form,
-            'model' => $model,
-        ])?>
+    <div class="no-content-margin">
+        <div class="col-lg-12 advert-form-block-info">
+            <img src="<?=$assetsUrl?>/img/warning-2.png" align="left" />
+            Обязательным выбором обладает марка. Вы можете выбрать не более 10 марок автомобилей и не более 10 моделей. На кузова и двигатели ограчений нет.
+        </div>
     </div>
 
-    <div class="col-sm-12">
-        <?=$form->field($model, 'description')->textarea(['maxlength' => Form::DESCRIPTION_MAX_LENGTH])?>
-    </div>
+    <div class="no-content-margin">
+        <div class="col-lg-12 advert-form-auto">
+            <?=$this->render('_form_choose_auto', [
+                'form' => $form,
+                'model' => $model,
+            ])?>
 
-    <div class="col-xs-12">
-        <?=Html::tag('h3', Yii::t('frontend/advert', 'Contacts'))?>
-    </div>
-
-    <div class="col-xs-12">
-        <div class="form-group">
-            <div class="col-xs-12 block-info block-info-primary">
-                В объявлении будет отображаться следующая контактная информация:<br />
-
-                <strong><?=$model->getAttributeLabel('user_name')?></strong><br />
-                <?=Html::encode($user->name)?><br />
-                <strong><?=$model->getAttributeLabel('user_phone')?></strong><br />
-                <?=Html::encode($user->phone)?><br />
-
-                Для редактирования контактной информации используйте <a href="<?=Url::toRoute(['/user/profile/index'])?>">профиль</a>.
+            <div class="col-lg-12">
+                <?=$form->field($model, 'description')->textarea(['maxlength' => Form::DESCRIPTION_MAX_LENGTH])?>
             </div>
         </div>
     </div>
 
-    <div class="col-xs-12">
-        <?php
-        $button = $model->getExists() ? Yii::t('frontend/advert', 'Update advert') : Yii::t('frontend/advert', 'Create advert');
-        ?>
-        <?=Html::submitButton($button, ['class' => 'btn btn-success'])?>
+    <div class="no-content-margin">
+        <div class="advert-form-contacts">
+            <div class="col-lg-12">
+                <?=Html::tag('h3', Yii::t('frontend/advert', 'Contacts'))?>
+            </div>
+
+            <div class="col-lg-12">
+                <div class="form-group">
+                    В объявлении будет отображаться следующая контактная информация:<br /><br />
+
+                    <strong><?=$model->getAttributeLabel('user_name')?></strong><br />
+                    <?=Html::encode($user->name)?><br /><br />
+                    <strong><?=$model->getAttributeLabel('user_phone')?></strong><br />
+                    <?=Html::encode($user->phone)?><br /><br />
+
+                    Для редактирования контактной информации используйте <a href="<?=Url::toRoute(['/user/profile/index'])?>">профиль</a>.
+                </div>
+            </div>
+
+            <div class="col-lg-12">
+                <?php
+                $button = $model->getExists() ? Yii::t('frontend/advert', 'Update advert') : Yii::t('frontend/advert', 'Create advert');
+                ?>
+                <?=Html::submitButton($button, ['class' => 'btn btn-primary'])?>
+            </div>
+        </div>
     </div>
 <?php $form->end(); ?>

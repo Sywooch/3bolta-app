@@ -50,6 +50,13 @@
     color: #FFF;
     padding-bottom: 40px;
 }
+.advert-form-contacts a {
+    color: #fff;
+    text-decoration: underline;
+}
+.advert-form-contacts a:hover, .advert-form-contacts a:focus {
+    text-decoration: none;
+}
 .advert-form-contacts h3 {
     color: #FFF;
 }

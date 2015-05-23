@@ -7,6 +7,7 @@ use auto\widgets\ChooseAutomobile;
 /* @var $form yii\bootstrap\ActiveRecord */
 
 $chooseAutomobile = ChooseAutomobile::begin([
+    'containerClass' => 'container advert-form-auto-widget',
     'pluginOptions' => [
         'multipleSelect' => true,
         'markName' => Html::getInputName($model, 'mark') . '[]',
