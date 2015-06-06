@@ -15,6 +15,7 @@ if (!$model->isNewRecord) {
     ]);
 }
 
+print $form->field($model, 'type')->dropDownList($model->getTypesList());
 print $form->field($model, 'email')->textInput();
 print $form->field($model, 'name')->textInput();
 

@@ -11,10 +11,12 @@ use user\forms\Register;
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
 use yii\widgets\MaskedInput;
+use partner\models\Partner;
 
 /* @var $this \yii\base\View */
 /* @var $model \user\forms\Register */
 /* @var $registeredUser \user\models\User */
+/* @var $form \yii\widgets\ActiveForm */
 ?>
 <div class="col-sm-1 col-lg-3"></div>
 <div class="col-sm-10 col-lg-6">
@@ -24,11 +26,20 @@ use yii\widgets\MaskedInput;
     $form = ActiveForm::begin([
         'enableAjaxValidation' => true,
     ]);
+    print $form->field($model, 'type')->dropDownList($model->getRegistrationTypes());
+    ?>
+    <div class="js-legal-person-fields" style="display:none;">
+        <?=$form->field($model, 'partnerName')->textInput([
+            'maxlength' => Register::MAX_PARTNER_NAME_LENGTH,
+        ])?>
+        <?=$form->field($model, 'partnerType')->dropDownList(Partner::getCompanyTypes())?>
+    </div>
+    <?php
     print $form->field($model, 'name')->textInput([
         'maxlength' => Register::MAX_NAME_LENGTH,
     ]);
     print $form->field($model, 'email')->textInput([
-        'maxlength' => Register::MAX_NAME_LENGTH,
+        'maxlength' => Register::MAX_EMAIL_LENGTH,
     ]);
     print $form->field($model, 'phone')->widget(MaskedInput::className(), [
         'mask' => PhoneValidator::PHONE_MASK,
@@ -42,6 +53,24 @@ use yii\widgets\MaskedInput;
     ?>
 </div>
 <div class="col-sm-1 col-lg-3"></div>
+
+<?php JS::begin(); ?>
+<script type="text/javascript">
+    $(document).ready(function() {
+        var legalPersonType = <?=User::TYPE_LEGAL_PERSON?>;
+        var privatePersonType = <?=User::TYPE_PRIVATE_PERSON?>;
+        var typeSelect = '#<?=Html::getInputId($model, 'type')?>';
+        $(typeSelect).on('change', function(e) {
+            if ($(this).val() == legalPersonType) {
+                $('.js-legal-person-fields').show();
+            }
+            else {
+                $('.js-legal-person-fields').hide();
+            }
+        });
+    });
+</script>
+<?php JS::end(); ?>
 
 <?php if ($registeredUser instanceof User) {
     Modal::begin([

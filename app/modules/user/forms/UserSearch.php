@@ -19,7 +19,8 @@ class UserSearch extends User
     {
         return [
             [['id', 'status'], 'integer'],
-            [['email', 'name'], 'safe'],
+            [['email', 'name'], 'string', 'max' => 100],
+            ['type', 'in', 'range' => array_keys(self::getTypesList())],
         ];
     }
 
@@ -35,6 +36,7 @@ class UserSearch extends User
             $query->andFilterWhere([
                 'id' => $this->id,
                 'status' => $this->status,
+                'type' => $this->type,
             ])
             ->andFilterWhere(['like', 'email', $this->email])
             ->andFilterWhere(['name', 'name', $this->name]);

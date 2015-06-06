@@ -134,9 +134,20 @@ class UserApi extends \yii\base\Component
                     'name' => $form->name,
                     'new_password' => $form->password,
                     'phone' => $form->phone,
+                    'type' => $form->type,
                 ]);
                 if (!$user->save()) {
                     throw new Exception();
+                }
+
+                // создать модель партнера, если регистрируемся как партнер
+                if ($form->type == User::TYPE_LEGAL_PERSON) {
+                    /* @var $partnersApi \partner\components\PartnersApi */
+                    $partnersApi = Yii::$app->getModule('partner')->api;
+                    $partner = $partnersApi->registerPartner($form, $user);
+                    if (!$partner) {
+                        throw new Exception();
+                    }
                 }
 
                 // сгенерировать подтверждение

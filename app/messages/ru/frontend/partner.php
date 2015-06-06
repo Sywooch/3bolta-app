@@ -17,14 +17,6 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'Legal person' => 'Юридическое лицо',
-    'Private person' => 'Частное лицо',
-    'Type' => 'Тип регистрации',
-    'Email' => 'E-mail',
-    'Last login' => 'Последняя авторизация',
-    'Name' => 'Имя',
-    'New password' => 'Новый пароль',
-    'Password' => 'Пароль',
-    'Status' => 'Статус',
-    'User roles' => 'Роли пользователя',
+    'Company name' => 'Название компании',
+    'Company type' => 'Тип компании',
 ];

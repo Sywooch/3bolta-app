@@ -28,6 +28,7 @@ return [
     // профиль
     '/profile' => '/user/profile/index',
     '/profile/change-email/<code:(\w+)>' => '/user/profile/change-email',
+    '/profile/<action:(change-password|update-company-data|update-email|update-contact-data)>' => '/user/profile/<action>',
 
     // объявления пользователя
     '/my-ads' => '/advert/user-advert/list',

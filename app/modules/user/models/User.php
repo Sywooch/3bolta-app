@@ -9,9 +9,20 @@ use Yii;
 use app\components\ActiveRecord;
 use yii\web\IdentityInterface;
 use app\components\PhoneValidator;
+use partner\models\Partner;
 
 class User extends ActiveRecord implements IdentityInterface
 {
+    /**
+     * Тип пользователя - частное лицо
+     */
+    const TYPE_PRIVATE_PERSON = 1;
+
+    /**
+     * Тип пользователя - юридическое лицо
+     */
+    const TYPE_LEGAL_PERSON = 2;
+
     /**
      * @var string[] новые роли для установки
      */
@@ -50,6 +61,7 @@ class User extends ActiveRecord implements IdentityInterface
 
             ['name', 'string', 'max' => 50],
             ['email', 'string', 'max' => 100],
+            ['type', 'in', 'range' => array_keys(self::getTypesList())],
         ];
     }
 
@@ -63,6 +75,7 @@ class User extends ActiveRecord implements IdentityInterface
             'last_login' => Yii::t('user', 'Last login'),
             'roleCodes' => Yii::t('user', 'User roles'),
             'new_password' => Yii::t('user', 'New password'),
+            'type' => Yii::t('user', 'Type'),
         ];
     }
 
@@ -322,5 +335,36 @@ class User extends ActiveRecord implements IdentityInterface
             }
         }
         return $res->one();
+    }
+
+    /**
+     * Получить привязку к партнеру
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPartner()
+    {
+        return $this->hasOne(Partner::className(), ['user_id' => 'id']);
+    }
+
+    /**
+     * Получить типы пользователей
+     * @return array
+     */
+    public static function getTypesList()
+    {
+        return [
+            self::TYPE_PRIVATE_PERSON => Yii::t('user', 'Private person'),
+            self::TYPE_LEGAL_PERSON => Yii::t('user', 'Legal person'),
+        ];
+    }
+
+    /**
+     * Получить описание типа регистрации
+     * @return string
+     */
+    public function getTypeDescription()
+    {
+        $types = self::getTypesList();
+        return isset($types[$this->type]) ? $types[$this->type] : null;
     }
 }

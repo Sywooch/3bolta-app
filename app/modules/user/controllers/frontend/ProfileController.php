@@ -9,6 +9,9 @@ use yii\helpers\Url;
 use yii\widgets\ActiveForm;
 use yii\web\Response;
 use yii\filters\AccessControl;
+use yii\filters\VerbFilter;
+use partner\forms\Partner as PartnerForm;
+use partner\models\Partner;
 
 use user\forms\ChangePassword;
 
@@ -52,6 +55,16 @@ class ProfileController extends \app\components\Controller
                         return $action->controller->goHome();
                     }
                 }
+            ],
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    // к изменениям формы доступ только через POST
+                    'change-password' => ['post'],
+                    'update-contact-data' => ['post'],
+                    'update-email' => ['post'],
+                    'update-company-data' => ['post'],
+                ]
             ]
         ], parent::behaviors());
     }
@@ -74,19 +87,102 @@ class ProfileController extends \app\components\Controller
     }
 
     /**
-     * Профиль - главная страница
+     * Форма изменения пароля
      */
-    public function actionIndex()
+    public function actionChangePassword()
     {
-        // форма профиля
+        // форма изменения пароля
+        $changePassword = new ChangePassword();
+
+        if (!empty($_POST['ajax']) && Yii::$app->request->isAjax) {
+            // AJAX-валидация
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            $changePassword->load($_POST);
+            return ActiveForm::validate($changePassword);
+        }
+
+        if ($changePassword->load($_POST)) {
+            if ($changePassword->validate() && ($this->userApi->changePassword($this->user, $changePassword))) {
+                Yii::$app->session->setFlash('password_success_changed', true);
+            }
+            else {
+                Yii::$app->session->setFlash('password_error_changed', true);
+            }
+        }
+
+        return $this->redirect(Url::toRoute(['index']) . '#change-password');
+    }
+
+    public function actionUpdateCompanyData()
+    {
+        $partnerForm = $this->user->partner instanceof Partner ?
+            PartnerForm::createFromPartner($this->user->partner) :
+            new PartnerForm();
+
+        if (!empty($_POST['ajax']) && Yii::$app->request->isAjax) {
+            // AJAX-валидация
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            $partnerForm->load($_POST);
+            return ActiveForm::validate($partnerForm);
+        }
+
+        if ($partnerForm->load($_POST)) {
+            /* @var $partnersApi \partner\components\PartnersApi */
+            $partnersApi = Yii::$app->getModule('partner')->api;
+            if ($partnerForm->validate() && $partnersApi->updatePartnerData($partnerForm, $this->user)) {
+                Yii::$app->session->setFlash('partner_success_update', true);
+            }
+            else {
+                Yii::$app->session->setFlash('partner_error_update', true);
+            }
+        }
+
+        return $this->redirect(Url::toRoute(['index']) . '#partner');
+    }
+
+    /**
+     * Форма изменения контактных данных
+     */
+    public function actionUpdateContactData()
+    {
         $profile = Profile::createFromUser($this->user);
 
-        // изменить e-mail
-        if (!empty($_POST['ajax']) && ($_POST['ajax'] == 'change-email' || $_POST['ajax'] == 'profile') && Yii::$app->request->isAjax) {
+        if (!empty($_POST['ajax']) && Yii::$app->request->isAjax) {
+            // AJAX-валидация
             Yii::$app->response->format = Response::FORMAT_JSON;
             $profile->load($_POST);
             return ActiveForm::validate($profile);
         }
+
+        $profileId = $profile->formName();
+        if (!empty($_POST[$profileId])) {
+            // изменения в профиле
+            $profile->load($_POST);
+            if (($profile->validate()) && $this->userApi->updateUserProfile($this->user, $profile)) {
+                Yii::$app->session->setFlash('profile_success_update', true);
+            }
+            else {
+                Yii::$app->session->setFlash('profile_error_update', true);
+            }
+        }
+
+        return $this->redirect(Url::toRoute(['index']) . '#profile');
+    }
+
+    /**
+     * Изменение e-mail
+     */
+    public function actionUpdateEmail()
+    {
+        $profile = Profile::createFromUser($this->user);
+
+        if (!empty($_POST['ajax']) && Yii::$app->request->isAjax) {
+            // AJAX-валидация
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            $profile->load($_POST);
+            return ActiveForm::validate($profile);
+        }
+
         $profileId = $profile->formName();
         if (!empty($_POST[$profileId]) && !empty($_POST[$profileId]['email'])) {
             // изменить e-mail
@@ -105,36 +201,30 @@ class ProfileController extends \app\components\Controller
                     Yii::$app->session->setFlash('email_change_error', Yii::t('frontend/user', 'Change e-mail error'));
                 }
             }
-
-            return $this->redirect(Url::toRoute(['index']) . '#change-email');
-        }
-        else if (!empty($_POST[$profileId])) {
-            // изменения в профиле
-            $profile->load($_POST);
-            if (($profile->validate()) && $this->userApi->updateUserProfile($this->user, $profile)) {
-                Yii::$app->session->setFlash('profile_success_update');
-            }
-
-            return $this->redirect(Url::toRoute(['index']) . '#profile');
         }
 
+        return $this->redirect(Url::toRoute(['index']) . '#change-email');
+    }
+
+    /**
+     * Профиль - главная страница
+     */
+    public function actionIndex()
+    {
+        // форма профиля
+        $profile = Profile::createFromUser($this->user);
         // форма изменения пароля
         $changePassword = new ChangePassword();
-        if (!empty($_POST['ajax']) && $_POST['ajax'] == 'change-password' && Yii::$app->request->isAjax) {
-            Yii::$app->response->format = Response::FORMAT_JSON;
-            $changePassword->load($_POST);
-            return ActiveForm::validate($changePassword);
-        }
-        if ($changePassword->load($_POST)) {
-            if ($changePassword->validate() && ($this->userApi->changePassword($this->user, $changePassword))) {
-                Yii::$app->session->setFlash('password_success_changed', true);
-            }
-            return $this->redirect(Url::toRoute(['index']) . '#change-password');
-        }
+        // форма редактирования партнера
+        $partner = $this->user->partner instanceof Partner ?
+                PartnerForm::createFromPartner($this->user->partner) :
+                new PartnerForm();
 
         return $this->render('index', [
             'changePassword' => $changePassword,
             'profile' => $profile,
+            'partner' => $partner,
+            'user' => $this->user,
         ]);
     }
 }

@@ -30,6 +30,8 @@ print Html::tag('p', Html::a(Yii::t('backend', 'Create {modelClass}', [
 
     <?= $form->field($searchModel, 'status') ?>
 
+    <?= $form->field($searchModel, 'type')->dropDownList($searchModel->getTypesList()) ?>
+
 
     <div class="form-group">
         <?= Html::submitButton(Yii::t('backend', 'Search'), ['class' => 'btn btn-primary']) ?>

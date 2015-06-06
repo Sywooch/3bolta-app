@@ -5,6 +5,7 @@ use Yii;
 
 use user\models\User;
 use app\components\PhoneValidator;
+use user\forms\Register;
 
 /**
  * Профиль пользователя
@@ -46,6 +47,8 @@ class Profile extends \yii\base\Model
                 },
                 'message' => Yii::t('frontend/user', 'This phone already exists'),
             ],
+            ['email', 'string', 'max' => Register::MAX_EMAIL_LENGTH],
+            ['name', 'string', 'max' => Register::MAX_NAME_LENGTH],
         ];
     }
 

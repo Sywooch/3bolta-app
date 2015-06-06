@@ -2,4 +2,10 @@
 /**
  * Конфигурация модуля партнеров
  */
-return [];
+return [
+    'components' => [
+        'api' => [
+            'class' => '\partner\components\PartnersApi',
+        ],
+    ],
+];
