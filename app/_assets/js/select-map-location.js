@@ -1,6 +1,10 @@
 /**
  * Выбор местоположения - виджет.
- * Виджет запоминает координаты при вводе адреса в инпут.
+ * Виджет запоминает координаты при вводе адреса в инпут и отображает карту Google.
+ * Необходимо передавать опции:
+ * - address - селектор, для указания адреса;
+ * - latitude - селектор для указания широты;
+ * - longitude - селектор для указания долготы.
  */
 (function($) {
     $.fn.selectLocation = function(options) {
@@ -44,18 +48,8 @@
              * @param {Object} point объект типа google.maps.LatLng
              */
             var setLatLngAttributes = function(point) {
-                if (typeof(options.setLatitude) == 'function') {
-                    options.setLatitude(point.lat());
-                }
-                else {
-                    $(options.setLatitude).val(point.lat());
-                }
-                if (typeof(options.setLongitude) == 'function') {
-                    options.setLongitude(point.lng());
-                }
-                else {
-                    $(options.setLongitude).val(point.lng());
-                }
+                $(options.latitude).val(point.lat());
+                $(options.longitude).val(point.lng());
             };
 
             /**
@@ -98,8 +92,8 @@
             });
 
             var defaults = {
-                'lat'       : typeof(options.getLatitude) == 'function' ? options.getLatitude() : $(options.getLatitude).val(),
-                'lng'       : typeof(options.getLongitude) == 'function' ? options.getLongitude() : $(options.getLongitude).val()
+                'lat'       : $(options.latitude).val(),
+                'lng'       : $(options.longitude).val()
             };
             if (defaults.lat && defaults.lng) {
                 var center = new google.maps.LatLng(defaults.lat, defaults.lng);

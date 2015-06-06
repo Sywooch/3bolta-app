@@ -1,6 +1,7 @@
 <?php
 namespace app\widgets;
 
+use yii\helpers\Json;
 use yii\helpers\Html;
 use app\assets\SelectMapLocationAssets;
 
@@ -8,47 +9,61 @@ use app\assets\SelectMapLocationAssets;
  * Виджет выбора местоположения.
  *
  * В виджет необходимо передать:
- * - address - селектор инпута, где находится адрес;
- * - setLatitude - селектор инпута, где хранится широта, либо js-фнукция для установки широты;
- * - getLatitude - селектор инпута, где хранится широта, либо js-фнукция для получени широты;
- * - setLongitude - селектор инпута, где хранится долгота, либо js-функция для установки долготы;
- * - getLongitude - селектор инпута, где хранится широта, либо js-фнукция для получени долготы;
+ * - model - модель формы или ActiveRecord;
+ * - attribute - атрибут для ввода адреса;
+ * - attributeLatitude - атрибут для ввода широты;
+ * - attributeLongitude - атрибут для ввода долготы;
+ * - renderWidgetMap - функция для рендера виджета, в нее передается переменная $map - html карты.
  */
 class SelectMapLocation extends \yii\base\Widget
 {
     /**
-     * @var [] атрибуты для враппера карты
+     * @var \yii\web\View
+     */
+    public $view;
+
+    /**
+     * @var \yii\base\Model
+     */
+    public $model;
+
+    /**
+     * @var string атрибут для ввода адреса
+     */
+    public $attribute;
+
+    /**
+     * @var string атрибут для ввода широты
+     */
+    public $attributeLatitude;
+
+    /**
+     * @var string атрибут для ввода долготы
+     */
+    public $attributeLongitude;
+
+    /**
+     * @var array атрибуты для враппера карты
      */
     public $wrapperOptions;
 
     /**
-     * @var string селектор адреса
+     * @var array атрибуты для текстового инпута
      */
-    public $address;
+    public $textOptions = ['class' => 'form-control'];
 
     /**
-     * @var mixed установка широты
+     * @var callable функция для рендера виджета
      */
-    public $setLatitude;
+    public $renderWidgetMap;
 
     /**
-     * @var mixed получение широты
+     * Вывод плагина
      */
-    public $getLatitude;
-
-    /**
-     * @var mixed установка долготы
-     */
-    public $setLongitude;
-
-    /**
-     * @var mixed получение долготы
-     */
-    public $getLongitude;
-
     public function run()
     {
         parent::run();
+
         if (!isset($this->wrapperOptions)) {
             $this->wrapperOptions = [];
         }
@@ -59,18 +74,31 @@ class SelectMapLocation extends \yii\base\Widget
             $this->wrapperOptions['style'] = 'width: 100%; height: 300px;';
         }
         SelectMapLocationAssets::register($this->view);
+
+        // получить идентификаторы инпутов
+        $address = Html::getInputId($this->model, $this->attribute);
+        $latitude = Html::getInputId($this->model, $this->attributeLatitude);
+        $longitude = Html::getInputId($this->model, $this->attributeLongitude);
+
         $jsOptions = [
-            'address'           => $this->address,
-            'setLatitude'       => $this->setLatitude,
-            'setLongitude'      => $this->setLongitude,
-            'getLatitude'       => $this->getLatitude,
-            'getLongitude'      => $this->getLongitude,
+            'address'           => '#' . $address,
+            'latitude'          => '#' . $latitude,
+            'longitude'         => '#' . $longitude,
         ];
         $this->view->registerJs(new \yii\web\JsExpression('
             $(document).ready(function() {
-                $(\'#' . $this->id . '\').selectLocation(' . json_encode($jsOptions) . ');
+                $(\'#' . $this->wrapperOptions['id'] . '\').selectLocation(' . Json::encode($jsOptions) . ');
             });
         '));
-        return Html::tag('div', '', $this->wrapperOptions);
+        $mapHtml = Html::tag('div', '', $this->wrapperOptions);
+        $mapHtml .= Html::activeHiddenInput($this->model, $this->attributeLatitude);
+        $mapHtml .= Html::activeHiddenInput($this->model, $this->attributeLongitude);
+
+        if (is_callable($this->renderWidgetMap)) {
+            return call_user_func_array($this->renderWidgetMap, [$mapHtml]);
+        }
+        else {
+            return Html::activeInput('text', $this->model, $this->attribute, $this->textOptions) . $mapHtml;
+        }
     }
 }

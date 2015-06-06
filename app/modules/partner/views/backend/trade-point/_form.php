@@ -30,19 +30,13 @@ use app\widgets\SelectMapLocation;
             ]);
         }
         print $form->field($model, 'partner_id')->textInput();
-        print $form->field($model, 'address')->textInput();
-        print SelectMapLocation::widget([
+        print $form->field($model, 'address')->widget(SelectMapLocation::className(), [
             'wrapperOptions'        => [
                 'class' => 'form-control',
             ],
-            'address'               => '#' . Html::getInputId($model, 'address'),
-            'setLatitude'           => '#' . Html::getInputId($model, 'latitude'),
-            'setLongitude'          => '#' . Html::getInputId($model, 'longitude'),
-            'getLatitude'           => '#' . Html::getInputId($model, 'latitude'),
-            'getLongitude'          => '#' . Html::getInputId($model, 'longitude'),
+            'attributeLatitude' => 'latitude',
+            'attributeLongitude' => 'longitude'
         ]);
-        print $form->field($model, 'longitude')->textInput();
-        print $form->field($model, 'latitude')->textInput();
         print $form->field($model, 'phone', [
             'errorOptions' => [
                 'encode' => false,
