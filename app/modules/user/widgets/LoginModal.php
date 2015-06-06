@@ -3,7 +3,6 @@ namespace user\widgets;
 
 use Yii;
 
-use yii\bootstrap\Modal;
 use user\forms\Login;
 
 /**

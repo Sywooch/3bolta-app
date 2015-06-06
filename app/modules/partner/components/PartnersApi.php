@@ -5,6 +5,8 @@ use user\forms\Register;
 use user\models\User;
 use partner\models\Partner;
 use partner\forms\Partner as PartnerForm;
+use partner\models\TradePoint;
+use partner\forms\TradePoint as TradePointForm;
 use yii\base\Exception;
 
 /**
@@ -12,6 +14,85 @@ use yii\base\Exception;
  */
 class PartnersApi extends \yii\base\Component
 {
+    /**
+     * Редактирование торговой точки $tradePoint из формы $form.
+     * В случае успеха возвращает true.
+     *
+     * @param TradePointForm $form форма редактирования
+     * @param TradePoint $tradePoint торговая точка
+     * @return boolean
+     * @throws Exception
+     */
+    public function updateTradePoint(TradePointForm $form, TradePoint $tradePoint)
+    {
+        $ret = false;
+
+        $tradePoint->setAttributes([
+            'address' => $form->address,
+            'latitude' => $form->latitude,
+            'longitude' => $form->longitude,
+            'phone' => $form->phone,
+            'phone_from_profile' => (boolean) $form->phone_from_profile,
+        ]);
+
+        $transaction = $tradePoint->getDb()->beginTransaction();
+
+        try {
+            if (!$tradePoint->save()) {
+                throw new Exception();
+            }
+
+            $transaction->commit();
+
+            $ret = true;;
+        } catch (Exception $ex) {
+            $transaction->rollBack();
+            $ret = false;
+        }
+
+        return $ret;
+    }
+
+    /**
+     * Создать торговую точку на основе данных из формы
+     *
+     * @param TradePointForm $form форма создания торговой точки
+     * @param Partner $partner данные партнера
+     * @return TradePoint|null
+     * @throws Exception
+     */
+    public function createTradePoint(TradePointForm $form, Partner $partner)
+    {
+        $ret = null;
+
+        $tradePoint = new TradePoint();
+        $tradePoint->setAttributes([
+            'address' => $form->address,
+            'latitude' => $form->latitude,
+            'longitude' => $form->longitude,
+            'phone' => $form->phone,
+            'phone_from_profile' => (boolean) $form->phone_from_profile,
+            'partner_id' => $partner->id,
+        ]);
+
+        $transaction = $tradePoint->getDb()->beginTransaction();
+
+        try {
+            if (!$tradePoint->save()) {
+                throw new Exception();
+            }
+
+            $transaction->commit();
+
+            $ret = $tradePoint;
+        } catch (Exception $ex) {
+            $transaction->rollBack();
+            $ret = null;
+        }
+
+        return $ret;
+    }
+
     /**
      * Редактирование данных о партнере из формы редактирования.
      * Если к пользователю еще не привязан партнерский аккаунт - создает его.

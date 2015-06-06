@@ -22,6 +22,10 @@ use user\models\User;
             <ul class="dropdown-menu" role="menu">
                 <li><a href="<?=Url::toRoute(['/user/profile/index'])?>"><?=Yii::t('frontend/user', 'Profile')?></a></li>
                 <li class="divider"></li>
+                <?php if ($user->type == User::TYPE_LEGAL_PERSON):?>
+                    <li><a href="<?=Url::toRoute(['/partner/user-trade-point/list'])?>"><?=Yii::t('frontend/partner', 'My trade points')?></a></li>
+                    <li class="divider"></li>
+                <?php endif;?>
                 <li><a href="<?=Url::toRoute(['/advert/user-advert/list'])?>"><?=Yii::t('frontend/user', 'My adverts')?></a></li>
                 <li><a href="<?=Url::toRoute(['/advert/user-advert/append'])?>"><?=Yii::t('frontend/advert', 'Append advert')?></a></li>
                 <li class="divider"></li>

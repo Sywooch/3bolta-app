@@ -42,7 +42,7 @@ $form = ActiveForm::begin([
 ]);
 ?>
     <div class="no-content-margin">
-        <div class="advert-form-common">
+        <div class="advert-form-common col-lg-12">
             <div class="col-lg-12">
                 <?=$form->field($model, 'name')->textInput()?>
             </div>

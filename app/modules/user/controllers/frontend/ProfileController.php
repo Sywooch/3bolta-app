@@ -12,9 +12,13 @@ use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use partner\forms\Partner as PartnerForm;
 use partner\models\Partner;
+use partner\filters\CheckPartnerAccessRule;
 
 use user\forms\ChangePassword;
 
+/**
+ * Работа с профилем
+ */
 class ProfileController extends \app\components\Controller
 {
     /**
@@ -34,6 +38,7 @@ class ProfileController extends \app\components\Controller
 
         return parent::init();
     }
+
     /**
      * Разделение прав доступа для авторизованных и неавторизованных пользователей.
      * В случае недоступности - редирект на главную страницу.
@@ -46,6 +51,11 @@ class ProfileController extends \app\components\Controller
                 'rules' => [
                     [
                         'roles' => ['@'],
+                        'allow' => true,
+                    ],
+                    [
+                        'class' => CheckPartnerAccessRule::className(),
+                        'actions' => ['update-company-data'],
                         'allow' => true,
                     ]
                 ],

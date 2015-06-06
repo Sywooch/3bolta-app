@@ -4,6 +4,7 @@ namespace app\widgets;
 use yii\helpers\Json;
 use yii\helpers\Html;
 use app\assets\SelectMapLocationAssets;
+use yii\helpers\ArrayHelper;
 
 /**
  * Виджет выбора местоположения.
@@ -53,6 +54,11 @@ class SelectMapLocation extends \yii\base\Widget
     public $textOptions = ['class' => 'form-control'];
 
     /**
+     * @var array опции для JS-плагина
+     */
+    public $jsOptions = [];
+
+    /**
      * @var callable функция для рендера виджета
      */
     public $renderWidgetMap;
@@ -80,11 +86,11 @@ class SelectMapLocation extends \yii\base\Widget
         $latitude = Html::getInputId($this->model, $this->attributeLatitude);
         $longitude = Html::getInputId($this->model, $this->attributeLongitude);
 
-        $jsOptions = [
+        $jsOptions = ArrayHelper::merge($this->jsOptions, [
             'address'           => '#' . $address,
             'latitude'          => '#' . $latitude,
             'longitude'         => '#' . $longitude,
-        ];
+        ]);
         $this->view->registerJs(new \yii\web\JsExpression('
             $(document).ready(function() {
                 $(\'#' . $this->wrapperOptions['id'] . '\').selectLocation(' . Json::encode($jsOptions) . ');

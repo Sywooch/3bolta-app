@@ -12,6 +12,11 @@ use yii\db\Expression;
 class TradePoint extends \yii\db\ActiveRecord
 {
     /**
+     * Максимальная длина поля адреса
+     */
+    const MAX_ADDRESS_LENGTH = 255;
+
+    /**
      * Название таблицы
      * @return string
      */
@@ -27,10 +32,22 @@ class TradePoint extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['partner_id', 'latitude', 'longitude', 'address', 'phone'], 'required'],
-            [['latitude', 'longitude'], 'number', 'min' => 0, 'max' => 180],
-            ['address', 'string', 'max' => 255],
-            [['phone'], PhoneValidator::className(), 'canonicalAttribute' => 'phone_canonical'],
+            [['partner_id', 'latitude', 'longitude', 'address'], 'required'],
+            ['phone_from_profile', 'default', 'value' => true],
+            ['phone_from_profile', 'boolean'],
+            ['phone', 'required', 'when' => function($model) {
+                /* @var $model \partner\models\TradePoint */
+                return !$model->phone_from_profile;
+            }],
+            ['phone', PhoneValidator::className(),
+                'canonicalAttribute' => 'phone_canonical',
+                'when' => function($model) {
+                    /* @var $model \partner\models\TradePoint */
+                    return !$model->phone_from_profile;
+                }
+            ],
+            [['latitude', 'longitude'], 'number', 'min' => -180, 'max' => 180],
+            ['address', 'string', 'max' => self::MAX_ADDRESS_LENGTH],
         ];
     }
 
@@ -48,6 +65,7 @@ class TradePoint extends \yii\db\ActiveRecord
             'longitude' => Yii::t('partner', 'Longitude'),
             'address' => Yii::t('partner', 'Address'),
             'phone' => Yii::t('partner', 'Contact phone'),
+            'phone_from_profile' => Yii::t('partner', 'Use profile phone'),
         ];
     }
 
@@ -60,6 +78,29 @@ class TradePoint extends \yii\db\ActiveRecord
         return $this->hasOne(Partner::className(), ['id' => 'partner_id']);
     }
 
+    /**
+     * Обертка для метода сохранения
+     * @param boolean $runValidation
+     * @param [] $attributeNames
+     * @return boolean
+     */
+    public function save($runValidation = true, $attributeNames = null)
+    {
+        if (is_array($attributeNames) && in_array('phone', $attributeNames)) {
+            // телефон без валидации сохранить невозможно,
+            // т.к. необходимо записать его в канонической форме
+            // через валидатор PhoneValidator
+            $runValidation = true;
+            if (!in_array('phone_canonical', $attributeNames)) {
+                $attributeNames[] = 'phone_canonical';
+            }
+        }
+        return parent::save($runValidation, $attributeNames);
+    }
+
+    /**
+     * Действия перед сохранением
+     */
     public function beforeSave($insert)
     {
         if ($this->latitude && $this->longitude) {
@@ -70,5 +111,53 @@ class TradePoint extends \yii\db\ActiveRecord
         }
         $this->edited = date('Y-m-d H:i:s');
         return parent::beforeSave($insert);
+    }
+
+    /**
+     * Поиск торговых точек пользователя
+     *
+     * @return \yii\db\ActiveQuery
+     * @throws Exception в случае, если пользователь не авторизован или к нему не привязан партнер
+     */
+    public static function findUserList()
+    {
+        if (Yii::$app->user->isGuest) {
+            // если пользователь неавторизован - выполнять метод невозможно
+            throw new Exception();
+        }
+
+        /* @var $user \user\models\User */
+        $user = Yii::$app->user->getIdentity();
+        /* @var $partner Partner */
+        $partner = $user->partner;
+
+        if (!($partner instanceof Partner)) {
+            throw new Exception();
+        }
+
+        return self::find()->andWhere([
+            'partner_id' => $partner->id
+        ])->orderBy('created DESC');
+    }
+
+    /**
+     * Получить телефон ТТ в зависимости от настроек
+     * @return string
+     */
+    public function getTradePointPhone()
+    {
+        $ret = null;
+
+        if ($this->phone_from_profile) {
+            $partner = $this->partner;
+            if ($partner instanceof Partner && $user = $partner->user) {
+                $ret = $user->phone;
+            }
+        }
+        else {
+            $ret = $this->phone;
+        }
+
+        return $ret;
     }
 }

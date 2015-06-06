@@ -31,9 +31,14 @@ return [
     '/profile/<action:(change-password|update-company-data|update-email|update-contact-data)>' => '/user/profile/<action>',
 
     // объявления пользователя
-    '/my-ads' => '/advert/user-advert/list',
-    '/my-ads/update-publication/<id:(\d+)>' => '/advert/user-advert/update-publication',
-    '/my-ads/stop-publication/<id:(\d+)>' => '/advert/user-advert/stop-publication',
-    '/my-ads/edit/<id:(\d+)>' => '/advert/user-advert/edit',
-    '/my-ads/append' => '/advert/user-advert/append',
+    '/cabinet/ads' => '/advert/user-advert/list',
+    '/cabinet/ads/update-publication/<id:(\d+)>' => '/advert/user-advert/update-publication',
+    '/cabinet/ads/stop-publication/<id:(\d+)>' => '/advert/user-advert/stop-publication',
+    '/cabinet/ads/edit/<id:(\d+)>' => '/advert/user-advert/edit',
+    '/cabinet/ads/append' => '/advert/user-advert/append',
+
+    // торговые точки
+    '/cabinet/tps' => '/partner/user-trade-point/list',
+    '/cabinet/tps/create' => '/partner/user-trade-point/create',
+    '/cabinet/tps/edit/<id:(\d+)>' => '/partner/user-trade-point/edit',
 ];

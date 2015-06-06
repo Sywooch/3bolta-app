@@ -4,14 +4,16 @@
  * Необходимо передавать опции:
  * - address - селектор, для указания адреса;
  * - latitude - селектор для указания широты;
- * - longitude - селектор для указания долготы.
+ * - longitude - селектор для указания долготы;
+ * - hideMarker - если определено, то не будет установлен маркер на карте при поиске локации;
+ * - onLoadMap - если определена функциия, то она будет вызвана при инициализации карты.
  */
 (function($) {
     $.fn.selectLocation = function(options) {
         var self = this;
         var map;
 
-        google.maps.event.addDomListener(window, 'load', function() {
+        $(document).ready(function() {
             var mapOptions = {
                 center: new google.maps.LatLng(55.997778, 37.190278),
                 zoom: 12,
@@ -19,6 +21,10 @@
                 panControl: true
             };
             map = new google.maps.Map($(self).get(0), mapOptions);
+
+            if (options.onLoadMap) {
+                options.onLoadMap(map);
+            }
 
             // маркер найденной точки
             var marker = null;
@@ -32,6 +38,10 @@
                 // удалить маркер если уже был
                 if (marker) {
                     marker.remove();
+                }
+                if (options.hideMarker) {
+                    // не нужно устанавливать маркер
+                    return;
                 }
                 marker = marker = new google.maps.Marker({
                     'position'          : latLng,

@@ -15,7 +15,7 @@ use app\widgets\SelectMapLocation;
     <?php
     $form = ActiveForm::begin([
         'enableAjaxValidation' => true,
-        'enableClientValidation' => true,
+        'enableClientValidation' => false,
     ]);
         if (!$model->isNewRecord) {
             print DetailView::widget([
@@ -44,6 +44,7 @@ use app\widgets\SelectMapLocation;
         ])->widget(MaskedInput::className(), [
             'mask' => PhoneValidator::PHONE_MASK,
         ]);
+        print $form->field($model, 'phone_from_profile')->checkbox();
         ?>
         <div class="form-group">
             <?=Html::submitButton(Yii::t('backend', 'Save'), ['class' => 'btn btn-success', 'name' => 'save'])?>

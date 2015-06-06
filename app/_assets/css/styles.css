@@ -505,3 +505,11 @@ h2, h3, h4, h5, h6 {
     -webkit-box-shadow: 1px 1px 10px rgba(169, 68, 66, 50);
 }
 
+
+/** MODAL **/
+.modal-backdrop {
+    z-index: 998;
+}
+.modal {
+    z-index: 999;
+}
