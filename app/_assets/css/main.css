@@ -1,17 +1,17 @@
 
 .list-group-item {
-        border:0;
+    border:0;
 }
 .list-item-row {
-        margin-bottom: 10px;
+    margin-bottom: 10px;
 }
 .list-item-price {
-        font-size: 20px;
-        margin-bottom: 20px;
+    font-size: 20px;
+    margin-bottom: 20px;
 }
 .list-item-condition {
-        font-size: 12px;
-            margin-left: 12px;
+    font-size: 12px;
+    margin-left: 12px;
 }
 .list-item h3 {
     margin-top: 3px;

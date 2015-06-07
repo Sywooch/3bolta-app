@@ -27,7 +27,7 @@ body {
     margin: 0 auto;
     background-color: #fff;
 }
-@media (max-width: 768px) {
+@media (max-width: 767px) {
     .page-wrap {
         width: 100%;
     }
@@ -35,10 +35,10 @@ body {
 .mobile-top-user {
     display: none;
 }
-@media (max-width: 768px) {
+@media (max-width: 767px) {
     .mobile-top-user {
         display: block; 
-        padding: 0px 20px;
+        padding: 0px 15px;
     }
     .mobile-top-user .user-panel {
         float: none;
@@ -53,7 +53,7 @@ body {
     height: 76px;
     background-color: #993333;
 }
-@media (max-width: 768px) {
+@media (max-width: 767px) {
     .logo-head {
         background-color: #000;
     }
@@ -68,7 +68,7 @@ body {
     width: 243px;
     height: 100%;
     line-height: 76px;
-    margin-left: 20px;
+    margin-left: 15px;
     font-size: 17px;
     color: #f0ede4;
     float: left;
@@ -164,7 +164,7 @@ body {
         background-color: #FFF;
     }
     .top-logo-menu .navbar-toggle {
-        margin-top: 20px;
+        margin-top: 15px;
         border: 1px solid #FFF;
     }
     .top-logo-menu .navbar-toggle:hover, .top-logo-menu .navbar-toggle:focus{
@@ -220,13 +220,18 @@ body {
 }
 
 .wrap > .container {
-    padding: 15px 0px;
+    padding: 15px 15px;
+}
+@media (max-width: 767px) {
+    .wrap > .container {
+        padding: 15px 0px;
+    }
 }
 .footer {
     height: 60px;
     background-color: #e2e2e2;
     border-top: 1px solid #ddd;
-    padding-top: 20px;
+    padding-top: 15px;
 }
 
 .jumbotron {
@@ -294,7 +299,7 @@ a.desc:after {
     color: #a94442;
     background: #fdf7f7;
     border-left: 3px solid #eed3d7;
-    padding: 10px 20px;
+    padding: 10px 15px;
     margin: 0 0 15px 0;
 }
 .content-container {
@@ -331,10 +336,10 @@ a.desc:after {
 }
 .block-info {
     border: 1px solid #eee;
-    padding: 20px;
+    padding: 15px;
     margin: 0px;
-    margin-top: 20px;
-    margin-bottom: 20px;
+    margin-top: 15px;
+    margin-bottom: 15px;
     border-left-width: 5px;
     border-radius: 3px;
 }
@@ -489,7 +494,7 @@ a.desc:after {
     background-color: #576676;
     color: #fff;
     float: left;
-    padding: 0px 20px;
+    padding: 0px 15px;
 }
 .index-automobiles h3 {
     color: #fff;
@@ -510,8 +515,8 @@ a.desc:after {
 }
 @media (min-width: 767px) {
     .no-content-margin {
-        margin-left: -20px;
-        margin-right: -20px;
+        margin-left: -15px;
+        margin-right: -15px;
     }
 }
 h2, h3, h4, h5, h6 {
