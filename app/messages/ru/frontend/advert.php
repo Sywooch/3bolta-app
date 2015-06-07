@@ -17,7 +17,9 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'Stop advert publication' => 'Завершить публикацию',
+    'Advert title' => 'Заголовок объявления',
+    'Contact face' => 'Контактное лицо',
+    'E-mail' => 'E-mail',
     'Advert description' => 'Описание',
     'Advert was created' => 'Объявление создано',
     'Advert was published' => 'Объявление опубликовано',
@@ -62,6 +64,7 @@ return [
     'Search' => 'Найти',
     'Seller type' => 'Продавец',
     'Serie' => 'Серия',
+    'Stop advert publication' => 'Завершить публикацию',
     'Unpublished' => 'Неопубликовано',
     'Update advert' => 'Обновить объявление',
     'User id' => 'Пользователь',
