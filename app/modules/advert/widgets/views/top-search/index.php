@@ -22,10 +22,14 @@ use advert\forms\Search;
             'action' => Url::toRoute(['/advert/catalog/search']),
             'enableAjaxValidation' => false,
             'enableClientValidation' => false,
+            'fieldConfig' => [
+                'template' => '{input}{icon}',
+                'parts' => ['{icon}' => ''],
+            ]
         ]);
         ?>
         <div class="row">
-            <div class="col-lg-6 col-sm-12">
+            <div class="col-lg-4 col-sm-12">
                 <?=$this->render('_choose_auto', [
                     'form' => $form,
                     'model' => $model,
@@ -33,17 +37,34 @@ use advert\forms\Search;
             </div>
         </div>
         <div class="row">
-            <div class="col-lg-6 col-sm-12">
-                <?=$form->field($model, 'con')->dropDownList(Advert::getConditionDropDownList())?>
+            <div class="col-lg-4 col-sm-12">
+                <?=$form->field($model, 'con', [
+                    'parts' => ['{icon}' => '<span class="form-control-icon glyphicon glyphicon-wrench"></span>'],
+                    'inputOptions' => [
+                        'class' => 'form-control form-control-with-icon',
+                        'placeholder' => Yii::t('frontend/advert', 'Condition'),
+                    ],
+                ])->dropDownList(Advert::getConditionDropDownList(true))?>
             </div>
-            <div class="col-lg-6 col-sm-12">
-                <?=$form->field($model, 'cat')->dropDownList(Advert::getCategoryDropDownList(true))?>
+            <div class="col-lg-4 col-sm-12">
+                <?=$form->field($model, 'cat', [
+                    'parts' => ['{icon}' => '<span class="form-control-icon glyphicon glyphicon-tag"></span>'],
+                    'inputOptions' => [
+                        'class' => 'form-control form-control-with-icon',
+                        'placeholder' => Yii::t('frontend/advert', 'Category'),
+                    ],
+                ])->dropDownList(Advert::getCategoryDropDownList(true))?>
             </div>
-            <div class="col-lg-12 col-sm-12">
-                <?=$form->field($model, 'q')->textInput(['maxlength' => Search::MAX_QUERY_LENGTH])?>
+            <div class="col-lg-4 col-sm-12">
+                <?=$form->field($model, 'q', [
+                    'parts' => ['{icon}' => '<span class="form-control-icon glyphicon glyphicon-search"></span>'],
+                    'inputOptions' => [
+                        'class' => 'form-control form-control-with-icon',
+                        'placeholder' => Yii::t('frontend/advert', 'Name'),
+                    ]
+                ])->textInput(['maxlength' => Search::MAX_QUERY_LENGTH])?>
             </div>
             <div class="col-lg-2 col-sm-12">
-                <label class="control-label">&nbsp;</label>
                 <?=Html::submitButton(Yii::t('frontend/advert', 'Search'), ['class' => 'form-control btn btn-primary'])?>
             </div>
         </div>

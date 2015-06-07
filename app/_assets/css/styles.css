@@ -21,9 +21,6 @@ body {
 .form-control-with-icon {
     padding-left: 34px;
 }
-.dropdown-toggle {
-    height: 34px;
-}
 
 .page-wrap {
     width: 1000px;
@@ -374,7 +371,6 @@ a.desc:after {
 .user-panel .user-dropdown-menu {
     position: relative;
     display: inline-block;
-    vertical-align: middle;
 }
 .collapse.in .user-panel .user-dropdown-menu .dropdown-menu {
     position: relative;
@@ -437,6 +433,11 @@ a.desc:after {
     background-image: none;
     cursor: pointer;
     border: 0px;
+}
+.bootstrap-select .dropdown-toggle {
+    height: 34px;
+    border: 1px solid #ccc;
+    border-radius: 0px;
 }
 .bottom-menu a, .bottom-menu a:hover, .bottom-menu a:focus {
     color: #3f3f3f;

@@ -17,10 +17,9 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'Advert title' => 'Заголовок объявления',
-    'Contact face' => 'Контактное лицо',
-    'E-mail' => 'E-mail',
+    'Name' => 'Название',
     'Advert description' => 'Описание',
+    'Advert title' => 'Заголовок объявления',
     'Advert was created' => 'Объявление создано',
     'Advert was published' => 'Объявление опубликовано',
     'Append advert' => 'Добавить объявление',
@@ -39,11 +38,13 @@ return [
     'Complete publication' => 'Завершена публикация',
     'Condition' => 'Состояние',
     'Contact email' => 'E-mail (не публикуется)',
+    'Contact face' => 'Контактное лицо',
     'Contact name' => 'Контактное лицо',
     'Contact phone' => 'Контактный телефон',
     'Contacts' => 'Контакты',
     'Create advert' => 'Создать объявление',
     'Description' => 'Описание',
+    'E-mail' => 'E-mail',
     'Edit' => 'Редактировать',
     'Edit advert' => 'Редактирование объявления',
     'Images' => 'Изображения',
