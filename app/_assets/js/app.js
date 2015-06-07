@@ -5,7 +5,13 @@ $(document).ready(function() {
     /**
      * Кастомный селект
      */
-    $('select').selectpicker();
+    $('select').each(function() {
+        var options = {};
+        if ($(this).attr('placeholder')) {
+            options.noneSelectedText = $(this).attr('placeholder');
+        }
+        $(this).selectpicker(options);
+    });
 
     /**
      * Переключение верхнего поиска

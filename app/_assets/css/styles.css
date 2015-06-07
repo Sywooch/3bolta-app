@@ -2,17 +2,24 @@ body {
     background-color: #cccccc;
 }
 
-.form-control {
-    border: none;
-    box-shadow: none;
-    -webkit-box-shadow: none;
-    border-radius: 3px;
-}
-.control-icon {
-    margin-right: 0px;
-    background-color: #FFF;
-    height: 34px;
+.form-control::-webkit-input-placeholder {color:#000;}
+.form-control::-moz-placeholder          {color:#000;}
+.form-control:-moz-placeholder           {color:#000;}
+.form-control:-ms-input-placeholder      {color:#000;}
+
+.form-control-icon {
+    position: absolute;
+    color: #000;
     line-height: 34px;
+    margin-left: 14px;
+    display: block;
+    z-index: 500;
+}
+.form-control-with-icon button {
+    padding-left: 34px;
+}
+.form-control-with-icon {
+    padding-left: 34px;
 }
 .dropdown-toggle {
     height: 34px;

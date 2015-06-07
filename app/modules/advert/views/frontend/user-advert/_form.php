@@ -38,22 +38,50 @@ $form = ActiveForm::begin([
     'enableAjaxValidation' => true,
     'options' => [
         'enctype' => 'multipart/form-data',
+    ],
+    'fieldConfig' => [
+        'template' => '{input}{icon}{error}',
+        'parts' => ['{icon}' => ''],
     ]
 ]);
 ?>
     <div class="no-content-margin">
         <div class="advert-form-common col-lg-12">
             <div class="col-lg-12">
-                <?=$form->field($model, 'name')->textInput()?>
+                <?=$form->field($model, 'name', [
+                    'parts' => ['{icon}' => '<span class="form-control-icon glyphicon glyphicon-bullhorn"></span>'],
+                    'inputOptions' => [
+                        'class' => 'form-control form-control-with-icon',
+                        'placeholder' => Yii::t('frontend/advert', 'Advert title'),
+                    ],
+                ])->textInput()?>
             </div>
             <div class="col-sm-12 col-lg-12">
-                <?=$form->field($model, 'category_id')->dropDownList(Advert::getCategoryDropDownList(true))?>
+                <?=$form->field($model, 'category_id', [
+                    'parts' => ['{icon}' => '<span class="form-control-icon glyphicon glyphicon-tag"></span>'],
+                    'inputOptions' => [
+                        'class' => 'form-control form-control-with-icon',
+                        'placeholder' => Yii::t('frontend/advert', 'Part category'),
+                    ],
+                ])->dropDownList(Advert::getCategoryDropDownList(true))?>
             </div>
             <div class="col-sm-12 col-lg-6">
-                <?=$form->field($model, 'condition_id')->dropDownList(Advert::getConditionDropDownList(true))?>
+                <?=$form->field($model, 'condition_id', [
+                    'parts' => ['{icon}' => '<span class="form-control-icon glyphicon glyphicon-wrench"></span>'],
+                    'inputOptions' => [
+                        'class' => 'form-control form-control-with-icon',
+                        'placeholder' => Yii::t('frontend/advert', 'Part condition'),
+                    ],
+                ])->dropDownList(Advert::getConditionDropDownList(true))?>
             </div>
             <div class="col-sm-12 col-lg-6">
-                <?=$form->field($model, 'price')->textInput()?>
+                <?=$form->field($model, 'price', [
+                    'parts' => ['{icon}' => '<span class="form-control-icon glyphicon glyphicon-ruble"></span>'],
+                    'inputOptions' => [
+                        'class' => 'form-control form-control-with-icon',
+                        'placeholder' => Yii::t('frontend/advert', 'Part price'),
+                    ],
+                ])->textInput()?>
             </div>
         </div>
     </div>
@@ -111,7 +139,10 @@ $form = ActiveForm::begin([
             ])?>
 
             <div class="col-lg-12">
-                <?=$form->field($model, 'description')->textarea(['maxlength' => Form::DESCRIPTION_MAX_LENGTH])?>
+                <?=$form->field($model, 'description')->textarea([
+                    'placeholder' => Yii::t('frontend/advert', 'Description'),
+                    'maxlength' => Form::DESCRIPTION_MAX_LENGTH
+                ])?>
             </div>
         </div>
     </div>
