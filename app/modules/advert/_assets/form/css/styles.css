@@ -74,8 +74,14 @@
 .advert-form-contacts .help-block-error {
     background-color: #660000;
 }
-@media (max-width: 767px) {
+@media (max-width: 768px) {
     .field-form-uploadimage .file-preview {
         display: none;
+    }
+    .advert-form-common > div,
+    .advert-form-contacts > div, 
+    .advert-form-auto > div {
+        padding-left: 0px;
+        padding-right: 0px;
     }
 }

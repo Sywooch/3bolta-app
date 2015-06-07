@@ -14,6 +14,10 @@ class AdvertList extends \yii\web\AssetBundle
         'css/styles.css',
     ];
 
+    public $js = [
+        'js/app.js',
+    ];
+
     public $depends = [
         'app\assets\FrontendAssets',
     ];

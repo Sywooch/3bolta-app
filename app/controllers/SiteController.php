@@ -22,12 +22,8 @@ class SiteController extends Controller
         // получить марки
         $marks = $advertApi->getDistinctMark();
 
-        // получить последние опубликованные объявления
-        $lastAdverts = Advert::findActiveAndPublished()->orderBy('published DESC')->limit(6)->all();
-
         return $this->render('index', [
             'marks' => $marks,
-            'lastAdverts' => $lastAdverts,
         ]);
     }
 }

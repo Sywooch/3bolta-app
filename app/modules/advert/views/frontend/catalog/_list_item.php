@@ -26,7 +26,7 @@ $preview = $model->getPreview();
 <?php if (!$hideDropDown):?>
     <div class="panel panel-default list-item-hover">
         <div class="panel-body">
-            <div class="<?php if ($preview):?>col-lg-8<?php endif;?> col-sm-12">
+            <div class="list-item-internal-desc<?php if ($preview):?> col-lg-8<?php endif;?>">
                 <div class="list-item-title">
                     <h3><?=Html::a(
                         Html::encode($model->advert_name),
@@ -44,7 +44,6 @@ $preview = $model->getPreview();
                         <span class="glyphicon glyphicon-ruble"></span>
                         <?=$model->getPriceFormated()?>
                     </span>
-                    <small class="list-item-condition"><strong><?=$model->getConditionName()?></strong></small>
                 </div>
                 <div class="list-item-row list-item-seller-type">
                     <strong><?=Yii::t('frontend/advert', 'Seller type')?>:</strong>
@@ -52,7 +51,7 @@ $preview = $model->getPreview();
                 </div>
             </div>
             <?php if ($preview):?>
-                <div class="list-item-internal-preview col-lg-4 col-sm-12">
+                <div class="list-item-internal-preview col-lg-4">
                     <?=Html::img($preview->getUrl())?>
                 </div>
             <?php endif;?>
@@ -78,7 +77,7 @@ $preview = $model->getPreview();
 <?php endif;?>
 <div class="panel panel-default list-item-internal">
     <div class="panel-body">
-        <div class="<?php if ($preview):?>col-lg-8<?php endif;?> col-sm-12">
+        <div class="list-item-internal-desc <?php if ($preview):?>col-xs-8<?php else:?>col-xs-12<?php endif;?>">
             <div class="list-item-title list-item-title-internal">
                 <h3><?=Html::a(
                     Html::encode($model->advert_name),
@@ -96,7 +95,6 @@ $preview = $model->getPreview();
                     <span class="glyphicon glyphicon-ruble"></span>
                     <?=$model->getPriceFormated()?>
                 </span>
-                <small class="list-item-condition"><strong><?=$model->getConditionName()?></strong></small>
             </div>
             <div class="list-item-row list-item-seller-type">
                 <strong><?=Yii::t('frontend/advert', 'Seller type')?>:</strong>
@@ -104,7 +102,7 @@ $preview = $model->getPreview();
             </div>
         </div>
         <?php if ($preview):?>
-            <div class="list-item-internal-preview col-lg-4 col-sm-12">
+            <div class="list-item-internal-preview col-xs-4">
                 <?=Html::img($preview->getUrl())?>
             </div>
         <?php endif;?>
