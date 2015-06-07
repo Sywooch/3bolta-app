@@ -220,13 +220,7 @@ body {
 }
 
 .wrap > .container {
-    padding: 15px 20px;
-}
-@media (max-width: 767px) {
-    .wrap > .container {
-        padding-left: 0px;
-        padding-right: 0px;
-    }
+    padding: 15px 0px;
 }
 .footer {
     height: 60px;
