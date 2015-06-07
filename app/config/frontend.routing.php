@@ -41,4 +41,5 @@ return [
     '/cabinet/tps' => '/partner/user-trade-point/list',
     '/cabinet/tps/create' => '/partner/user-trade-point/create',
     '/cabinet/tps/edit/<id:(\d+)>' => '/partner/user-trade-point/edit',
+    '/cabinet/tps/delete/<id:(\d+)>' => '/partner/user-trade-point/delete',
 ];

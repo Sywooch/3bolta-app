@@ -6,7 +6,8 @@
  * - latitude - селектор для указания широты;
  * - longitude - селектор для указания долготы;
  * - hideMarker - если определено, то не будет установлен маркер на карте при поиске локации;
- * - onLoadMap - если определена функциия, то она будет вызвана при инициализации карты.
+ * - onLoadMap - если определена функциия, то она будет вызвана при инициализации карты;
+ * - addressNotFound - сообщение о не найденном адресе.
  */
 (function($) {
     $.fn.selectLocation = function(options) {
@@ -89,6 +90,19 @@
                     setLatLngAttributes(center);
                 }
             };
+
+            // валидация адреса, если не найдены координаты
+            // испльзуется событие из ActiveForm
+            if ($(options.address).parents('form').length) {
+                var $form = $(options.address).parents('form');
+                $form.on('afterValidateAttribute', function(e, attribute, messages) {
+                    if (attribute.input == options.address && !$(options.latitude).val() && !$(options.longitude).val() && !messages.length) {
+                        // не найдены координаты
+                        messages.push(options.addressNotFound);
+                        e.preventDefault();
+                    }
+                });
+            }
 
             // автокомплит для поиска местонахождения
             var autocomplete = new google.maps.places.Autocomplete($(options.address).get(0));

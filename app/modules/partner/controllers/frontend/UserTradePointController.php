@@ -67,6 +67,7 @@ class UserTradePointController extends \app\components\Controller
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
+                    'delete' => ['post'],
                 ]
             ]
         ], parent::behaviors());
@@ -161,5 +162,23 @@ class UserTradePointController extends \app\components\Controller
         return $this->render('list', [
             'list' => $list,
         ]);
+    }
+
+    /**
+     * Удаление
+     */
+    public function actionDelete($id)
+    {
+        $tradePoint = TradePoint::findUserList()->andWhere(['id' => (int) $id])->one();
+
+        if (!($tradePoint instanceof TradePoint)) {
+            throw new NotFoundHttpException();
+        }
+
+        try {
+            $tradePoint->delete();
+        } catch (Exception $ex) { }
+
+        return $this->redirect(['list']);
     }
 }

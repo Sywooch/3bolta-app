@@ -17,14 +17,15 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'Last adverts' => 'Последние объвления',
-    'Parts for automobiles' => 'Запчасти для автомобилей',
+    'Address not found' => 'Адрес не найден: выберите адрес из списка',
     'Can\'t create advert to this e-mail. <a href="{url}">Details...</a>' => 'Для публикации объявления на этот e-mail необходимо зарегистрироваться. <a href="{url}">Подробнее</a>',
     'Can\'t create advert to this phone. <a href="{url}">Details...</a>' => 'Для публикации объявления на этот телефон необходимо зарегистрироваться. <a href="{url}">Подробнее</a>',
     'Created' => 'Создано',
     'Drag & drop files here for upload' => 'Для загрузки перетащите файлы в это окно',
     'Edited' => 'Отредактировано',
+    'Last adverts' => 'Последние объвления',
     'No' => 'Нет',
+    'Parts for automobiles' => 'Запчасти для автомобилей',
     'Phone already exists' => 'Телефон уже используется',
     'Submit' => 'Отправить',
     'Wrong phone format' => 'Неверный формат телефона',

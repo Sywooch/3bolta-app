@@ -1,6 +1,8 @@
 <?php
 namespace app\widgets;
 
+use Yii;
+
 use yii\helpers\Json;
 use yii\helpers\Html;
 use app\assets\SelectMapLocationAssets;
@@ -77,7 +79,7 @@ class SelectMapLocation extends \yii\base\Widget
             $this->wrapperOptions['id'] = $this->id;
         }
         if (!isset($this->wrapperOptions['style'])) {
-            $this->wrapperOptions['style'] = 'width: 100%; height: 300px;';
+            $this->wrapperOptions['style'] = 'width: 100%; height: 500px;';
         }
         SelectMapLocationAssets::register($this->view);
 
@@ -91,6 +93,10 @@ class SelectMapLocation extends \yii\base\Widget
             'latitude'          => '#' . $latitude,
             'longitude'         => '#' . $longitude,
         ]);
+        // сообщение о ненайденном адресе
+        if (!isset($jsOptions['addressNotFound'])) {
+            $jsOptions['addressNotFound'] = Yii::t('main', 'Address not found');
+        }
         $this->view->registerJs(new \yii\web\JsExpression('
             $(document).ready(function() {
                 $(\'#' . $this->wrapperOptions['id'] . '\').selectLocation(' . Json::encode($jsOptions) . ');

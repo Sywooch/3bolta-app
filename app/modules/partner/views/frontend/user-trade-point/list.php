@@ -5,6 +5,7 @@
 
 use yii\helpers\Json;
 use app\widgets\JS;
+use yii\helpers\Url;
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
 use partner\forms\MyTradePointSearch;
@@ -72,6 +73,7 @@ $formModel = new MyTradePointSearch();
                 'phone' => $tradepoint->getTradePointPhone(),
                 'latitude' => $tradepoint->latitude,
                 'longitude' => $tradepoint->longitude,
+                'removeUrl' => Url::toRoute(['/partner/user-trade-point/delete', 'id' => $tradepoint->id]),
             ];
         }
         ?>

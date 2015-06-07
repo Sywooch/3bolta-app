@@ -37,6 +37,7 @@ class TradePoint extends \yii\base\Model
     {
         return [
             [['address', 'latitude', 'longitude'], 'required'],
+            [['latitude', 'longitude'], 'number', 'min' => -180, 'max' => 180],
             ['phone_from_profile', 'boolean'],
             ['phone', 'required', 'when' => function($model) {
                 /* @var $model \partner\models\TradePoint */
@@ -71,6 +72,7 @@ class TradePoint extends \yii\base\Model
             'address' => Yii::t('frontend/partner', 'Address'),
             'latitude' => Yii::t('frontend/partner', 'Latitude'),
             'longitude' => Yii::t('frontend/partner', 'Longitude'),
+            'phone' => Yii::t('frontend/partner', 'Phone'),
             'phone_from_profile' => Yii::t('frontend/partner', 'Phone from profile'),
         ];
     }

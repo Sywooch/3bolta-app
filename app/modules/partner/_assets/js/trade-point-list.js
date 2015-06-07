@@ -27,7 +27,7 @@ document.onLoadTradePointMap = function(map) {
         content += '<a href="#" data-toggle="modal" data-target="#tradePointModal' + tradePoint.id + '" class="btn btn-sm btn-success">';
         content += '<span class="glyphicon glyphicon-pencil">';
         content += '</span>&nbsp;Редактировать</a></b>&nbsp;&nbsp;'
-        content += '<b><a href="#" class="btn btn-sm btn-warning"><span class="glyphicon glyphicon-remove">';
+        content += '<b><a href="' + tradePoint.removeUrl + '" data-confirm="Вы уверены, что хотите удалить торговую точку?" data-method="post" class="btn btn-sm btn-warning"><span class="glyphicon glyphicon-remove">';
         content += '</span>&nbsp;Удалить</a></b>'
         var infowindow = new google.maps.InfoWindow({
             'content'           : content
