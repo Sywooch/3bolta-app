@@ -1,6 +1,23 @@
 body {
     background-color: #cccccc;
 }
+
+.form-control {
+    border: none;
+    box-shadow: none;
+    -webkit-box-shadow: none;
+    border-radius: 3px;
+}
+.control-icon {
+    margin-right: 0px;
+    background-color: #FFF;
+    height: 34px;
+    line-height: 34px;
+}
+.dropdown-toggle {
+    height: 34px;
+}
+
 .page-wrap {
     width: 1000px;
     margin: 0 auto;

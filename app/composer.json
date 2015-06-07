@@ -24,7 +24,8 @@
         "bower-asset/flot": "*",
         "bower-asset/font-awesome": "*",
         "kartik-v/yii2-widgets": "*",
-        "yiisoft/yii2-imagine": "*"
+        "yiisoft/yii2-imagine": "*",
+        "bootstrap-select/bootstrap-select": "1.7.2"
     },
     "require-dev": {
         "yiisoft/yii2-codeception": "*",

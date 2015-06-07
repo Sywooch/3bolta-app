@@ -3,6 +3,11 @@
  */
 $(document).ready(function() {
     /**
+     * Кастомный селект
+     */
+    $('select').selectpicker();
+
+    /**
      * Переключение верхнего поиска
      */
     $('#toggleTopSearch').click(function(e) {
