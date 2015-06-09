@@ -1,18 +1,20 @@
 <?php
 namespace partner\components;
 
+use partner\forms\Partner as PartnerForm;
+use partner\forms\TradePoint as TradePointForm;
+use partner\models\Partner;
+use partner\models\Specialization;
+use partner\models\TradePoint;
 use user\forms\Register;
 use user\models\User;
-use partner\models\Partner;
-use partner\forms\Partner as PartnerForm;
-use partner\models\TradePoint;
-use partner\forms\TradePoint as TradePointForm;
+use yii\base\Component;
 use yii\base\Exception;
 
 /**
  * API для работы с партнерами
  */
-class PartnersApi extends \yii\base\Component
+class PartnersApi extends Component
 {
     /**
      * Редактирование торговой точки $tradePoint из формы $form.
@@ -172,6 +174,8 @@ class PartnersApi extends \yii\base\Component
         $transaction = $partner->getDb()->beginTransaction();
 
         try {
+            // создать привязки к специализациям
+            $partner->setMark($form->getPartnerSpecializationArray());
             if (!$partner->save()) {
                 throw new Exception();
             }

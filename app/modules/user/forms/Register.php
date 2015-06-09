@@ -36,6 +36,11 @@ class Register extends \yii\base\Model
     const MIN_PASSWORD_LENGTH = 6;
 
     /**
+     * Максимальное количество специализаций для выбора их селекта
+     */
+    const MAX_PARTNER_SPECIALIZATION = 5;
+
+    /**
      * @var string название компании-партнера, если пользователь - юр. лицо
      */
     public $partnerName;
@@ -44,6 +49,16 @@ class Register extends \yii\base\Model
      * @var string тип компании-партнера, если пользователь - юр. лицо
      */
     public $partnerType;
+
+    /**
+     * @var string специализации партнера в текстовом виде для саггеста
+     */
+    public $_partnerSpecialization;
+
+    /**
+     * @var array массив идентификаторов специализаций
+     */
+    public $_partnerSpecializationArray = [];
 
     /**
      * @var int тип регистрации: частное лицо, юр. лицо
@@ -107,6 +122,7 @@ class Register extends \yii\base\Model
                 /* @var $model \user\forms\Register */
                 return $model->type == User::TYPE_LEGAL_PERSON;
             }],
+            ['partnerSpecialization', 'safe'],
         ];
     }
 
@@ -126,7 +142,43 @@ class Register extends \yii\base\Model
             'phone_canonical' => Yii::t('frontend/user', 'Your phone'),
             'password' => Yii::t('frontend/user', 'Password'),
             'password_confirmation' => Yii::t('frontend/user', 'Password confirmation'),
+            'partnerSpecialization' => Yii::t('frontend/user', 'Specialization'),
         ];
+    }
+
+    /**
+     * Получение специализаций в текстовом виде
+     * @return string
+     */
+    public function getPartnerSpecialization()
+    {
+        return $this->_partnerSpecialization;
+    }
+
+    /**
+     * Установка специализаций. Если пришел массив то его запоминаем в _partnerSpecializationArray
+     * @param array $value
+     */
+    public function setPartnerSpecialization($value)
+    {
+        if (is_array($value)) {
+            $this->_partnerSpecializationArray = [];
+            foreach ($value as $v) {
+                $v = (int) $v;
+                if ($v) {
+                    $this->_partnerSpecializationArray[] = $v;
+                }
+            }
+        }
+    }
+
+    /**
+     * Получить массив специализаций
+     * @return array
+     */
+    public function getPartnerSpecializationArray()
+    {
+        return $this->_partnerSpecializationArray;
     }
 
     /**

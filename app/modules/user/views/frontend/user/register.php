@@ -3,20 +3,25 @@
  * Форма регистрации
  */
 
-use app\widgets\JS;
-use yii\bootstrap\Modal;
-use user\models\User;
 use app\components\PhoneValidator;
-use user\forms\Register;
-use yii\helpers\Html;
-use yii\bootstrap\ActiveForm;
-use yii\widgets\MaskedInput;
+use app\widgets\JS;
+use auto\models\Mark;
 use partner\models\Partner;
+use user\forms\Register;
+use user\models\User;
+use wh\widgets\MagicSuggest;
+use yii\base\View;
+use yii\bootstrap\ActiveForm;
+use yii\bootstrap\Modal;
+use yii\helpers\ArrayHelper;
+use yii\helpers\Html;
+use yii\widgets\ActiveForm as ActiveForm2;
+use yii\widgets\MaskedInput;
 
-/* @var $this \yii\base\View */
-/* @var $model \user\forms\Register */
-/* @var $registeredUser \user\models\User */
-/* @var $form \yii\widgets\ActiveForm */
+/* @var $this View */
+/* @var $model Register */
+/* @var $registeredUser User */
+/* @var $form ActiveForm2 */
 ?>
 <div class="col-sm-1 col-lg-3"></div>
 <div class="col-sm-10 col-lg-6">
@@ -33,6 +38,20 @@ use partner\models\Partner;
             'maxlength' => Register::MAX_PARTNER_NAME_LENGTH,
         ])?>
         <?=$form->field($model, 'partnerType')->dropDownList(Partner::getCompanyTypes())?>
+        <?=$form->field($model, 'partnerSpecialization')->widget(\app\widgets\MagicSuggestDefaults::className(), [
+            'items' => ArrayHelper::map(Mark::find()->all(), 'id', function($data) {
+                return ['id' => $data->id, 'name' => $data->full_name];
+            }),
+            'clientOptions' => [
+                'editable' => true,
+                'expandOnFocus' => true,
+                'maxSelection' => Register::MAX_PARTNER_SPECIALIZATION,
+                'maxSelectionRenderer' => '',
+                'maxEntryRenderer' => '',
+                'minCharsRenderer' => '',
+                'value' => $model->getPartnerSpecializationArray(),
+            ]
+        ])?>
     </div>
     <?php
     print $form->field($model, 'name')->textInput([

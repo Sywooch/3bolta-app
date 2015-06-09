@@ -273,4 +273,13 @@ return array (
       '@yii/imagine' => $vendorDir . '/yiisoft/yii2-imagine',
     ),
   ),
+  'wayhood/yii2-widgets-magicsuggest' => 
+  array (
+    'name' => 'wayhood/yii2-widgets-magicsuggest',
+    'version' => '9999999-dev',
+    'alias' => 
+    array (
+      '@wh/widgets' => $vendorDir . '/wayhood/yii2-widgets-magicsuggest',
+    ),
+  ),
 );

@@ -1,12 +1,15 @@
 <?php
 namespace app\widgets;
 
-use Yii;
-
-use yii\helpers\Json;
-use yii\helpers\Html;
 use app\assets\SelectMapLocationAssets;
+use Yii;
+use yii\base\Model;
 use yii\helpers\ArrayHelper;
+use yii\helpers\Html;
+use yii\helpers\Json;
+use yii\web\JsExpression;
+use yii\web\View;
+use yii\widgets\InputWidget;
 
 /**
  * Виджет выбора местоположения.
@@ -18,23 +21,8 @@ use yii\helpers\ArrayHelper;
  * - attributeLongitude - атрибут для ввода долготы;
  * - renderWidgetMap - функция для рендера виджета, в нее передается переменная $map - html карты.
  */
-class SelectMapLocation extends \yii\base\Widget
+class SelectMapLocation extends InputWidget
 {
-    /**
-     * @var \yii\web\View
-     */
-    public $view;
-
-    /**
-     * @var \yii\base\Model
-     */
-    public $model;
-
-    /**
-     * @var string атрибут для ввода адреса
-     */
-    public $attribute;
-
     /**
      * @var string атрибут для ввода широты
      */
@@ -97,7 +85,7 @@ class SelectMapLocation extends \yii\base\Widget
         if (!isset($jsOptions['addressNotFound'])) {
             $jsOptions['addressNotFound'] = Yii::t('main', 'Address not found');
         }
-        $this->view->registerJs(new \yii\web\JsExpression('
+        $this->view->registerJs(new JsExpression('
             $(document).ready(function() {
                 $(\'#' . $this->wrapperOptions['id'] . '\').selectLocation(' . Json::encode($jsOptions) . ');
             });

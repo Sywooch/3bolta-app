@@ -17,7 +17,7 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'Use profile phone' => 'Использовать телефон из профиля',
+    'Specialization' => 'Специализация',
     'Address' => 'Адрес',
     'Company type' => 'Тип компании',
     'Contact phone' => 'Контактный телефон',
@@ -26,4 +26,5 @@ return [
     'Owner' => 'Владелец',
     'Partner' => 'Партнер',
     'Partner name' => 'Название партнера',
+    'Use profile phone' => 'Использовать телефон из профиля',
 ];

@@ -25,7 +25,8 @@
         "bower-asset/font-awesome": "*",
         "kartik-v/yii2-widgets": "*",
         "yiisoft/yii2-imagine": "*",
-        "bootstrap-select/bootstrap-select": "1.7.2"
+        "bootstrap-select/bootstrap-select": "1.7.2",
+        "wayhood/yii2-widgets-magicsuggest": "dev-master"
     },
     "require-dev": {
         "yiisoft/yii2-codeception": "*",

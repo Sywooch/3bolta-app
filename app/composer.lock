@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "8be5803519a8c395fb9f50696d87c53c",
+    "hash": "f54d7cd82d563e676d67bb941ba85dd2",
     "packages": [
         {
             "name": "bootstrap-select/bootstrap-select",
@@ -1796,6 +1796,47 @@
             "time": "2014-12-05 14:17:14"
         },
         {
+            "name": "wayhood/yii2-widgets-magicsuggest",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/wayhood/yii2-widgets-magicsuggest.git",
+                "reference": "15ca5001b53c59f8e3f3e4fba0700c0c744517ee"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/wayhood/yii2-widgets-magicsuggest/zipball/15ca5001b53c59f8e3f3e4fba0700c0c744517ee",
+                "reference": "15ca5001b53c59f8e3f3e4fba0700c0c744517ee",
+                "shasum": ""
+            },
+            "require": {
+                "yiisoft/yii2": "*"
+            },
+            "type": "yii2-extension",
+            "autoload": {
+                "psr-4": {
+                    "wh\\widgets\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "wayhood",
+                    "email": "wayhood@163.com"
+                }
+            ],
+            "description": "MagicSuggest",
+            "keywords": [
+                "MagicSuggest",
+                "extension",
+                "yii2"
+            ],
+            "time": "2015-04-21 04:46:34"
+        },
+        {
             "name": "yiisoft/yii2",
             "version": "2.0.2",
             "source": {
@@ -2423,7 +2464,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "wayhood/yii2-widgets-magicsuggest": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
