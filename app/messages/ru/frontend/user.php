@@ -17,7 +17,7 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'Specialization' => 'Специализация',
+    'Contacts' => 'Контакты',
     'Account locked' => 'Аккаунт заблокирован',
     'Authorize' => 'Авторизация',
     'Change e-mail' => 'Изменить e-mail',
@@ -28,7 +28,6 @@ return [
     'Company data update error' => 'Ошибка редактирования данных',
     'Company name' => 'Название компании',
     'Company type' => 'Тип компании',
-    'Contact data' => 'Контактные данные',
     'Current e-mail' => 'Текущий e-mail',
     'E-mail' => 'E-mail',
     'E-mail has no changes' => 'Нет изменений в e-mail',
@@ -58,6 +57,7 @@ return [
     'Register type' => 'Тип регистрации',
     'Registration' => 'Регистрация',
     'Restore password' => 'Восстановить пароль',
+    'Specialization' => 'Специализация',
     'Success registered' => 'Успешная регистрация',
     'This e-mail already exists' => 'Данный e-mail уже занят',
     'This phone already exists' => 'Данный телефон уже занят',

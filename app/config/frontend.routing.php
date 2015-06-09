@@ -38,8 +38,8 @@ return [
     '/cabinet/ads/append' => '/advert/user-advert/append',
 
     // торговые точки
-    '/cabinet/tps' => '/partner/user-trade-point/list',
-    '/cabinet/tps/create' => '/partner/user-trade-point/create',
-    '/cabinet/tps/edit/<id:(\d+)>' => '/partner/user-trade-point/edit',
-    '/cabinet/tps/delete/<id:(\d+)>' => '/partner/user-trade-point/delete',
+    '/cabinet/company' => '/partner/partner/index',
+    '/cabinet/company/tps/create' => '/partner/partner/create-trade-point',
+    '/cabinet/company/tps/edit/<id:(\d+)>' => '/partner/partner/edit-trade-point',
+    '/cabinet/company/tps/delete/<id:(\d+)>' => '/partner/partner/delete-trade-point',
 ];

@@ -53,12 +53,12 @@ class Register extends \yii\base\Model
     /**
      * @var string специализации партнера в текстовом виде для саггеста
      */
-    public $_partnerSpecialization;
+    protected $_partnerSpecialization;
 
     /**
      * @var array массив идентификаторов специализаций
      */
-    public $_partnerSpecializationArray = [];
+    protected $_partnerSpecializationArray = [];
 
     /**
      * @var int тип регистрации: частное лицо, юр. лицо

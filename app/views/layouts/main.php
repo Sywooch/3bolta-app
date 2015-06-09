@@ -1,16 +1,19 @@
 <?php
-use user\widgets\UserPanel;
-use yii\helpers\Url;
-use yii\helpers\Html;
-use yii\bootstrap\Nav;
-use yii\bootstrap\NavBar;
-use app\widgets\ServiceMessage;
-use app\assets\FrontendAssets;
-use advert\widgets\TopSearch;
-/* @var $this \yii\web\View */
+/* @var $this View */
 /* @var $content string */
+
+use advert\widgets\TopSearch;
+use app\assets\FrontendAssets;
+use app\widgets\ServiceMessage;
 use user\widgets\LoginModal;
 use user\widgets\LostPasswordModal;
+use user\widgets\UserPanel;
+use yii\bootstrap\Nav;
+use yii\bootstrap\NavBar;
+use yii\helpers\Html;
+use yii\helpers\Url;
+use yii\web\View;
+use yii\widgets\Breadcrumbs;
 
 FrontendAssets::register($this);
 ?>

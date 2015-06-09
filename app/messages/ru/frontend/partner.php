@@ -17,9 +17,10 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'Phone' => 'Телефон',
+    'Trade points' => 'Торговые точки',
     'Address' => 'Адрес',
     'Can\'t send request: system error' => 'Невозможно отправить запрос: системная ошибка',
+    'Company data' => 'Данные о компании',
     'Company name' => 'Название компании',
     'Company type' => 'Тип компании',
     'Create' => 'Создать',
@@ -27,11 +28,12 @@ return [
     'Create trade point' => 'Создать торговую точку',
     'Latitude' => 'Широта',
     'Longitude' => 'Долгота',
-    'My trade points' => 'Мои торговые точки',
+    'Phone' => 'Телефон',
     'Phone from profile' => 'Использовать телефон из профиля',
     'Search by address' => 'Искать по адресу',
     'Search by latitude' => 'Искать по широте',
     'Search by longitude' => 'Искать по долготе',
+    'Specialization' => 'Специализация',
     'Update' => 'Обновить',
     'Update trade point' => 'Редактировать торговую точку',
     'Use phone from <a href="{link}">profile</a>' => 'Использовать телефон из <a href="{link}" target="_blank">профиля</a>',

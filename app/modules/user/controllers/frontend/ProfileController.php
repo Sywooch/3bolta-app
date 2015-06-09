@@ -1,33 +1,33 @@
 <?php
 namespace user\controllers\frontend;
 
-use Yii;
-
-use yii\base\Exception;
+use app\components\Controller;
+use user\components\UserApi;
+use user\forms\ChangePassword;
 use user\forms\Profile;
-use yii\helpers\Url;
-use yii\widgets\ActiveForm;
-use yii\web\Response;
+use Yii;
+use yii\base\Exception;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
-use partner\forms\Partner as PartnerForm;
-use partner\models\Partner;
-use partner\filters\CheckPartnerAccessRule;
-
-use user\forms\ChangePassword;
+use yii\helpers\ArrayHelper;
+use yii\helpers\Url;
+use yii\rest\Action;
+use yii\web\Response;
+use yii\web\User;
+use yii\widgets\ActiveForm;
 
 /**
  * Работа с профилем
  */
-class ProfileController extends \app\components\Controller
+class ProfileController extends Controller
 {
     /**
-     * @var \user\components\UserApi
+     * @var UserApi
      */
     protected $userApi;
 
     /**
-     * @var \user\models\User
+     * @var User
      */
     protected $user;
 
@@ -45,23 +45,18 @@ class ProfileController extends \app\components\Controller
      */
     public function behaviors()
     {
-        return \yii\helpers\ArrayHelper::merge([
+        return ArrayHelper::merge([
             'access' => [
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
                         'roles' => ['@'],
                         'allow' => true,
-                    ],
-                    [
-                        'class' => CheckPartnerAccessRule::className(),
-                        'actions' => ['update-company-data'],
-                        'allow' => true,
                     ]
                 ],
                 'denyCallback' => function($rule, $action) {
-                    if ($action instanceof \yii\base\Action) {
-                        /* @var $action \yii\base\Action */
+                    if ($action instanceof Action) {
+                        /* @var $action Action */
                         return $action->controller->goHome();
                     }
                 }
@@ -121,33 +116,6 @@ class ProfileController extends \app\components\Controller
         }
 
         return $this->redirect(Url::toRoute(['index']) . '#change-password');
-    }
-
-    public function actionUpdateCompanyData()
-    {
-        $partnerForm = $this->user->partner instanceof Partner ?
-            PartnerForm::createFromPartner($this->user->partner) :
-            new PartnerForm();
-
-        if (!empty($_POST['ajax']) && Yii::$app->request->isAjax) {
-            // AJAX-валидация
-            Yii::$app->response->format = Response::FORMAT_JSON;
-            $partnerForm->load($_POST);
-            return ActiveForm::validate($partnerForm);
-        }
-
-        if ($partnerForm->load($_POST)) {
-            /* @var $partnersApi \partner\components\PartnersApi */
-            $partnersApi = Yii::$app->getModule('partner')->api;
-            if ($partnerForm->validate() && $partnersApi->updatePartnerData($partnerForm, $this->user)) {
-                Yii::$app->session->setFlash('partner_success_update', true);
-            }
-            else {
-                Yii::$app->session->setFlash('partner_error_update', true);
-            }
-        }
-
-        return $this->redirect(Url::toRoute(['index']) . '#partner');
     }
 
     /**
@@ -225,15 +193,10 @@ class ProfileController extends \app\components\Controller
         $profile = Profile::createFromUser($this->user);
         // форма изменения пароля
         $changePassword = new ChangePassword();
-        // форма редактирования партнера
-        $partner = $this->user->partner instanceof Partner ?
-                PartnerForm::createFromPartner($this->user->partner) :
-                new PartnerForm();
 
         return $this->render('index', [
             'changePassword' => $changePassword,
             'profile' => $profile,
-            'partner' => $partner,
             'user' => $this->user,
         ]);
     }

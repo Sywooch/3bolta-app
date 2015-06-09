@@ -5,11 +5,11 @@
 
 use app\components\PhoneValidator;
 use app\widgets\JS;
+use app\widgets\MagicSuggestDefaults;
 use auto\models\Mark;
 use partner\models\Partner;
 use user\forms\Register;
 use user\models\User;
-use wh\widgets\MagicSuggest;
 use yii\base\View;
 use yii\bootstrap\ActiveForm;
 use yii\bootstrap\Modal;
@@ -38,7 +38,7 @@ use yii\widgets\MaskedInput;
             'maxlength' => Register::MAX_PARTNER_NAME_LENGTH,
         ])?>
         <?=$form->field($model, 'partnerType')->dropDownList(Partner::getCompanyTypes())?>
-        <?=$form->field($model, 'partnerSpecialization')->widget(\app\widgets\MagicSuggestDefaults::className(), [
+        <?=$form->field($model, 'partnerSpecialization')->widget(MagicSuggestDefaults::className(), [
             'items' => ArrayHelper::map(Mark::find()->all(), 'id', function($data) {
                 return ['id' => $data->id, 'name' => $data->full_name];
             }),

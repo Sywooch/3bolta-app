@@ -29,8 +29,8 @@ class TradePointModal extends \yii\bootstrap\Widget
             Yii::t('frontend/partner', 'Update trade point') :
             Yii::t('frontend/partner', 'Create trade point');
         $loadUrl = $tradePointId ?
-            Url::toRoute(['/partner/user-trade-point/edit', 'id' => $tradePointId]) :
-            Url::toRoute(['/partner/user-trade-point/create']);
+            Url::toRoute(['/partner/partner/edit-trade-point', 'id' => $tradePointId]) :
+            Url::toRoute(['/partner/partner/create-trade-point']);
 
         Modal::begin([
             'id' => $modalId,

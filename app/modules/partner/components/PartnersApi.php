@@ -131,6 +131,8 @@ class PartnersApi extends Component
             'company_type' => $form->type,
         ]);
 
+        $partner->setMark($form->getSpecializationArray());
+
         $transaction = $partner->getDb()->beginTransaction();
 
         try {
@@ -144,6 +146,7 @@ class PartnersApi extends Component
         } catch (Exception $ex) {
             $transaction->rollBack();
             $ret = null;
+            throw $ex;
         }
 
         return $ret;

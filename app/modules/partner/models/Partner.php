@@ -4,6 +4,7 @@ namespace partner\models;
 use handbook\models\HandbookValue;
 use user\models\User;
 use Yii;
+use yii\base\Exception;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 use yii\helpers\ArrayHelper;
@@ -192,7 +193,8 @@ class Partner extends ActiveRecord
         $transaction = $this->getDb()->beginTransaction();
 
         try {
-            if ($ret = parent::save($runValidation, $attributeNames) && is_array($this->_markArray)) {
+            $ret = parent::save($runValidation, $attributeNames);
+            if ($ret && is_array($this->_markArray)) {
                 // удалить предыдущие записи
                 Specialization::deleteAll('partner_id=:partner_id', [
                     ':partner_id' => $this->id,
@@ -211,7 +213,7 @@ class Partner extends ActiveRecord
 
             $transaction->commit();
         }
-        catch (\yii\base\Exception $ex) {
+        catch (Exception $ex) {
             $transaction->rollBack();
 
             $ret = false;

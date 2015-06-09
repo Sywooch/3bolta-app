@@ -1,34 +1,37 @@
 <?php
 namespace partner\controllers\frontend;
 
-use Yii;
-
+use app\components\Controller;
+use partner\components\PartnersApi;
+use partner\filters\CheckPartnerAccessRule;
+use partner\forms\Partner as PartnerForm;
+use partner\forms\TradePoint as TradePointForm;
 use partner\models\Partner;
 use partner\models\TradePoint;
-use partner\forms\TradePoint as TradePointForm;
-
+use user\models\User;
+use Yii;
+use yii\base\Exception;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
-use partner\filters\CheckPartnerAccessRule;
-
+use yii\helpers\ArrayHelper;
+use yii\rest\Action;
 use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
-use yii\base\Exception;
 use yii\web\Response;
 use yii\widgets\ActiveForm;
 
 /**
- * Работа с торговыми точками пользователя
+ * Работа с информацией о компании-партнере: редактирование данных, торговых точек
  */
-class UserTradePointController extends \app\components\Controller
+class PartnerController extends Controller
 {
     /**
-     * @var \partner\components\PartnersApi
+     * @var PartnersApi
      */
     protected $partnersApi;
 
     /**
-     * @var \partner\models\Partner
+     * @var Partner
      */
     protected $partner;
 
@@ -37,7 +40,7 @@ class UserTradePointController extends \app\components\Controller
         parent::init();
         $this->partnersApi = Yii::$app->getModule('partner')->api;
         $user = Yii::$app->user->getIdentity();
-        if ($user instanceof \user\models\User) {
+        if ($user instanceof User) {
             $this->partner = $user->partner;
         }
     }
@@ -48,7 +51,7 @@ class UserTradePointController extends \app\components\Controller
      */
     public function behaviors()
     {
-        return \yii\helpers\ArrayHelper::merge([
+        return ArrayHelper::merge([
             'access' => [
                 'class' => AccessControl::className(),
                 'rules' => [
@@ -58,8 +61,8 @@ class UserTradePointController extends \app\components\Controller
                     ]
                 ],
                 'denyCallback' => function($rule, $action) {
-                    if ($action instanceof \yii\base\Action) {
-                        /* @var $action \yii\base\Action */
+                    if ($action instanceof Action) {
+                        /* @var $action Action */
                         return $action->controller->goHome();
                     }
                 }
@@ -67,7 +70,7 @@ class UserTradePointController extends \app\components\Controller
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'delete' => ['post'],
+                    'delete-trade-point' => ['post'],
                 ]
             ]
         ], parent::behaviors());
@@ -76,7 +79,7 @@ class UserTradePointController extends \app\components\Controller
     /**
      * Редактирование торговой точки
      */
-    public function actionEdit($id)
+    public function actionEditTradePoint($id)
     {
         if (!Yii::$app->request->isAjax) {
             throw new ForbiddenHttpException();
@@ -110,7 +113,7 @@ class UserTradePointController extends \app\components\Controller
             return $result;
         }
 
-        return $this->renderAjax('form', [
+        return $this->renderAjax('trade-point-form', [
             'model' => $form,
         ]);
     }
@@ -118,7 +121,7 @@ class UserTradePointController extends \app\components\Controller
     /**
      * Форма создания торговой точки (вызывается в модальном окне)
      */
-    public function actionCreate()
+    public function actionCreateTradePoint()
     {
         if (!Yii::$app->request->isAjax) {
             throw new ForbiddenHttpException();
@@ -153,21 +156,40 @@ class UserTradePointController extends \app\components\Controller
     }
 
     /**
-     * Списк торговых точек
+     * Главная страница для редактирования информации о компании
      */
-    public function actionList()
+    public function actionIndex()
     {
         $list = TradePoint::findUserList()->all();
+        $partnerForm = PartnerForm::createFromPartner($this->partner);
 
-        return $this->render('list', [
+        if (!empty($_POST['ajax']) && Yii::$app->request->isAjax) {
+            // AJAX-валидация
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            $partnerForm->load($_POST);
+            return ActiveForm::validate($partnerForm);
+        }
+
+        if ($partnerForm->load($_POST)) {
+            if ($partnerForm->validate() && $this->partnersApi->updatePartnerData($partnerForm, $this->partner->user)) {
+                Yii::$app->session->setFlash('partner_success_update', true);
+            }
+            else {
+                Yii::$app->session->setFlash('partner_error_update', true);
+            }
+            return $this->refresh();
+        }
+
+        return $this->render('index', [
             'list' => $list,
+            'partnerForm' => $partnerForm,
         ]);
     }
 
     /**
-     * Удаление
+     * Удаление торговой точки
      */
-    public function actionDelete($id)
+    public function actionDeleteTradePoint($id)
     {
         $tradePoint = TradePoint::findUserList()->andWhere(['id' => (int) $id])->one();
 

@@ -24,6 +24,19 @@ body {
 button.selected-default span {
     color: #bbb;
 }
+.btn-default, .btn-primary, .btn-success, .btn-info, .btn-warning, .btn-danger {
+    text-shadow: none;
+}
+.btn-group.open .dropdown-toggle {
+    box-shadow: none;
+    -webkit-box-shadow: none;
+}
+.open>.dropdown-toggle.btn-default {
+    background-color: #fff;
+}
+.dropdown-toggle.btn-default {
+    background-color: #fff;
+}
 
 .page-wrap {
     width: 1000px;

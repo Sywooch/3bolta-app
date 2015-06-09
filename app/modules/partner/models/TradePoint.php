@@ -131,12 +131,8 @@ class TradePoint extends \yii\db\ActiveRecord
         /* @var $partner Partner */
         $partner = $user->partner;
 
-        if (!($partner instanceof Partner)) {
-            throw new Exception();
-        }
-
         return self::find()->andWhere([
-            'partner_id' => $partner->id
+            'partner_id' => $partner instanceof Partner ? $partner->id : 0
         ])->orderBy('created DESC');
     }
 
