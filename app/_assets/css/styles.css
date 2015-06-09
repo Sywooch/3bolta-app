@@ -1,15 +1,15 @@
 body {
-    background-color: #cccccc;
+    background-color: #eee;
 }
 
-.form-control::-webkit-input-placeholder {color:#000;}
-.form-control::-moz-placeholder          {color:#000;}
-.form-control:-moz-placeholder           {color:#000;}
-.form-control:-ms-input-placeholder      {color:#000;}
+.form-control::-webkit-input-placeholder {color:#bbb;}
+.form-control::-moz-placeholder          {color:#bbb;}
+.form-control:-moz-placeholder           {color:#bbb;}
+.form-control:-ms-input-placeholder      {color:#bbb;}
 
 .form-control-icon {
     position: absolute;
-    color: #000;
+    color: #bbb;
     line-height: 34px;
     margin-left: 14px;
     display: block;
@@ -20,6 +20,9 @@ body {
 }
 .form-control-with-icon {
     padding-left: 34px;
+}
+button.selected-default span {
+    color: #bbb;
 }
 
 .page-wrap {
@@ -541,4 +544,21 @@ h2, h3, h4, h5, h6 {
 }
 .modal {
     z-index: 999;
+}
+.modal-content {
+    border-radius: 10px;
+    border: none;
+}
+.modal-header .close {
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    width: 30px;
+    height: 30px;
+    line-height: 20px;
+}
+.modal-header {
+    border-bottom: none;
+}
+.modal-header h2 {
+    text-align: center;
 }

@@ -33,7 +33,7 @@ FrontendAssets::register($this);
             <div class="slogan"><i>Автозапчасти на одном сайте</i></div>
             <div class="logo-buttons">
                 <div class="top-logo-search">
-                    <a href="#" id="toggleTopSearch" class="top-logo-search-btn"><span class="glyphicon glyphicon-search"></span></a>
+                    <a href="<?=Url::toRoute(['/advert/catalog/search'])?>" id="toggleTopSearch" class="top-logo-search-btn"><span class="glyphicon glyphicon-search"></span></a>
                 </div>
                 <div class="top-logo-add-advert">
                     <a href="<?=Url::toRoute(['/advert/advert/append'])?>" class="btn btn-primary btn-top-add-advert"><span class="glyphicon glyphicon-plus"></span>&nbsp;&nbsp;<?=Yii::t('frontend/menu', 'Append advert')?></a>
@@ -77,7 +77,7 @@ FrontendAssets::register($this);
         print Nav::widget([
             'options' => ['class' => 'navbar-nav navbar-left'],
             'items' => [
-                ['label' => Yii::t('frontend/menu', 'Search parts'), 'url' => ['/advert/catalog/search']],
+                ['label' => Yii::t('frontend/menu', 'Parts catalog'), 'url' => ['/advert/catalog/search']],
                 ['label' => Yii::t('frontend/menu', 'About project'), 'url' => '#'],
             ],
         ]);
@@ -85,7 +85,9 @@ FrontendAssets::register($this);
         <div class="pull-right"><?=UserPanel::widget()?></div>
         <?php
         NavBar::end();
-        print TopSearch::widget();
+        if (Yii::$app->controller->route == 'advert/catalog/search') {
+            print TopSearch::widget();
+        }
         ?>
         <div class="container content-container">
             <div class="mobile-top-user col-lg-12">

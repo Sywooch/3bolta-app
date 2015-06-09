@@ -5,21 +5,23 @@ $(document).ready(function() {
     /**
      * Кастомный селект
      */
+    $('select').on('rendered.bs.select', function(e) {
+        var id = $(this).attr('id');
+        var $button = $(this).siblings('div.btn-group').find('.dropdown-toggle[data-id="' + id + '"]');
+        if ($button.find('span').text() == $(this).attr('placeholder')) {
+            $button.addClass('selected-default');
+        }
+        else {
+            $button.removeClass('selected-default');
+        }
+    });
     $('select').each(function() {
         var options = {};
         if ($(this).attr('placeholder')) {
             options.noneSelectedText = $(this).attr('placeholder');
         }
         $(this).selectpicker(options);
-    });
-
-    /**
-     * Переключение верхнего поиска
-     */
-    $('#toggleTopSearch').click(function(e) {
-        e.preventDefault();
-        $('#topSearchWrap').slideToggle();
-        $(this).parents('li:first').toggleClass('active');
+        $(this).trigger('rendered.bs.select');
     });
 
     /**
