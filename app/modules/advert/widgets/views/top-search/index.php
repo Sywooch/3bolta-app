@@ -13,7 +13,7 @@ use advert\forms\Search;
 /* @var $this yii\base\View */
 ?>
 
-<div class="panel panel-default top-search" id="topSearchWrap" <?php if (Url::to() != Url::toRoute(['/advert/catalog/search'])):?> style="display:none;"<?php endif;?>>
+<div class="panel panel-default top-search" id="topSearchWrap">
     <div class="panel-body">
         <?php
         $form = ActiveForm::begin([
