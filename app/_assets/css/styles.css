@@ -69,16 +69,23 @@ button.selected-default span {
     height: 76px;
     background-color: #993333;
 }
-@media (max-width: 767px) {
-    .logo-head {
-        background-color: #000;
-    }
-}
 .logo-head .logo {
     width: 239px;
     height: 100%;
     background-image: url(../img/logo.png);
     float: left;
+}
+@media (max-width: 767px) {
+    .logo-head {
+        background-color: #000;
+        height: 46px;
+    }
+    .logo-head .logo {
+        width: 149px;
+        height: 100%;
+        background-image: url(../img/logo-small.png);
+        float: left;
+    }
 }
 .logo-head .slogan {
     width: 243px;
@@ -103,7 +110,7 @@ button.selected-default span {
 }
 .logo-head .logo-buttons {
     float: right;
-    height: 76px;
+    height: 100%;
 }
 .logo-head .top-logo-search, .logo-head .top-logo-add-advert {
     float: right;
@@ -150,6 +157,13 @@ button.selected-default span {
 .top-search a {
     color: #ff5757;
 }
+.top-logo-menu {
+    float: left;
+}
+.top-logo-menu .mobile-menu-link {
+    display: none;
+}
+
 @media (max-width: 767px) {
     .logo-main-navbar {
         display: block;
@@ -158,9 +172,43 @@ button.selected-default span {
         display: none;
     }
     .logo-head .top-logo-search {
-        display: none;
+        height: 100%;
+        width: 46px;
+        font-size: 20px;
+        line-height: 46px;
+        background: none;
+        float: left;
+    }
+    .logo-head .top-logo-search a {
+        color: #fff;
+        font-size: inherit;
+        line-height: inherit;
     }
     .logo-head .top-logo-add-advert {
+        display: block;
+        width: 46px;
+        font-size: 20px;
+        line-height: 46px;
+        background: none;
+        float: left;
+        min-width: 46px;
+        margin: 0px;
+        padding: 0px;
+        text-align: center;
+    }
+    .logo-head .top-logo-add-advert a {
+        color: #fff;
+        font-size: inherit;
+        line-height: inherit;
+        border-radius: 0;
+        -webkit-border-radius: 0;
+        border: 0;
+        background: none;
+        padding: 0px;
+        margin: 0px;
+        display: block;
+    }
+    .logo-head .top-logo-add-advert a .text {
         display: none;
     }
     /** MOBILE MENU **/
@@ -168,19 +216,20 @@ button.selected-default span {
         display: none;
     }
     .top-logo-menu .navbar-header {
-        height: 76px;
+        height: 46px;
         width: 100%;
         float: right;
     }
     .top-logo-menu .navbar-default {
-        min-height: 76px;
+        min-height: 46px;
         background-color: #993333;
     }
     .top-logo-menu .navbar-toggle .icon-bar {
         background-color: #FFF;
     }
     .top-logo-menu .navbar-toggle {
-        margin-top: 15px;
+        margin-top: 5px;
+        margin-right: 5px;
         border: 1px solid #FFF;
     }
     .top-logo-menu .navbar-toggle:hover, .top-logo-menu .navbar-toggle:focus{

@@ -39,7 +39,10 @@ FrontendAssets::register($this);
                     <a href="<?=Url::toRoute(['/advert/catalog/search'])?>" id="toggleTopSearch" class="top-logo-search-btn"><span class="glyphicon glyphicon-search"></span></a>
                 </div>
                 <div class="top-logo-add-advert">
-                    <a href="<?=Url::toRoute(['/advert/advert/append'])?>" class="btn btn-primary btn-top-add-advert"><span class="glyphicon glyphicon-plus"></span>&nbsp;&nbsp;<?=Yii::t('frontend/menu', 'Append advert')?></a>
+                    <a href="<?=Url::toRoute(['/advert/advert/append'])?>" class="btn btn-primary btn-top-add-advert">
+                        <span class="glyphicon glyphicon-plus"></span>
+                        <span class="text">&nbsp;&nbsp;<?=Yii::t('frontend/menu', 'Append advert')?></span>
+                    </a>
                 </div>
                 <div class="top-logo-menu">
                     <div class="navbar-header">
