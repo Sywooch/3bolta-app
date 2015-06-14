@@ -46,7 +46,7 @@ $form = ActiveForm::begin([
 ]);
 ?>
     <div class="no-content-margin">
-        <div class="advert-form-common col-lg-12">
+        <div class="advert-form-common col-md-12">
             <div class="col-lg-12">
                 <?=$form->field($model, 'name', [
                     'parts' => ['{icon}' => '<span class="form-control-icon glyphicon glyphicon-bullhorn"></span>'],
@@ -56,7 +56,7 @@ $form = ActiveForm::begin([
                     ],
                 ])->textInput()?>
             </div>
-            <div class="col-sm-12 col-lg-12">
+            <div class="col-sm-12">
                 <?=$form->field($model, 'category_id', [
                     'parts' => ['{icon}' => '<span class="form-control-icon glyphicon glyphicon-tag"></span>'],
                     'inputOptions' => [
@@ -65,7 +65,7 @@ $form = ActiveForm::begin([
                     ],
                 ])->dropDownList(Advert::getCategoryDropDownList(true))?>
             </div>
-            <div class="col-sm-12 col-lg-6">
+            <div class="col-sm-12 col-md-6">
                 <?=$form->field($model, 'condition_id', [
                     'parts' => ['{icon}' => '<span class="form-control-icon glyphicon glyphicon-wrench"></span>'],
                     'inputOptions' => [
@@ -74,7 +74,7 @@ $form = ActiveForm::begin([
                     ],
                 ])->dropDownList(Advert::getConditionDropDownList(true))?>
             </div>
-            <div class="col-sm-12 col-lg-6">
+            <div class="col-sm-12 col-md-6">
                 <?=$form->field($model, 'price', [
                     'parts' => ['{icon}' => '<span class="form-control-icon glyphicon glyphicon-ruble"></span>'],
                     'inputOptions' => [
@@ -86,11 +86,11 @@ $form = ActiveForm::begin([
         </div>
     </div>
 
-    <div class="col-lg-12">
+    <div class="col-md-12">
         <?=Html::tag('h3', Yii::t('frontend/advert', 'Images'))?>
     </div>
 
-    <div class="col-lg-12">
+    <div class="col-md-12">
         <?=$form->field($model, 'uploadImage', [
             'template' => '{input}',
         ])->widget(FileInput::className(), [
@@ -114,31 +114,31 @@ $form = ActiveForm::begin([
         ])?>
     </div>
 
-    <div class="col-lg-12">
+    <div class="col-md-12">
         <?=Html::tag('h3', Yii::t('frontend/advert', 'Automobiles'))?>
     </div>
 
-    <div class="col-lg-12">
+    <div class="col-md-12">
         <?=$form->field($model, 'mark', [
             'template' => '{input}{error}',
         ])->hiddenInput(['value' => ''])?>
     </div>
 
     <div class="no-content-margin">
-        <div class="col-lg-12 advert-form-block-info">
+        <div class="col-md-12 advert-form-block-info">
             <img src="<?=$assetsUrl?>/img/warning-2.png" align="left" />
             Обязательным выбором обладает марка. Вы можете выбрать не более 10 марок автомобилей и не более 10 моделей. На кузова и двигатели ограчений нет.
         </div>
     </div>
 
     <div class="no-content-margin">
-        <div class="col-lg-12 advert-form-auto">
+        <div class="col-md-12 advert-form-auto">
             <?=$this->render('_form_choose_auto', [
                 'form' => $form,
                 'model' => $model,
             ])?>
 
-            <div class="col-lg-12">
+            <div class="col-md-12">
                 <?=$form->field($model, 'description')->textarea([
                     'placeholder' => Yii::t('frontend/advert', 'Description'),
                     'maxlength' => Form::DESCRIPTION_MAX_LENGTH
@@ -149,11 +149,11 @@ $form = ActiveForm::begin([
 
     <div class="no-content-margin">
         <div class="advert-form-contacts">
-            <div class="col-lg-12">
+            <div class="col-md-12">
                 <?=Html::tag('h3', Yii::t('frontend/advert', 'Contacts'))?>
             </div>
 
-            <div class="col-lg-12">
+            <div class="col-md-12">
                 <div class="form-group">
                     В объявлении будет отображаться следующая контактная информация:<br /><br />
 
@@ -166,7 +166,7 @@ $form = ActiveForm::begin([
                 </div>
             </div>
 
-            <div class="col-lg-12">
+            <div class="col-md-12">
                 <?php
                 $button = $model->getExists() ? Yii::t('frontend/advert', 'Update advert') : Yii::t('frontend/advert', 'Create advert');
                 ?>

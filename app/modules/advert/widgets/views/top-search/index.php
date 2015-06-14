@@ -29,7 +29,7 @@ use advert\forms\Search;
         ]);
         ?>
         <div class="row">
-            <div class="col-lg-4 col-sm-12">
+            <div class="col-xs-12">
                 <?=$this->render('_choose_auto', [
                     'form' => $form,
                     'model' => $model,
@@ -37,7 +37,7 @@ use advert\forms\Search;
             </div>
         </div>
         <div class="row">
-            <div class="col-lg-4 col-sm-12">
+            <div class="col-md-4 col-xs-12">
                 <?=$form->field($model, 'con', [
                     'parts' => ['{icon}' => '<span class="form-control-icon glyphicon glyphicon-wrench"></span>'],
                     'inputOptions' => [
@@ -46,7 +46,7 @@ use advert\forms\Search;
                     ],
                 ])->dropDownList(Advert::getConditionDropDownList(true))?>
             </div>
-            <div class="col-lg-4 col-sm-12">
+            <div class="col-md-4 col-xs-12">
                 <?=$form->field($model, 'cat', [
                     'parts' => ['{icon}' => '<span class="form-control-icon glyphicon glyphicon-tag"></span>'],
                     'inputOptions' => [
@@ -55,7 +55,7 @@ use advert\forms\Search;
                     ],
                 ])->dropDownList(Advert::getCategoryDropDownList(true))?>
             </div>
-            <div class="col-lg-4 col-sm-12">
+            <div class="col-md-4 col-xs-12">
                 <?=$form->field($model, 'q', [
                     'parts' => ['{icon}' => '<span class="form-control-icon glyphicon glyphicon-search"></span>'],
                     'inputOptions' => [
@@ -64,7 +64,7 @@ use advert\forms\Search;
                     ]
                 ])->textInput(['maxlength' => Search::MAX_QUERY_LENGTH])?>
             </div>
-            <div class="col-lg-2 col-sm-12">
+            <div class="col-md-2 col-xs-12">
                 <?=Html::submitButton(Yii::t('frontend/advert', 'Search'), ['class' => 'form-control btn btn-primary'])?>
             </div>
         </div>

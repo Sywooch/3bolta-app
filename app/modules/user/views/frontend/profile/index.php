@@ -19,7 +19,7 @@ use yii\widgets\MaskedInput;
 /* @var $profile Profile */
 /* @var $user User */
 ?>
-<div class="col-sm-10 col-lg-12 profile">
+<div class="col-sm-10 col-md-12 profile">
     <?php if (Yii::$app->session->getFlash('profile_success_update')):?>
         <div class="alert alert-success">
             <?=Yii::t('frontend/user', 'Profile success updated')?>
@@ -53,7 +53,7 @@ use yii\widgets\MaskedInput;
     <?php endif;?>
 
     <a name="profile"></a>
-    <div class="profile-row col-sm-12 col-lg-4">
+    <div class="profile-row col-sm-12 col-md-4">
         <h2><?=Yii::t('frontend/user', 'Contacts')?></h2>
         <?php
         $form = ActiveForm::begin([
@@ -78,7 +78,7 @@ use yii\widgets\MaskedInput;
     </div>
 
     <a name="change-email"></a>
-    <div class="profile-row col-sm-12 col-lg-4">
+    <div class="profile-row col-sm-12 col-md-4">
         <h2><?=Yii::t('frontend/user', 'Change e-mail')?></h2>
         <?php
         $form = ActiveForm::begin([
@@ -105,7 +105,7 @@ use yii\widgets\MaskedInput;
     </div>
 
     <a name="change-password"></a>
-    <div class="profile-row col-sm-12 col-lg-4">
+    <div class="profile-row col-sm-12 col-md-4">
         <h2><?=Yii::t('frontend/user', 'Change password')?></h2>
         <?php
         $form = ActiveForm::begin([

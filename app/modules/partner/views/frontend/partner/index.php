@@ -50,13 +50,13 @@ $form = ActiveForm::begin([
     'enableClientValidation' => true,
 ]);
 ?>
-<div class="col-xs-12 col-lg-6">
+<div class="col-xs-12 col-md-6">
     <?php
     print $form->field($partnerForm, 'name')->textInput(['maxlength' => Register::MAX_PARTNER_NAME_LENGTH]);
     print $form->field($partnerForm, 'type')->dropDownList(Partner::getCompanyTypes());
     ?>
 </div>
-<div class="col-xs-12 col-lg-6">
+<div class="col-xs-12 col-md-6">
     <?=$form->field($partnerForm, 'specialization')->widget(MagicSuggestDefaults::className(), [
         'items' => ArrayHelper::map(Mark::find()->all(), 'id', function($data) {
             return ['id' => $data->id, 'name' => $data->full_name];
@@ -72,14 +72,14 @@ $form = ActiveForm::begin([
         ]
     ])?>
 </div>
-<div class="col-lg-12">
+<div class="col-md-12">
     <?=Html::submitButton(Yii::t('frontend/user', 'Update data'), [
         'class' => 'btn btn-primary',
     ])?>
 </div>
 <?php ActiveForm::end(); ?>
 
-<div class="col-lg-12">
+<div class="col-md-12">
     <h2><?=Yii::t('frontend/partner', 'Trade points')?></h2>
 </div>
 
@@ -109,7 +109,7 @@ $form = ActiveForm::begin([
     <?=TradePointModal::widget(['tradePoint' => $tradePoint])?>
 <?php endforeach;?>
 
-<div class="col-lg-12">
+<div class="col-md-12">
     <?=TradePointModal::widget();?>
     <?=Html::button(Yii::t('frontend/partner', 'Create new trade point'), [
         'class' => 'btn btn-primary',
