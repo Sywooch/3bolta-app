@@ -62,6 +62,17 @@ button.selected-default span {
     .mobile-top-user .caption {
         display: none;
     }
+    .mobile-top-user .dropdown-menu {
+        position: relative;
+        z-index: none;
+        background: none;
+        border: none;
+        box-shadow: none;
+        -webkit-box-shadow: none;
+    }
+    .mobile-top-user .dropdown-menu .divider {
+        display: none;
+    }
 }
 /** HEAD **/
 .logo-head {
@@ -230,10 +241,6 @@ button.selected-default span {
     .top-logo-menu .navbar-toggle {
         margin-top: 5px;
         margin-right: 5px;
-        border: 1px solid #FFF;
-    }
-    .top-logo-menu .navbar-toggle:hover, .top-logo-menu .navbar-toggle:focus{
-        background-color:#af3a3a;
     }
     #mobile-top-nav {
         background-color: #e2e2e2;

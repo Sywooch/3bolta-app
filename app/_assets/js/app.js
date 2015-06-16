@@ -34,4 +34,11 @@ $(document).ready(function() {
     $('.load-modal-ajax').on('hide.bs.modal', function(e) {
         $(this).find('.modal-body').html('');
     });
+
+    /**
+     * переключение мобильного меню
+     */
+    $('.sidebar-toggle').on('click', function(e) {
+        $('#wrapper').toggleClass('toggled');
+    });
 });

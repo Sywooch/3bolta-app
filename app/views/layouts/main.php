@@ -13,7 +13,7 @@ use yii\bootstrap\NavBar;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\web\View;
-use yii\widgets\Breadcrumbs;
+use yii\widgets\Menu;
 
 FrontendAssets::register($this);
 ?>
@@ -30,7 +30,7 @@ FrontendAssets::register($this);
 <body>
 
 <?php $this->beginBody() ?>
-    <div class="wrap page-wrap">
+    <div class="wrap page-wrap" id="wrapper">
         <div class="logo-head">
             <div class="logo"><a href="/">&nbsp;&nbsp;</a></div>
             <div class="slogan"><i>Автозапчасти на одном сайте</i></div>
@@ -46,7 +46,7 @@ FrontendAssets::register($this);
                 </div>
                 <div class="top-logo-menu">
                     <div class="navbar-header">
-                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#mobile-top-nav">
+                        <button type="button" class="navbar-toggle sidebar-toggle">
                             <span class="sr-only">Toggle navigation</span>
                             <span class="icon-bar"></span>
                             <span class="icon-bar"></span>
@@ -55,18 +55,6 @@ FrontendAssets::register($this);
                     </div>
                 </div>
             </div>
-        </div>
-        <div id="mobile-top-nav" class="collapse">
-            <?php
-            print Nav::widget([
-                'options' => ['class' => 'navbar-nav navbar-left', 'id' => ''],
-                'items' => [
-                    ['label' => Yii::t('frontend/menu', 'Search parts'), 'url' => ['/advert/catalog/search']],
-                    ['label' => Yii::t('frontend/menu', 'Append advert'), 'url' => ['/advert/advert/append']],
-                    ['label' => Yii::t('frontend/menu', 'About project'), 'url' => '#'],
-                ],
-            ]);
-            ?>
         </div>
         <?php
         NavBar::begin([
@@ -95,11 +83,23 @@ FrontendAssets::register($this);
             print TopSearch::widget();
         }
         ?>
-        <div class="container content-container">
+        <div class="container content-container" id="page-content-wrapper">
+            <?= $content ?>
+        </div>
+        <div id="sidebar-wrapper">
             <div class="mobile-top-user col-lg-12">
                 <?=UserPanel::widget()?>
             </div>
-            <?= $content ?>
+            <?php
+            print Nav::widget([
+                'options' => ['class' => '', 'id' => ''],
+                'items' => [
+                    ['label' => Yii::t('frontend/menu', 'Search parts'), 'url' => ['/advert/catalog/search']],
+                    ['label' => Yii::t('frontend/menu', 'Append advert'), 'url' => ['/advert/advert/append']],
+                    ['label' => Yii::t('frontend/menu', 'About project'), 'url' => '#'],
+                ],
+            ]);
+            ?>
         </div>
     </div>
 

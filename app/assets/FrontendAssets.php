@@ -12,6 +12,7 @@ class FrontendAssets extends AssetBundle
     public $baseUrl = '@web';
     public $css = [
         'css/styles.css',
+        'css/sidebar.simple.css',
     ];
     public $js = [
         'js/app.js',
