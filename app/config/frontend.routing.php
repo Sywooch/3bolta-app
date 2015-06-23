@@ -42,4 +42,7 @@ return [
     '/cabinet/company/tps/create' => '/partner/partner/create-trade-point',
     '/cabinet/company/tps/edit/<id:(\d+)>' => '/partner/partner/edit-trade-point',
     '/cabinet/company/tps/delete/<id:(\d+)>' => '/partner/partner/delete-trade-point',
+
+    // поиск по торговым точкам
+    '/trade-points/map' => '/partner/search/index',
 ];

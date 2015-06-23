@@ -7,5 +7,8 @@ return [
         'api' => [
             'class' => '\partner\components\PartnersApi',
         ],
+        'search' => [
+            'class' => '\partner\components\SearchApi',
+        ],
     ],
 ];
