@@ -27,8 +27,10 @@ class Date
      *
      * @param mixed $date
      * @param boolean $allowShort разрешать приставки "сегодня", "завтра" и т.п.
+     * @param string $withMonthFormat формат даты для вывода с месяцем, если год совпадает с текущим
+     * @param string $withYearFormat формат даты для вывода с годом, если год не совпадает с текущим
      */
-    public static function formatDate($date, $allowShort = true)
+    public static function formatDate($date, $allowShort = true, $withMonthFormat = 'd MMMM, h:mm', $withYearFormat = 'd MMMM Yг., h:mm')
     {
         if (is_numeric($date) || is_string($date)) {
             $date = new DateTime($date);
@@ -53,10 +55,10 @@ class Date
                 IntlDateFormatter::MEDIUM
             );
             if ($diff->y === 0) {
-                $formatter->setPattern('d MMMM, h:mm');
+                $formatter->setPattern($withMonthFormat);
             }
             else {
-                $formatter->setPattern('d MMMM Yг., h:mm');
+                $formatter->setPattern($withYearFormat);
             }
             return $formatter->format($date);
         }
