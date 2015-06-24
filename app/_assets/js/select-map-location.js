@@ -44,7 +44,7 @@
                     // не нужно устанавливать маркер
                     return;
                 }
-                marker = marker = new google.maps.Marker({
+                marker = new google.maps.Marker({
                     'position'          : latLng,
                     'map'               : map
                 });

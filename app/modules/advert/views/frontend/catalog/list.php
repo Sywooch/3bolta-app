@@ -3,14 +3,19 @@
  * Вывод результов поиска
  */
 
+use advert\assets\AdvertList;
+use advert\widgets\Search;
+use yii\base\View;
+use yii\data\ActiveDataProvider;
 use yii\helpers\Html;
 use yii\widgets\LinkPager;
-use advert\assets\AdvertList;
 
 AdvertList::register($this);
 
-/* @var $this \yii\base\View */
-/* @var $dataProvider \yii\data\ActiveDataProvider */
+print Search::widget();
+
+/* @var $this View */
+/* @var $dataProvider ActiveDataProvider */
 $models = $dataProvider->getModels();
 foreach ($models as $model) {
     print Html::beginTag('div', [

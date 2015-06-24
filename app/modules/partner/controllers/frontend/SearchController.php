@@ -44,8 +44,17 @@ class SearchController extends Controller
         $form = new TradePointMap();
         if ($form->load($_POST) && $form->validate()) {
             // поиск торговых точек
-            $res = $this->searchApi->search($searchForm);
-            print_r($res);exit();
+            $res = $this->searchApi->search($form);
+            foreach ($res as $row) {
+                $result['items'][] = [
+                    'id' => $row->id,
+                    'name' => $row->partner->name,
+                    'address' => $row->address,
+                    'phone' => $row->phone,
+                    'latitude' => $row->latitude,
+                    'longitude' => $row->longitude,
+                ];
+            }
         }
 
         return $result;

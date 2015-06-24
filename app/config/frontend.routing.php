@@ -45,4 +45,5 @@ return [
 
     // поиск по торговым точкам
     '/trade-points/map' => '/partner/search/index',
+    '/trade-points/search' => '/partner/search/search',
 ];

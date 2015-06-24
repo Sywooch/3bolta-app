@@ -33,6 +33,11 @@ class TradePointMap extends Model
     public $name;
 
     /**
+     * @var string поиск по адресу
+     */
+    public $address;
+
+    /**
      * Правила валидации
      * @return array
      */
@@ -40,6 +45,7 @@ class TradePointMap extends Model
     {
         return [
             ['name', 'string', 'max' => 255],
+            ['address', 'string', 'max' => 255],
             [['specialization', 'coordinates'], 'safe'],
         ];
     }
@@ -50,6 +56,7 @@ class TradePointMap extends Model
             'specialization' => Yii::t('frontend/partner', 'Specialization'),
             'name' => Yii::t('frontend/partner', 'Search by organization name'),
             'coordinates' => Yii::t('frontend/partner', 'Coordinates'),
+            'address' => Yii::t('frontend/partner', 'Address'),
         ];
     }
 

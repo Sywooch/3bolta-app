@@ -8,11 +8,11 @@ use yii\web\AssetBundle;
  */
 class TradePointFormAssets extends AssetBundle
 {
-    public $sourcePath = '@partner/_assets';
+    public $sourcePath = '@partner/_assets/trade-point-form';
     public $baseUrl = '@web/assets';
     public $css = [];
     public $js = [
-        'js/trade-point-form.js',
+        'js/app.js',
     ];
     public $depends = [
         'app\assets\FrontendAssets',

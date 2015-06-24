@@ -8,11 +8,11 @@ use yii\web\AssetBundle;
  */
 class TradePointListAssets extends AssetBundle
 {
-    public $sourcePath = '@partner/_assets';
+    public $sourcePath = '@partner/_assets/trade-point-list/';
     public $baseUrl = '@web/assets';
     public $css = [];
     public $js = [
-        'js/trade-point-list.js',
+        'js/app.js',
     ];
     public $depends = [
         'app\assets\FrontendAssets',

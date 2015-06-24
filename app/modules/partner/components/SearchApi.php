@@ -37,7 +37,7 @@ class SearchApi extends Component
             if (!is_null($c)) {
                 // поиск по координатам
                 $query->andWhere(['between', 'latitude', $c['sw']['lat'], $c['ne']['lat']]);
-                $query->andWhere(['between', 'longitude', $c['ne']['lng'], $c['sw']['lng']]);
+                $query->andWhere(['between', 'longitude', $c['sw']['lng'], $c['ne']['lng']]);
             }
             if (trim($n)) {
                 // поиск по имени партнера

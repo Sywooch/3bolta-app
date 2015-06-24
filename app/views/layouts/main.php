@@ -13,7 +13,6 @@ use yii\bootstrap\NavBar;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\web\View;
-use yii\widgets\Menu;
 
 FrontendAssets::register($this);
 ?>
@@ -79,9 +78,6 @@ FrontendAssets::register($this);
         <div class="pull-right"><?=UserPanel::widget()?></div>
         <?php
         NavBar::end();
-        if (Yii::$app->controller->route == 'advert/catalog/search') {
-            print TopSearch::widget();
-        }
         ?>
         <div class="container content-container" id="page-content-wrapper">
             <?= $content ?>

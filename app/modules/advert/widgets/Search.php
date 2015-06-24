@@ -6,9 +6,9 @@ use Yii;
 use advert\forms\Search as Form;
 
 /**
- * Виджет поиска по автозапчастям вверху шапки
+ * Виджет поиска по автозапчастям
  */
-class TopSearch extends \yii\bootstrap\Widget
+class Search extends \yii\bootstrap\Widget
 {
     /**
      * @var Form форма поиска
@@ -17,7 +17,7 @@ class TopSearch extends \yii\bootstrap\Widget
 
     public function getViewPath()
     {
-        return parent::getViewPath() . DIRECTORY_SEPARATOR . 'top-search';
+        return parent::getViewPath() . DIRECTORY_SEPARATOR . 'search';
     }
 
     public function init()
