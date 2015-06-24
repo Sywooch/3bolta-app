@@ -71,6 +71,7 @@ FrontendAssets::register($this);
             'options' => ['class' => 'navbar-nav navbar-left'],
             'items' => [
                 ['label' => Yii::t('frontend/menu', 'Parts catalog'), 'url' => ['/advert/catalog/search']],
+                ['label' => Yii::t('frontend/menu', 'Organizations catalog'), 'url' => ['/partner/search/index']],
                 ['label' => Yii::t('frontend/menu', 'About project'), 'url' => '#'],
             ],
         ]);
@@ -91,6 +92,7 @@ FrontendAssets::register($this);
                 'options' => ['class' => '', 'id' => ''],
                 'items' => [
                     ['label' => Yii::t('frontend/menu', 'Search parts'), 'url' => ['/advert/catalog/search']],
+                    ['label' => Yii::t('frontend/menu', 'Search organization'), 'url' => ['/partner/search/index']],
                     ['label' => Yii::t('frontend/menu', 'Append advert'), 'url' => ['/advert/advert/append']],
                     ['label' => Yii::t('frontend/menu', 'About project'), 'url' => '#'],
                 ],

@@ -51,7 +51,7 @@ $form = ActiveForm::begin([
         <div class="advert-form-common col-md-12">
             <div class="col-lg-12">
                 <?=$form->field($model, 'name', [
-                    'parts' => ['{icon}' => '<span class="form-control-icon glyphicon glyphicon-bullhorn"></span>'],
+                    'parts' => ['{icon}' => '<span class="form-control-icon icon-megaphone"></span>'],
                     'inputOptions' => [
                         'class' => 'form-control form-control-with-icon',
                         'placeholder' => Yii::t('frontend/advert', 'Advert title'),
@@ -60,7 +60,7 @@ $form = ActiveForm::begin([
             </div>
             <div class="col-sm-12 col-md-12">
                 <?=$form->field($model, 'category_id', [
-                    'parts' => ['{icon}' => '<span class="form-control-icon glyphicon glyphicon-tag"></span>'],
+                    'parts' => ['{icon}' => '<span class="form-control-icon icon-tag"></span>'],
                     'inputOptions' => [
                         'class' => 'form-control form-control-with-icon',
                         'placeholder' => Yii::t('frontend/advert', 'Part category'),
@@ -69,7 +69,7 @@ $form = ActiveForm::begin([
             </div>
             <div class="col-sm-12 col-md-6">
                 <?=$form->field($model, 'condition_id', [
-                    'parts' => ['{icon}' => '<span class="form-control-icon glyphicon glyphicon-wrench"></span>'],
+                    'parts' => ['{icon}' => '<span class="form-control-icon icon-wrench"></span>'],
                     'inputOptions' => [
                         'class' => 'form-control form-control-with-icon',
                         'placeholder' => Yii::t('frontend/advert', 'Part condition'),
@@ -78,7 +78,7 @@ $form = ActiveForm::begin([
             </div>
             <div class="col-sm-12 col-md-6">
                 <?=$form->field($model, 'price', [
-                    'parts' => ['{icon}' => '<span class="form-control-icon glyphicon glyphicon-ruble"></span>'],
+                    'parts' => ['{icon}' => '<span class="form-control-icon icon-rouble"></span>'],
                     'inputOptions' => [
                         'class' => 'form-control form-control-with-icon',
                         'placeholder' => Yii::t('frontend/advert', 'Part price'),
@@ -157,7 +157,7 @@ $form = ActiveForm::begin([
 
             <div class="col-sm-12 col-md-4">
                 <?=$form->field($model, 'user_name', [
-                    'parts' => ['{icon}' => '<span class="form-control-icon glyphicon glyphicon-user"></span>'],
+                    'parts' => ['{icon}' => '<span class="form-control-icon icon-user"></span>'],
                     'inputOptions' => [
                         'class' => 'form-control form-control-with-icon',
                         'placeholder' => Yii::t('frontend/advert', 'Contact face'),
@@ -170,7 +170,7 @@ $form = ActiveForm::begin([
                     'errorOptions' => [
                         'encode' => false,
                     ],
-                    'parts' => ['{icon}' => '<span class="form-control-icon glyphicon glyphicon-earphone"></span>'],
+                    'parts' => ['{icon}' => '<span class="form-control-icon icon-phone"></span>'],
                 ])->widget(MaskedInput::className(), [
                     'mask' => PhoneValidator::PHONE_MASK,
                     'options' => [
@@ -185,7 +185,7 @@ $form = ActiveForm::begin([
                     'errorOptions' => [
                         'encode' => false,
                     ],
-                    'parts' => ['{icon}' => '<span class="form-control-icon glyphicon glyphicon-envelope"></span>'],
+                    'parts' => ['{icon}' => '<span class="form-control-icon icon-mail-alt"></span>'],
                     'inputOptions' => [
                         'class' => 'form-control form-control-with-icon',
                         'placeholder' => Yii::t('frontend/advert', 'E-mail'),

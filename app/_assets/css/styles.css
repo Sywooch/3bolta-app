@@ -9,11 +9,12 @@ body {
 
 .form-control-icon {
     position: absolute;
-    color: #000;
+    color: #ccc;
     line-height: 34px;
     margin-left: 14px;
     display: block;
     z-index: 500;
+    top: 0px;
 }
 .form-control-with-icon button {
     padding-left: 34px;

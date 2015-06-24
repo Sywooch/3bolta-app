@@ -21,5 +21,6 @@ class FrontendAssets extends AssetBundle
         'yii\web\YiiAsset',
         'yii\bootstrap\BootstrapAsset',
         'app\assets\BootstrapSelectAssets',
+        'app\assets\FontelloAssets',
     ];
 }

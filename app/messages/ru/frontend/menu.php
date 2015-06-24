@@ -17,8 +17,10 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'Parts catalog' => 'Каталог запчастей',
+    'Organizations catalog' => 'Каталог организаций',
+    'Search organization' => 'Поиск организации',
     'About project' => 'О проекте',
     'Append advert' => 'Добавить объявление',
+    'Parts catalog' => 'Каталог запчастей',
     'Search parts' => 'Поиск автозапчастей',
 ];

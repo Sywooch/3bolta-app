@@ -53,10 +53,10 @@ class TradePointMap extends Model
     public function attributeLabels()
     {
         return [
-            'specialization' => Yii::t('frontend/partner', 'Specialization'),
+            'specialization' => Yii::t('frontend/partner', 'Search by auto mark'),
             'name' => Yii::t('frontend/partner', 'Search by organization name'),
             'coordinates' => Yii::t('frontend/partner', 'Coordinates'),
-            'address' => Yii::t('frontend/partner', 'Address'),
+            'address' => Yii::t('frontend/partner', 'Search by address'),
         ];
     }
 
