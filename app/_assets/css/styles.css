@@ -463,6 +463,10 @@ a.desc:after {
     margin-bottom: 40px;
 }
 @media (max-width: 767px) {
+    .top-search {
+        margin: 0px;
+        padding: 10px;
+    }
     .top-search-choose-auto {
         height: 650px;
     }
