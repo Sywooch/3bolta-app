@@ -1,4 +1,52 @@
-.trade-point-map {
+.trade-point-map-wrapper {
     margin-bottom: -15px;
     min-height: 300px;
+    position: relative;
+    top: 0px;
+    -webkit-transition: all 0.5s ease;
+    -moz-transition: all 0.5s ease;
+    -o-transition: all 0.5s ease;
+    transition: all 0.5s ease;
+}
+.trade-point-map {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    height: 100%;
+    width: 100%;
+    -webkit-transition: all 0.5s ease;
+    -moz-transition: all 0.5s ease;
+    -o-transition: all 0.5s ease;
+    transition: all 0.5s ease;
+}
+.trade-point-list {
+    width: 0%;
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    height: 100%;
+    overflow-y: scroll;
+    -webkit-transition: all 0.5s ease;
+    -moz-transition: all 0.5s ease;
+    -o-transition: all 0.5s ease;
+    transition: all 0.5s ease;
+}
+.trade-point-map-wrapper.toggled .trade-point-map {
+    width: 70%;
+}
+.trade-point-map-wrapper.toggled .trade-point-list {
+    width: 30%;
+}
+.trade-point-list-item {
+    border-bottom: 1px solid #ccc;
+    padding: 15px;
+    width: 100%;
+}
+@media (max-width: 767px) {
+    .trade-point-map, .trade-point-map-wrapper.toggled .trade-point-map {
+        width: 100%;
+    }
+    .trade-point-list, .trade-point-map-wrapper.toggled .trade-point-list {
+        display: none;
+    }
 }

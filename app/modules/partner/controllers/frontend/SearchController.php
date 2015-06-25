@@ -112,10 +112,13 @@ class SearchController extends Controller
             // поиск торговых точек
             $res = $this->searchApi->search($form);
             foreach ($res as $row) {
+                /* @var $partner Partner */
+                $partner = $row->partner;
                 $result['items'][] = [
                     'id' => $row->id,
-                    'name' => $row->partner->name,
+                    'name' => $partner->name,
                     'active' => $row->active,
+                    'marks' => $partner->getMarkNames(),
                     'address' => $row->address,
                     'phone' => $row->phone,
                     'latitude' => $row->latitude,

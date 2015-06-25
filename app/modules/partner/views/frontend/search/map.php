@@ -84,4 +84,7 @@ TradePointMapAssets::register($this);
         <?php ActiveForm::end(); ?>
     </div>
 </div>
-<div class="trade-point-map no-content-margin js-trade-point-map"></div>
+<div class="no-content-margin trade-point-map-wrapper">
+    <div class="trade-point-map js-trade-point-map"></div>
+    <div class="trade-point-list js-trade-point-list"></div>
+</div>

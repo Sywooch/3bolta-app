@@ -78,6 +78,23 @@ class Partner extends ActiveRecord
     }
 
     /**
+     * Получить названия марок
+     *
+     * @return array
+     */
+    public function getMarkNames()
+    {
+        $ret = [];
+        foreach ($this->specialization as $v) {
+            /* @var $v Specialization */
+            /* @var $mark Mark */
+            $mark = $v->mark;
+            $ret[] = $mark->full_name;
+        }
+        return $ret;
+    }
+
+    /**
      * Получить массив специализаций
      * @return Mark[]
      */

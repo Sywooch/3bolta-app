@@ -11,13 +11,30 @@ document.tradePointMapParams = {
 
 $(document).ready(function() {
     // враппер карты
-    var $mapWrapper = $('.js-trade-point-map');
+    var $map = $('.js-trade-point-map');
+    var $mapWrapper = $map.parents('div:first');
+    // список
+    var $list = $('.js-trade-point-list');
     // форма
     var $form = $('.js-trade-point-map-form');
     // поле для ввода адреса
     var $addressInput = $('.js-trade-point-address');
     // поле для ввода координат
     var $coordinatesInput = $('.js-trade-point-map-coordinates');
+
+    // шаблон для бабла
+    var bubleTemplate = '<h4><%- name %></h4>';
+    bubleTemplate += '<p><i class="icon-location"></i> <%- address %><br /><i class="icon-phone"></i> <%- phone %></p>';
+    bubleTemplate = _.template(bubleTemplate);
+
+    // шаблон для списка
+    var listTemplate = '<div class="trade-point-list-item <%- itemClass %>">';
+    listTemplate += '<div class="trade-point-list-item-unactive"></div>'
+    listTemplate += '<h4><%- name %></h4>';
+    listTemplate += '<i class="icon-location"></i> <%- address %><br /><i class="icon-phone"></i> <%- phone %><br />';
+    listTemplate += '<i class="icon-cab"></i> <% _.forEach(marks, function(mark) { %> <%- mark %> <% }); %>'
+    listTemplate += '</div>';
+    listTemplate = _.template(listTemplate);
 
     // массив сгенерированных торговых точек (они же - маркеры на карте)
     var tradePoints = [];
@@ -45,7 +62,7 @@ $(document).ready(function() {
         mapTypeId: google.maps.MapTypeId.ROADMAP,
         panControl: true
     };
-    var map = new google.maps.Map($mapWrapper.get(0), mapOptions);
+    var map = new google.maps.Map($map.get(0), mapOptions);
 
     // сгенерировать автокомплит по адресу
     var addressAutocomplete = new google.maps.places.Autocomplete($addressInput.get(0));
@@ -108,6 +125,7 @@ $(document).ready(function() {
             tradePoints[i].remove();
         }
         tradePoints.slice(0, 1);
+        $list.empty();
     };
 
     // создать торговую точку на карте на основе данных data
@@ -122,13 +140,14 @@ $(document).ready(function() {
             google.maps.event.clearInstanceListeners(this);
             this.setMap(null);
         };
-        var content = '<h4>' + data.name + '</h4>';
-        content += '<p><b>Адрес: </b> ' + data.address + '<br />';
-        content += '<b>Телефон: </b>' + data.phone + '<br /></p>';
+        var content = bubleTemplate(data);
         var infowindow = new google.maps.InfoWindow({
             'content'           : content
         });
         tradePoint.infowindow = infowindow;
+        data.itemClass = data.active ? 'disabled' : '';
+        var listItem = listTemplate(data);
+        $list.append(listItem);
         google.maps.event.addListener(tradePoint, 'click', function() {
             infowindow.open(map, tradePoint);
         });
@@ -154,6 +173,12 @@ $(document).ready(function() {
                         for (var i in d.items) {
                             createTradePoint(d.items[i]);
                         }
+                    }
+                    if ($list.find('.trade-point-list-item').length > 10) {
+                        $mapWrapper.addClass('toggled');
+                    }
+                    else {
+                        $mapWrapper.removeClass('toggled');
                     }
                 }
             });

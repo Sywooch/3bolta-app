@@ -15,6 +15,7 @@ class FrontendAssets extends AssetBundle
         'css/sidebar.simple.css',
     ];
     public $js = [
+        'js/lodash.min.js',
         'js/app.js',
     ];
     public $depends = [

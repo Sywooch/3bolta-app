@@ -57,11 +57,9 @@ class SearchApi extends Component
                     // фильтр по марке автомобиля
                     $row->active = false;
 
-                    $specialization = $partner->specialization;
-                    foreach ($specialization as $spec) {
-                        /* @var $spec Specialization */
-                        $mark = $spec->mark;
-                        $markName = strtoupper($mark->full_name);
+                    $marks = $partner->getMarkNames();
+                    foreach ($marks as $markName) {
+                        $markName = strtoupper($markName);
                         if (strpos($markName, $s) !== false) {
                             $row->active = true;
                             break;
