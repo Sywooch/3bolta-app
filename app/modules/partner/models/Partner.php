@@ -79,7 +79,7 @@ class Partner extends ActiveRecord
 
     /**
      * Получить массив специализаций
-     * @return array
+     * @return Mark[]
      */
     public function getMarkArray()
     {

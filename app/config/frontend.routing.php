@@ -46,4 +46,6 @@ return [
     // поиск по торговым точкам
     '/trade-points/map' => '/partner/search/index',
     '/trade-points/search' => '/partner/search/search',
+    '/trade-points/search-by-name' => '/partner/search/name-autocomplete',
+    '/trade-points/search-by-mark' => '/partner/search/mark-autocomplete',
 ];

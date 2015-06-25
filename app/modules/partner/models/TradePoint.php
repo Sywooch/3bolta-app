@@ -12,6 +12,11 @@ use yii\db\Expression;
 class TradePoint extends \yii\db\ActiveRecord
 {
     /**
+     * @var boolean активность на карте, используется только для поиска торговых точек по карте
+     */
+    public $active = true;
+
+    /**
      * Максимальная длина поля адреса
      */
     const MAX_ADDRESS_LENGTH = 255;

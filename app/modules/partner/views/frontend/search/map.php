@@ -3,18 +3,30 @@
  * Главная страница для поиска торговых точек на карте
  */
 
+use app\components\Controller;
+use app\widgets\JS;
 use partner\assets\TradePointMapAssets;
 use partner\forms\TradePointMap;
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\jui\AutoComplete;
 use yii\web\View;
 use yii\widgets\ActiveForm;
 
 /* @var $this View */
 /* @var $searchForm TradePointMap */
-
 TradePointMapAssets::register($this);
 ?>
+
+<?php JS::begin(); ?>
+<script type="text/javascript">
+    document.tradePointMapParams['mapMarkerSvg'] = '<?=Controller::getFrontendAssetsUrl()?>/img/map-marker.svg';
+    document.tradePointMapParams['mapMarkerUnactiveSvg'] = '<?=Controller::getFrontendAssetsUrl()?>/img/map-marker-unactive.svg';
+    document.tradePointMapParams['mapMarkerPng'] = '<?=Controller::getFrontendAssetsUrl()?>/img/map-marker.png';
+    document.tradePointMapParams['mapMarkerUnactivePng'] = '<?=Controller::getFrontendAssetsUrl()?>/img/map-marker-unactive.png';
+</script>
+<?php JS::end(); ?>
+
 <div class="top-search">
     <div class="row">
         <?php $form = ActiveForm::begin([
@@ -32,20 +44,30 @@ TradePointMapAssets::register($this);
             <div class="col-md-4 col-xs-12">
                 <?=$form->field($searchForm, 'name', [
                     'parts' => ['{icon}' => '<span class="form-control-icon icon-tag"></span>'],
-                    'inputOptions' => [
-                        'class' => 'form-control form-control-with-icon',
+                ])->widget(AutoComplete::className(), [
+                    'options' => [
                         'placeholder' => $searchForm->getAttributeLabel('name'),
+                        'class' => 'form-control form-control-with-icon js-trade-point-map-name',
                     ],
-                ])->textInput()?>
+                    'clientOptions' => [
+                        'source' => Url::toRoute(['name-autocomplete']),
+                        'minLength' => 3,
+                    ]
+                ])?>
             </div>
             <div class="col-md-4 col-xs-12">
                 <?=$form->field($searchForm, 'specialization', [
                     'parts' => ['{icon}' => '<span class="form-control-icon icon-cab"></span>'],
-                    'inputOptions' => [
-                        'class' => 'form-control form-control-with-icon',
+                ])->widget(AutoComplete::className(), [
+                    'options' => [
                         'placeholder' => $searchForm->getAttributeLabel('specialization'),
+                        'class' => 'form-control form-control-with-icon js-trade-point-map-mark',
                     ],
-                ])->textInput()?>
+                    'clientOptions' => [
+                        'source' => Url::toRoute(['mark-autocomplete']),
+                        'minLength' => 3,
+                    ]
+                ])?>
             </div>
             <div class="col-md-4 col-xs-12">
                 <?=$form->field($searchForm, 'address', [

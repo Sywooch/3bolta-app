@@ -2,6 +2,7 @@
 namespace partner\assets;
 
 use yii\web\AssetBundle;
+use yii\web\JqueryAsset;
 
 /**
  * Поиск торговых точек

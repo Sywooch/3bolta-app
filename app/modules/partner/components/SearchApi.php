@@ -13,7 +13,9 @@ use yii\base\Component;
 class SearchApi extends Component
 {
     /**
-     * Поиск торговых точек по заполненной форме поиска
+     * Поиск торговых точек по заполненной форме поиска.
+     * Поиск происходит внутри локации. Все торговые точки,
+     * которые не подходят по запросу по названию, либо по специализации - подсвечиваются как неактивные.
      *
      * @param TradePointMap $searchForm
      * @return TradePoint[]
@@ -26,30 +28,47 @@ class SearchApi extends Component
             $query = TradePoint::find();
 
             $c = $searchForm->getCoordinatesArray();
-            $n = $searchForm->name;
-            $s = $searchForm->getSpecialization();
-
-            if (trim($n) || $s) {
-                // также нужно подключить таблицу партнера
-                $query->joinWith('partner');
-            }
+            $n = strtoupper($searchForm->name);
+            $s = strtoupper($searchForm->specialization);
 
             if (!is_null($c)) {
                 // поиск по координатам
                 $query->andWhere(['between', 'latitude', $c['sw']['lat'], $c['ne']['lat']]);
                 $query->andWhere(['between', 'longitude', $c['sw']['lng'], $c['ne']['lng']]);
             }
-            if (trim($n)) {
-                // поиск по имени партнера
-                $query->andWhere(['like', Partner::tableName() . '.name', $n]);
-            }
-            if ($s) {
-                // поиск по специализации
-                $query->joinWith('partner.specialization');
-                $query->andWhere([Specialization::tableName() . '.mark_id' => $s]);
-            }
 
-            $ret = $query->all();
+            foreach ($query->each() as $row) {
+                $ret[] = $row;
+
+                /* @var $row TradePoint */
+                $row->active = true;
+                /* @var $partner Partner */
+                $partner = $row->partner;
+                if (trim($n)) {
+                    // фильтр по имени
+                    $partnerName = strtoupper($partner->name);
+                    if (strpos($partnerName, $n) === false) {
+                        $row->active = false;
+                        continue;
+                    }
+                }
+
+                if (trim($s)) {
+                    // фильтр по марке автомобиля
+                    $row->active = false;
+
+                    $specialization = $partner->specialization;
+                    foreach ($specialization as $spec) {
+                        /* @var $spec Specialization */
+                        $mark = $spec->mark;
+                        $markName = strtoupper($mark->full_name);
+                        if (strpos($markName, $s) !== false) {
+                            $row->active = true;
+                            break;
+                        }
+                    }
+                }
+            }
         }
 
         return $ret;

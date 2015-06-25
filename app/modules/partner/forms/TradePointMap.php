@@ -23,9 +23,9 @@ class TradePointMap extends Model
     protected $_coordinates;
 
     /**
-     * @var int специализация (выбор идентификатора марки)
+     * @var string название специализации
      */
-    protected $_specialization;
+    public $specialization;
 
     /**
      * @var string поиск по вхождению строки
@@ -46,7 +46,8 @@ class TradePointMap extends Model
         return [
             ['name', 'string', 'max' => 255],
             ['address', 'string', 'max' => 255],
-            [['specialization', 'coordinates'], 'safe'],
+            ['specialization', 'string', 'max' => 255],
+            [['coordinates'], 'safe'],
         ];
     }
 
@@ -99,27 +100,6 @@ class TradePointMap extends Model
     public function getCoordinates()
     {
         return is_array($this->_coordinates) ? Json::encode($this->_coordinates) : '';
-    }
-
-    /**
-     * Установить специализацию
-     *
-     * @param int $val
-     */
-    public function setSpecialization($val)
-    {
-        $val = (int) $val;
-        $this->_specialization = $val ? $val : null;
-    }
-
-    /**
-     * Получить специализацию
-     *
-     * @return int
-     */
-    public function getSpecialization()
-    {
-        return $this->_specialization;
     }
 
     /**

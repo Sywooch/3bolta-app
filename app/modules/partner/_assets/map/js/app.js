@@ -2,6 +2,13 @@
  * Скрипты на странице карты торговых точек
  */
 
+document.tradePointMapParams = {
+    'mapMarkerSvg' : null,
+    'mapMarkerUnactiveSvg' : null,
+    'mapMarkerPng' : null,
+    'mapMarkerUnactivePng' : null
+};
+
 $(document).ready(function() {
     // враппер карты
     var $mapWrapper = $('.js-trade-point-map');
@@ -14,6 +21,15 @@ $(document).ready(function() {
 
     // массив сгенерированных торговых точек (они же - маркеры на карте)
     var tradePoints = [];
+
+    // получить иконку в зависимости от условия активности
+    var getMarkerIcon = function(getActive) {
+        var markerIcon = getActive ? document.tradePointMapParams['mapMarkerSvg'] : document.tradePointMapParams['mapMarkerUnactiveSvg'];
+        if (!!navigator.userAgent.match(/Trident.*rv\:11\./)) {
+            markerIcon = getActive ? document.tradePointMapParams['mapMarkerPng'] : document.tradePointMapParams['mapMarkerUnactivePng'];
+        }
+        return markerIcon;
+    };
 
     // определить высоту враппера
     var resizeMapWrapper = function() {
@@ -70,6 +86,22 @@ $(document).ready(function() {
         $form.submit();
     });
 
+    // выбор имени торговой точки
+    $('.js-trade-point-map-name').on('input', function() {
+        $form.submit();
+    })
+    $('.js-trade-point-map-name').on('autocompleteselect', function() {
+        $form.submit();
+    });
+
+    // выбор марки
+    $('.js-trade-point-map-mark').on('input', function() {
+        $form.submit();
+    })
+    $('.js-trade-point-map-mark').on('autocompleteselect', function() {
+        $form.submit();
+    });
+
     // очистить торговые точки на карте
     var clearTradePoints = function() {
         for (var i in tradePoints) {
@@ -82,6 +114,7 @@ $(document).ready(function() {
     var createTradePoint = function(data) {
         var tradePoint = new google.maps.Marker({
             'position'          : new google.maps.LatLng(data.latitude, data.longitude),
+            'icon'              : getMarkerIcon(data.active),
             'map'               : map
         });
         tradePoint.data = data;
