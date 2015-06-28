@@ -54,7 +54,7 @@ $(document).ready(function() {
     // деактивировать список
     var disableList = function() {
         $mapWrapper.removeClass('toggled');
-        listEnabled = $list.is(':visible');
+        listEnabled = false;
     };
 
     // получить иконку в зависимости от условия активности
@@ -146,7 +146,6 @@ $(document).ready(function() {
             }
         }
         tradePoints.slice(0, 1);
-        $list.empty();
     };
 
     // обновить торговые точки
@@ -168,6 +167,11 @@ $(document).ready(function() {
             if ($.inArray(newItems[i].id, oldIds) === -1) {
                 createTradePoint(newItems[i]);
             }
+        }
+        // обновить список
+        $list.empty();
+        for (var i in tradePoints) {
+            tradePoints[i].listItem = createListItem(tradePoints[i].data);
         }
     };
 
@@ -224,7 +228,6 @@ $(document).ready(function() {
             'map'               : map
         });
         tradePoint.data = data;
-        tradePoint.listItem = createListItem(data);
         tradePoint.infowindow = createBuble(data, tradePoint);
 
         // удаление маркера
