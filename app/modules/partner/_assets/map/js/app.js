@@ -34,7 +34,7 @@ $(document).ready(function() {
 
     // шаблон для списка
     var listTemplate = '<div class="trade-point-list-item <%- itemClass %> js-trade-point-list-item" data-trade-point-id="<%- id %>">';
-    listTemplate += '<div class="trade-point-list-item-unactive"></div>'
+    listTemplate += '<div class="trade-point-list-item-unactive"></div>';
     listTemplate += '<h4><%- name %></h4>';
     listTemplate += '<span class="mark"><i class="icon-cab"></i> <% _.forEach(marks, function(mark) { %> <%- mark %> <% }); %></span>';
     listTemplate += '<span class="location"><i class="icon-location"></i> <%- address %></span><br />';
@@ -150,11 +150,11 @@ $(document).ready(function() {
 
     // обновить торговые точки
     var renewTradePoints = function(newItems) {
-        var newIds = [];
-        var oldIds = [];
+        var tradePointsById = {};
         for (var i in tradePoints) {
-            oldIds.push(tradePoints[i].data.id);
+            tradePointsById[tradePoints[i].data.id] = tradePoints[i];
         }
+        var newIds = [];
         // сортировать по активности
         newItems = _.sortByOrder(newItems, ['active'], [false], _.values);
         if (newItems) {
@@ -164,14 +164,17 @@ $(document).ready(function() {
         }
         clearTradePoints(newIds);
         for (var i in newItems) {
-            if ($.inArray(newItems[i].id, oldIds) === -1) {
-                createTradePoint(newItems[i]);
+            if (typeof tradePointsById[newItems[i].id] == 'undefined') {
+                tradePointsById[newItems[i].id] = createTradePoint(newItems[i]);
+            }
+            else {
+                tradePointsById[newItems[i].id].setTradePointData(newItems[i]);
             }
         }
         // обновить список
         $list.empty();
-        for (var i in tradePoints) {
-            tradePoints[i].listItem = createListItem(tradePoints[i].data);
+        for (var i in newItems) {
+            tradePointsById[newItems[i].id].listItem = createListItem(newItems[i]);
         }
     };
 
@@ -221,13 +224,18 @@ $(document).ready(function() {
 
     // создать торговую точку на карте на основе данных data
     var createTradePoint = function(data) {
-        data.itemClass = data.active ? '' : 'disabled';
+
         var tradePoint = new google.maps.Marker({
             'position'          : new google.maps.LatLng(data.latitude, data.longitude),
             'icon'              : getMarkerIcon(data.active),
             'map'               : map
         });
-        tradePoint.data = data;
+        tradePoint.setTradePointData = function(data) {
+            data.itemClass = data.active ? '' : 'disabled';
+            this.data = data;
+            this.setIcon(getMarkerIcon(data.active));
+        };
+        tradePoint.setTradePointData(data);
         tradePoint.infowindow = createBuble(data, tradePoint);
 
         // удаление маркера
@@ -247,6 +255,8 @@ $(document).ready(function() {
         });
 
         tradePoints.push(tradePoint);
+
+        return tradePoint;
     };
 
     // поиск торговых точек
