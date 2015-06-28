@@ -40,10 +40,10 @@ $(document).ready(function() {
     $(document).ajaxComplete(function() {
         $('.loader').remove();
     });
-    $('form').on('submit', function(e) {
+    $('.modal-content form').on('submit', function(e) {
         document.appendLoader(this);
     });
-    $('form').on('beforeSubmit', function(e) {
+    $('.modal-content form').on('beforeSubmit', function(e) {
         document.appendLoader(this);
     });
 });
