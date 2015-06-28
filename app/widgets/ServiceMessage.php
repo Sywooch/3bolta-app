@@ -4,7 +4,7 @@ namespace app\widgets;
 use Yii;
 use yii\helpers\Html;
 use yii\helpers\ArrayHelper;
-use yii\bootstrap\Modal;
+use app\widgets\Modal;
 
 /**
  * Виджет отображения сервисного сообщения
@@ -29,14 +29,10 @@ class ServiceMessage extends \yii\base\Widget
                 $classTitle = '';
             }
 
-            if ($title) {
-                $title = '<h2 class="' . $classTitle . '"><span class="glyphicon glyphicon-info-sign"></span> ' . $title . '</h2>';
-            }
             ob_start();
             Modal::begin([
                 'id' => 'serviceMessage',
-                'header' => $title,
-                'toggleButton' => false,
+                'title' => $title,
             ]);
             print $body;
             Modal::end();

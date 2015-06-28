@@ -4,7 +4,7 @@
  */
 
 use app\widgets\JS;
-use yii\bootstrap\Modal;
+use app\widgets\Modal;
 use advert\models\Advert;
 
 $model = null;
@@ -17,8 +17,7 @@ if ($id = Yii::$app->session->getFlash('advert_success_created')) {
 if ($model instanceof Advert && !$model->user_id) {
     Modal::begin([
         'id' => 'advertWasCreatedModal',
-        'header' => '<h2><span class="glyphicon glyphicon-info-sign"></span> ' . Yii::t('frontend/advert', 'Advert was created') . '</h2>',
-        'toggleButton' => false,
+        'title' => Yii::t('frontend/advert', 'Advert was created'),
     ]);
     ?>
     Ваше объявление успешно добавлено!

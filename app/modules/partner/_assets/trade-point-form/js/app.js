@@ -23,7 +23,7 @@ $(document).ready(function() {
             'data'      : $(this).serialize(),
             'success'   : function(d) {
                 if (d.success) {
-                    location.reload();
+                    document.reloadLocation();
                 }
                 else {
                     $(this).find('.js-trade-point-error').show();

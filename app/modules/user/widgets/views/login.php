@@ -7,14 +7,13 @@ use yii\helpers\Url;
 use yii\bootstrap\ActiveForm;
 use app\widgets\JS;
 use yii\helpers\Html;
-use yii\bootstrap\Modal;
+use app\widgets\Modal;
 
 /* @var $this \user\widgets\LoginModal */
 /* @var $modal \user\forms\Login */
 Modal::begin([
     'id' => 'loginModal',
-    'header' => '<h2><span class="glyphicon glyphicon-hand-right"></span> ' . Yii::t('frontend/user', 'Authorize') . '</h2>',
-    'toggleButton' => false,
+    'title' => Yii::t('frontend/user', 'Authorize'),
 ]);
 $form = ActiveForm::begin([
     'id' => 'loginForm',

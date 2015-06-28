@@ -12,7 +12,7 @@ use user\forms\Register;
 use user\models\User;
 use yii\base\View;
 use yii\bootstrap\ActiveForm;
-use yii\bootstrap\Modal;
+use app\widgets\Modal;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm as ActiveForm2;
@@ -94,8 +94,7 @@ use yii\widgets\MaskedInput;
 <?php if ($registeredUser instanceof User) {
     Modal::begin([
         'id' => 'userConfirmationSend',
-        'header' => '<h2><span class="glyphicon glyphicon-info-sign"></span> ' . Yii::t('frontend/user', 'Success registered') . '</h2>',
-        'toggleButton' => false,
+        'title' => Yii::t('frontend/user', 'Success registered'),
     ]);
     ?>
     Вы успешно зарегистрировались!

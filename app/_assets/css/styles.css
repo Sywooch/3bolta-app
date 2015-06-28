@@ -642,3 +642,19 @@ h2, h3, h4, h5, h6 {
 .form-control > .ms-trigger {
     border-left: none;
 }
+.loader {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    height: 100%;
+    width: 100%;
+    background-color: #fff;
+    opacity: 0.8;
+    z-index: 999999;
+    background-image: url(../img/loader.gif);
+    background-repeat: no-repeat;
+    background-position: center;
+}
+.modal-dialog .loader {
+    border-radius: 10px;
+}

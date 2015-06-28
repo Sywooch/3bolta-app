@@ -3,7 +3,7 @@ namespace partner\widgets;
 
 use Yii;
 use partner\models\TradePoint as TradePointModel;
-use yii\bootstrap\Modal;
+use app\widgets\Modal;
 use yii\helpers\Url;
 
 /**
@@ -34,8 +34,7 @@ class TradePointModal extends \yii\bootstrap\Widget
 
         Modal::begin([
             'id' => $modalId,
-            'header' => '<h2>' . $title . '</h2>',
-            'toggleButton' => false,
+            'title' => $title,
             'options' => [
                 'class' => 'load-modal-ajax',
                 'data-ajax-url' => $loadUrl,

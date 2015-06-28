@@ -8,7 +8,7 @@ use yii\helpers\Html;
 use advert\assets\AdvertDetail;
 
 use app\helpers\Date;
-use yii\bootstrap\Modal;
+use app\widgets\Modal;
 use app\widgets\JS;
 use yii\helpers\Url;
 
@@ -115,8 +115,7 @@ AdvertDetail::register($this);
     <?php
     Modal::begin([
         'id' => 'advertWasPublishedModal',
-        'header' => '<h2><span class="glyphicon glyphicon-info-sign"></span> ' . Yii::t('frontend/advert', 'Advert was published') . '</h2>',
-        'toggleButton' => false,
+        'title' => Yii::t('frontend/advert', 'Advert was published'),
     ]);
     ?>
     Поздравляем, ваше объявление успешно опубликовано!

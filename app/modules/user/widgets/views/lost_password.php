@@ -3,7 +3,7 @@
  * Вывод модального окна восстановления пароля
  */
 
-use yii\bootstrap\Modal;
+use app\widgets\Modal;
 use yii\bootstrap\ActiveForm;
 use yii\helpers\Url;
 use yii\helpers\Html;
@@ -13,8 +13,7 @@ use app\widgets\JS;
 /* @var $modal \user\forms\LostPassword */
 Modal::begin([
     'id' => 'lostPasswordModal',
-    'header' => '<h2>' . Yii::t('frontend/user', 'Restore password') . '</h2>',
-    'toggleButton' => false,
+    'title' => Yii::t('frontend/user', 'Restore password'),
 ]);
 $form = ActiveForm::begin([
     'id' => 'lostPasswordForm',

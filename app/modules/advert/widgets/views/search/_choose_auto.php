@@ -2,7 +2,7 @@
 /**
  * Виджет выбора автомобиля
  */
-use yii\bootstrap\Modal;
+use app\widgets\Modal;
 use auto\widgets\ChooseAutomobile;
 use app\widgets\JS;
 use yii\web\JsExpression;
@@ -13,9 +13,8 @@ use yii\helpers\Html;
 /* @var $this yii\base\View */
 $modal = Modal::begin([
     'id' => 'topSearchChooseAuto',
-    'header' => Yii::t('frontend/advert', 'Choose automobile'),
+    'title' => Yii::t('frontend/advert', 'Choose automobile'),
     'size' => Modal::SIZE_LARGE,
-    'toggleButton' => false,
     'closeButton' => [
         'tag' => 'button',
         'class' => 'btn btn-success pull-right',

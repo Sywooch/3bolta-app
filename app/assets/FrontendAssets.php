@@ -16,6 +16,7 @@ class FrontendAssets extends AssetBundle
     ];
     public $js = [
         'js/lodash.min.js',
+        'js/loader.js',
         'js/app.js',
     ];
     public $depends = [
