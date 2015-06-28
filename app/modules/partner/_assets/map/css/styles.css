@@ -41,6 +41,34 @@
     border-bottom: 1px solid #ccc;
     padding: 15px;
     width: 100%;
+    color: #000;
+    cursor: pointer;
+    background-color: #fff;
+}
+.trade-point-list-item.active {
+    background-color: #ddd;
+}
+.trade-point-list-item:hover {
+    background-color: #ddd;
+}
+.trade-point-list-item h4, .trade-point-map-infowindow h4 {
+    color: #000;
+    margin-top: 0px;
+    margin-bottom: 5px;
+}
+.trade-point-list-item .mark, .trade-point-map-infowindow .mark {
+    background-color: #fcf8e3;
+    font-size: 12px;
+}
+.trade-point-list-item .location, .trade-point-map-infowindow .location {
+    font-size: 12px;
+    font-style: italic;
+}
+.trade-point-list-item.disabled {
+    color: #ccc;
+}
+.trade-point-list-item.disabled h4 {
+    color: #ccc;
 }
 @media (max-width: 767px) {
     .trade-point-map, .trade-point-map-wrapper.toggled .trade-point-map {

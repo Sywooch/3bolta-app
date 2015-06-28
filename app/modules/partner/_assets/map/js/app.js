@@ -21,23 +21,41 @@ $(document).ready(function() {
     var $addressInput = $('.js-trade-point-address');
     // поле для ввода координат
     var $coordinatesInput = $('.js-trade-point-map-coordinates');
+    // флаг, означающий, что список активирован
+    var listEnabled = false;
 
     // шаблон для бабла
-    var bubleTemplate = '<h4><%- name %></h4>';
-    bubleTemplate += '<p><i class="icon-location"></i> <%- address %><br /><i class="icon-phone"></i> <%- phone %></p>';
+    var bubleTemplate = '<div class="trade-point-map-infowindow">';
+    bubleTemplate += '<h4><%- name %></h4>';
+    bubleTemplate += '<span class="location"><i class="icon-location"></i> <%- address %></span><br />';
+    bubleTemplate += '<span class="phone"><i class="icon-phone"></i> <%- phone %></span>';
+    bubleTemplate += '</div>';
     bubleTemplate = _.template(bubleTemplate);
 
     // шаблон для списка
-    var listTemplate = '<div class="trade-point-list-item <%- itemClass %>">';
+    var listTemplate = '<div class="trade-point-list-item <%- itemClass %> js-trade-point-list-item" data-trade-point-id="<%- id %>">';
     listTemplate += '<div class="trade-point-list-item-unactive"></div>'
     listTemplate += '<h4><%- name %></h4>';
-    listTemplate += '<i class="icon-location"></i> <%- address %><br /><i class="icon-phone"></i> <%- phone %><br />';
-    listTemplate += '<i class="icon-cab"></i> <% _.forEach(marks, function(mark) { %> <%- mark %> <% }); %>'
+    listTemplate += '<span class="mark"><i class="icon-cab"></i> <% _.forEach(marks, function(mark) { %> <%- mark %> <% }); %></span>';
+    listTemplate += '<span class="location"><i class="icon-location"></i> <%- address %></span><br />';
+    listTemplate += '<span class="phone"><i class="icon-phone"></i> <%- phone %></span><br />';
     listTemplate += '</div>';
     listTemplate = _.template(listTemplate);
 
     // массив сгенерированных торговых точек (они же - маркеры на карте)
     var tradePoints = [];
+
+    // активировать список
+    var enableList = function() {
+        $mapWrapper.addClass('toggled');
+        listEnabled = $list.is(':visible');
+    };
+
+    // деактивировать список
+    var disableList = function() {
+        $mapWrapper.removeClass('toggled');
+        listEnabled = $list.is(':visible');
+    };
 
     // получить иконку в зависимости от условия активности
     var getMarkerIcon = function(getActive) {
@@ -119,38 +137,112 @@ $(document).ready(function() {
         $form.submit();
     });
 
-    // очистить торговые точки на карте
-    var clearTradePoints = function() {
+    // очистить торговые точки на карте, которых нет в новой выборке
+    var clearTradePoints = function(newIds) {
         for (var i in tradePoints) {
-            tradePoints[i].remove();
+            var id = tradePoints[i].data.id;
+            if ($.inArray(id, newIds) === -1) {
+                tradePoints[i].remove();
+            }
         }
         tradePoints.slice(0, 1);
         $list.empty();
     };
 
+    // обновить торговые точки
+    var renewTradePoints = function(newItems) {
+        var newIds = [];
+        var oldIds = [];
+        for (var i in tradePoints) {
+            oldIds.push(tradePoints[i].data.id);
+        }
+        // сортировать по активности
+        newItems = _.sortByOrder(newItems, ['active'], [false], _.values);
+        if (newItems) {
+            for (var i in newItems) {
+                newIds.push(newItems[i].id);
+            }
+        }
+        clearTradePoints(newIds);
+        for (var i in newItems) {
+            if ($.inArray(newItems[i].id, oldIds) === -1) {
+                createTradePoint(newItems[i]);
+            }
+        }
+    };
+
+    // создать элемент списка
+    var createListItem = function(data) {
+        var $listItem = $(listTemplate(data));
+        $list.append($listItem);
+        $listItem.on('trade.point.listOpen', function(e, doNotScroll) {
+            if (!doNotScroll) {
+                $list.scrollTo(this);
+            }
+            $(this).addClass('active').siblings('.js-trade-point-list-item').removeClass('active');
+        });
+        return $listItem;
+    };
+
+    // создать бабл для карты на основе данных data для маркера tradePoint
+    var createBuble = function(data, tradePoint) {
+        var infowindow = new google.maps.InfoWindow({
+            'content'           : bubleTemplate(data)
+        });
+        infowindow.tradePoint = tradePoint;
+        infowindow.remove = function() {
+            google.maps.event.clearInstanceListeners(infowindow);
+            infowindow.setMap(null);
+        };
+        infowindow.hide = function() {
+            this.tradePoint.setAnimation(null);
+            this.close();
+        };
+        infowindow.show = function(doNotScroll) {
+            this.tradePoint.setAnimation(google.maps.Animation.BOUNCE);
+            if (!listEnabled) {
+                // если список неактивирован - показываем бабл
+                this.open(map, this.tradePoint);
+            }
+            else {
+                // иначе - открываем в списке
+                this.tradePoint.listItem.trigger('trade.point.listOpen', [doNotScroll]);
+            }
+        };
+        google.maps.event.addListener(infowindow, 'closeclick', function() {
+            this.hide();
+        });
+        return infowindow;
+    };
+
     // создать торговую точку на карте на основе данных data
     var createTradePoint = function(data) {
+        data.itemClass = data.active ? '' : 'disabled';
         var tradePoint = new google.maps.Marker({
             'position'          : new google.maps.LatLng(data.latitude, data.longitude),
             'icon'              : getMarkerIcon(data.active),
             'map'               : map
         });
         tradePoint.data = data;
+        tradePoint.listItem = createListItem(data);
+        tradePoint.infowindow = createBuble(data, tradePoint);
+
+        // удаление маркера
         tradePoint.remove = function() {
+            this.infowindow.remove();
             google.maps.event.clearInstanceListeners(this);
             this.setMap(null);
         };
-        var content = bubleTemplate(data);
-        var infowindow = new google.maps.InfoWindow({
-            'content'           : content
-        });
-        tradePoint.infowindow = infowindow;
-        data.itemClass = data.active ? 'disabled' : '';
-        var listItem = listTemplate(data);
-        $list.append(listItem);
+
+        // клик по маркеру
         google.maps.event.addListener(tradePoint, 'click', function() {
-            infowindow.open(map, tradePoint);
+            $.each(tradePoints, function(k, v) {
+                // close all infowindow
+                v.infowindow.hide();
+            });
+            this.infowindow.show();
         });
+
         tradePoints.push(tradePoint);
     };
 
@@ -168,23 +260,34 @@ $(document).ready(function() {
                 'url'       : $form.attr('action'),
                 'success'   : function(d) {
                     searchTradePointsLocked = false;
-                    clearTradePoints();
                     if (d.items) {
-                        for (var i in d.items) {
-                            createTradePoint(d.items[i]);
-                        }
+                        renewTradePoints(d.items);
                     }
-                    if ($list.find('.trade-point-list-item').length > 10) {
-                        $mapWrapper.addClass('toggled');
+                    if (tradePoints.length > 10) {
+                        enableList();
                     }
                     else {
-                        $mapWrapper.removeClass('toggled');
+                        disableList();
                     }
                 }
             });
         }, 500);
     };
 
+    // открыть элемент списка
+    $list.on('click', '.js-trade-point-list-item', function(e) {
+        var id = $(this).data('trade-point-id');
+        for (var i in tradePoints) {
+            if (tradePoints[i].data.id == id) {
+                tradePoints[i].infowindow.show(true);
+            }
+            else {
+                tradePoints[i].infowindow.hide();
+            }
+        }
+    });
+
+    // субмит формы
     $('.js-trade-point-map-form').on('submit', function() {
         searchTradePoints();
         return false;
