@@ -89,7 +89,6 @@ button.selected-default span {
 }
 @media (max-width: 767px) {
     .logo-head {
-        background-color: #000;
         height: 46px;
     }
     .logo-head .logo {
