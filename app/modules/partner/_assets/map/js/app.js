@@ -118,23 +118,23 @@ $(document).ready(function() {
                 'lng' : bounds.getNorthEast().lng()
             }
         }));
-        $form.submit();
+        $form.trigger('beforeSubmit');
     });
 
     // выбор имени торговой точки
     $('.js-trade-point-map-name').on('input', function() {
-        $form.submit();
+        $form.trigger('beforeSubmit');
     })
     $('.js-trade-point-map-name').on('autocompleteselect', function() {
-        $form.submit();
+        $form.trigger('beforeSubmit');
     });
 
     // выбор марки
     $('.js-trade-point-map-mark').on('input', function() {
-        $form.submit();
+        $form.trigger('beforeSubmit');
     })
     $('.js-trade-point-map-mark').on('autocompleteselect', function() {
-        $form.submit();
+        $form.trigger('beforeSubmit');
     });
 
     // очистить торговые точки на карте, которых нет в новой выборке
@@ -301,7 +301,7 @@ $(document).ready(function() {
     });
 
     // субмит формы
-    $('.js-trade-point-map-form').on('submit', function() {
+    $('.js-trade-point-map-form').on('beforeSubmit', function() {
         searchTradePoints();
         return false;
     });

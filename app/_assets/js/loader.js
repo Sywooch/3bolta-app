@@ -22,6 +22,12 @@ document.appendLoader = function(to) {
     }
 };
 
+// удалить лоадеры
+document.removeLoader = function() {
+    var $loader = $('.loader');
+    $loader.remove();
+};
+
 // смена локации документа
 document.changeLocation = function(href) {
     $('body').appendLoader();
@@ -37,13 +43,11 @@ document.reloadLocation = function() {
 $(document).ready(function() {
     // по завершению ajax лоадеры удаляем
     // навесить лоадеры на формы
-    $(document).ajaxComplete(function() {
+    $('form').on('afterValidate', function(e) {
         $('.loader').remove();
     });
-    $('.modal-content form').on('submit', function(e) {
-        document.appendLoader(this);
-    });
-    $('.modal-content form').on('beforeSubmit', function(e) {
+    $('form').on('submit', function(e) {
+        document.removeLoader();
         document.appendLoader(this);
     });
 });

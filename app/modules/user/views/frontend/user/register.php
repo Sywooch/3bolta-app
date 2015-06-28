@@ -30,6 +30,7 @@ use yii\widgets\MaskedInput;
     <?php
     $form = ActiveForm::begin([
         'enableAjaxValidation' => true,
+        'enableClientValidation' => false,
     ]);
     print $form->field($model, 'type')->dropDownList($model->getRegistrationTypes());
     ?>

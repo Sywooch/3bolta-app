@@ -1,21 +1,23 @@
 <?php
 namespace user\controllers\frontend;
 
-use Yii;
-
-use yii\filters\AccessControl;
-
-use user\models\User;
-use yii\widgets\ActiveForm;
-use yii\web\Response;
-use user\forms\Register as RegisterForm;
+use app\components\Controller;
+use user\components\UserApi;
+use user\forms\ChangePassword as ChangePasswordForm;
 use user\forms\Login as LoginForm;
 use user\forms\LostPassword as LostPasswordForm;
-use user\forms\ChangePassword as ChangePasswordForm;
-
+use user\forms\Register as RegisterForm;
+use user\models\User;
+use Yii;
+use yii\base\Action;
+use yii\filters\AccessControl;
+use yii\helpers\ArrayHelper;
+use yii\helpers\Url;
 use yii\web\ForbiddenHttpException;
+use yii\web\Response;
+use yii\widgets\ActiveForm;
 
-class UserController extends \app\components\Controller
+class UserController extends Controller
 {
     /**
      * Разделение прав доступа для авторизованных и неавторизованных пользователей.
@@ -23,7 +25,7 @@ class UserController extends \app\components\Controller
      */
     public function behaviors()
     {
-        return \yii\helpers\ArrayHelper::merge([
+        return ArrayHelper::merge([
             'access' => [
                 'class' => AccessControl::className(),
                 'rules' => [
@@ -39,8 +41,8 @@ class UserController extends \app\components\Controller
                     ]
                 ],
                 'denyCallback' => function($rule, $action) {
-                    if ($action instanceof \yii\base\Action) {
-                        /* @var $action \yii\base\Action */
+                    if ($action instanceof Action) {
+                        /* @var $action Action */
                         return $action->controller->goHome();
                     }
                 }
@@ -55,7 +57,7 @@ class UserController extends \app\components\Controller
      */
     public function actionConfirmation($code)
     {
-        /* @var $api \user\components\UserApi */
+        /* @var $api UserApi */
         $api = Yii::$app->getModule('user')->api;
 
         // активировать пользователя и авторизовать его в случае успеха
@@ -81,7 +83,7 @@ class UserController extends \app\components\Controller
         }
 
         if ($model->load($_POST) && $model->validate()) {
-            /* @var $api \user\components\UserApi */
+            /* @var $api UserApi */
             $api = Yii::$app->getModule('user')->api;
             $user = $api->registerUser($model);
             if ($user instanceof User) {
@@ -157,7 +159,7 @@ class UserController extends \app\components\Controller
         ];
 
         if ((!empty($_POST) && $form->load($_POST)) && $form->validate()) {
-            /* @var $api \user\components\UserApi */
+            /* @var $api UserApi */
             $api = Yii::$app->getModule('user')->api;
             if ($api->lostPassword($form)) {
                 $result['success'] = true;
@@ -174,7 +176,7 @@ class UserController extends \app\components\Controller
      */
     public function actionChangePassword($code)
     {
-        /* @var $api \user\components\UserApi */
+        /* @var $api UserApi */
         $api = Yii::$app->getModule('user')->api;
 
         if (Yii::$app->session->getFlash('password_success_updated')) {

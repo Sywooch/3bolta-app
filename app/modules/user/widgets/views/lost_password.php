@@ -48,12 +48,14 @@ JS::begin();
 <script type="text/javascript">
     $(document).ready(function() {
         $('#lostPasswordForm').on('beforeSubmit', function(e) {
+            document.appendLoader(this);
             $.ajax({
                 'url'           : $(this).attr('action'),
                 'type'          : 'post',
                 'data'          : $(this).serialize(),
                 'dataType'      : 'json',
                 'success'       : function(d) {
+                    document.removeLoader();
                     if (d.success && d.email) {
                         $('.lostPasswordSuccess .lostUserEmail').text(d.email);
                         $('#lostPasswordForm').hide();

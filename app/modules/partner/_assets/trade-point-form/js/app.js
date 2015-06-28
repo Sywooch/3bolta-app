@@ -15,6 +15,7 @@ $(document).ready(function() {
     $('#trade-point-form').off('beforeSubmit').on('beforeSubmit', function(e) {
         e.preventDefault();
 
+        document.appendLoader(this);
         $(this).find('.js-trade-point-error').hide();
         $.ajax({
             'url'       : $(this).attr('action'),
@@ -22,6 +23,8 @@ $(document).ready(function() {
             'dataType'  : 'json',
             'data'      : $(this).serialize(),
             'success'   : function(d) {
+                document.removeLoader();
+
                 if (d.success) {
                     document.reloadLocation();
                 }
