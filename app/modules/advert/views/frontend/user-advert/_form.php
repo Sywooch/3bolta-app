@@ -153,18 +153,31 @@ $form = ActiveForm::begin([
                 <?=Html::tag('h3', Yii::t('frontend/advert', 'Contacts'))?>
             </div>
 
-            <div class="col-md-12">
-                <div class="form-group">
-                    В объявлении будет отображаться следующая контактная информация:<br /><br />
+            <?php if ($user->type != \user\models\User::TYPE_LEGAL_PERSON):?>
+                <div class="col-md-12">
+                    <div class="form-group">
+                        В объявлении будет отображаться следующая контактная информация:<br /><br />
 
-                    <strong><?=$model->getAttributeLabel('user_name')?></strong><br />
-                    <?=Html::encode($user->name)?><br /><br />
-                    <strong><?=$model->getAttributeLabel('user_phone')?></strong><br />
-                    <?=Html::encode($user->phone)?><br /><br />
+                        <strong><?=$model->getAttributeLabel('user_name')?></strong><br />
+                        <?=Html::encode($user->name)?><br /><br />
+                        <strong><?=$model->getAttributeLabel('user_phone')?></strong><br />
+                        <?=Html::encode($user->phone)?><br /><br />
 
-                    Для редактирования контактной информации используйте <a href="<?=Url::toRoute(['/user/profile/index'])?>">профиль</a>.
+                        Для редактирования контактной информации используйте <a href="<?=Url::toRoute(['/user/profile/index'])?>">профиль</a>.
+                    </div>
                 </div>
-            </div>
+            <?php else:?>
+                <div class="col-md-12 advert-form-trade-point">
+                    <?=$form->field($model, 'trade_point_id')->widget(\app\widgets\ItemsList::className(), [
+                        'items' => $model->getTradePointsDropDown(),
+                    ])?>
+                    <?php
+                    /*
+                    <?=$form->field($model, 'trade_point_id')->radioList($model->getTradePointsDropDown(), ['encode' => false])?>
+                     */
+                    ?>
+                </div>
+            <?php endif;?>
 
             <div class="col-md-12">
                 <?php

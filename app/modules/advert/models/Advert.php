@@ -1,30 +1,27 @@
 <?php
 namespace advert\models;
 
-use Yii;
-
+use app\components\ActiveRecord;
+use app\components\PhoneValidator;
 use app\helpers\Date as DateHelper;
-use yii\helpers\ArrayHelper;
-use user\models\User;
-use handbook\models\HandbookValue;
-
 use auto\models\Mark;
 use auto\models\Model;
-use auto\models\Serie;
 use auto\models\Modification;
-
-use yii\db\Expression;
-
+use auto\models\Serie;
+use handbook\models\HandbookValue;
+use storage\models\File;
+use user\models\User;
+use Yii;
 use yii\base\Exception;
-
+use yii\db\ActiveQuery;
+use yii\db\Expression;
+use yii\helpers\ArrayHelper;
 use yii\web\UploadedFile;
-
-use app\components\PhoneValidator;
 
 /**
  * Модель объявления
  */
-class Advert extends \app\components\ActiveRecord
+class Advert extends ActiveRecord
 {
     const TABLE_MARK = '{{%advert_mark}}';
     const TABLE_MODEL = '{{%advert_model}}';
@@ -42,7 +39,7 @@ class Advert extends \app\components\ActiveRecord
     const UPLOAD_MAX_FILES = 10;
 
     /**
-     * @var [] доступные расширения изображений
+     * @var array доступные расширения изображений
      */
     public static $_imageFileExtensions = ['jpeg', 'jpg', 'gif', 'png', 'bmp', 'tiff'];
 
@@ -55,14 +52,9 @@ class Advert extends \app\components\ActiveRecord
     protected $_modifications;
 
     /**
-     * @var [] поле для загрузки новых изображений
+     * @var array поле для загрузки новых изображений
      */
     protected $_uploadImage;
-
-    /**
-     * @var User
-     */
-    protected $_user;
 
     /**
      * Таблица
@@ -75,7 +67,7 @@ class Advert extends \app\components\ActiveRecord
 
     /**
      * Правила валидации
-     * @return []
+     * @return array
      */
     public function rules()
     {
@@ -93,6 +85,16 @@ class Advert extends \app\components\ActiveRecord
             [['user_name', 'user_phone', 'user_email'], 'required', 'when' => function($model) {
                 // обязательна либо привязка к пользователю, либо координаты пользователя
                 return empty($model->user_id);
+            }],
+            ['trade_point_id', 'integer', 'skipOnEmpty' => false, 'when' => function($data) {
+                /* @var $data Advert */
+                $userId = (int) $data->user_id;
+                if ($userId) {
+                    /* @var $user User */
+                    $user = User::find()->andWhere(['id' => $userId])->one();
+                    return $user instanceof User && $user->type == User::TYPE_LEGAL_PERSON;
+                }
+                return false;
             }],
             [['user_phone'], PhoneValidator::className(), 'canonicalAttribute' => 'user_phone_canonical'],
             [['user_name', 'advert_name'], 'string', 'max' => 50],
@@ -116,7 +118,7 @@ class Advert extends \app\components\ActiveRecord
 
     /**
      * Подписи атрибутов
-     * @return []
+     * @return array
      */
     public function attributeLabels()
     {
@@ -130,6 +132,7 @@ class Advert extends \app\components\ActiveRecord
             'user_phone' => Yii::t('advert', 'Contact phone'),
             'user_email' => Yii::t('advert', 'Contact email'),
             'user_id' => Yii::t('advert', 'User id'),
+            'trade_point_id' => Yii::t('advert', 'Trade point'),
             'active' => Yii::t('advert', 'Part active'),
             'description' => Yii::t('advert', 'Advert description'),
             'marks' => Yii::t('advert', 'Choose mark'),
@@ -163,7 +166,7 @@ class Advert extends \app\components\ActiveRecord
 
     /**
      * прикрепить изображения к объявлению
-     * @param [] $uploadedFiles
+     * @param array $uploadedFiles
      */
     protected function attachImages($uploadedFiles)
     {
@@ -225,7 +228,7 @@ class Advert extends \app\components\ActiveRecord
 
     /**
      * Установить изображения для загрузки
-     * @param [] $files
+     * @param array $files
      */
     public function setUploadImage($files)
     {
@@ -274,20 +277,26 @@ class Advert extends \app\components\ActiveRecord
     }
 
     /**
+     * Получить торговую точку
+     * @return ActiveQuery
+     */
+    public function getTradePoint()
+    {
+        return $this->hasOne(\partner\models\TradePoint::className(), ['id' => 'trade_point_id']);
+    }
+
+    /**
      * Получить пользователя
-     * @return yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getUser()
     {
-        if ($this->_user === null) {
-            $this->_user = $this->hasOne(User::className(), ['id' => 'user_id'])->one();
-        }
-        return $this->_user;
+        return $this->hasOne(User::className(), ['id' => 'user_id'])->one();
     }
 
     /**
      * Получить категорию
-     * @return yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getCategory()
     {
@@ -296,7 +305,7 @@ class Advert extends \app\components\ActiveRecord
 
     /**
      * Получить состояние запчасти
-     * @return yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getCondition()
     {
@@ -319,14 +328,14 @@ class Advert extends \app\components\ActiveRecord
 
     /**
      * Получить превью
-     * @return \storage\models\File
+     * @return File
      */
     public function getPreview()
     {
         $ret = null;
         foreach ($this->images as $image) {
             if ($image->is_preview) {
-                /* @var $image \advert\models\AdvertImage */
+                /* @var $image AdvertImage */
                 $ret = $image->preview;
             }
         }
@@ -335,7 +344,7 @@ class Advert extends \app\components\ActiveRecord
 
     /**
      * Получить изображения
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getImages()
     {
@@ -344,7 +353,7 @@ class Advert extends \app\components\ActiveRecord
 
     /**
      * Получить марки автомобилей
-     * @return yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getMark()
     {
@@ -354,7 +363,7 @@ class Advert extends \app\components\ActiveRecord
 
     /**
      * Получить модели автомобилей
-     * @return yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getModel()
     {
@@ -364,7 +373,7 @@ class Advert extends \app\components\ActiveRecord
 
     /**
      * Получить серии автомобилей
-     * @return yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getSerie()
     {
@@ -374,7 +383,7 @@ class Advert extends \app\components\ActiveRecord
 
     /**
      * Получить модификации автомобилей
-     * @return yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getModification()
     {
@@ -458,7 +467,7 @@ class Advert extends \app\components\ActiveRecord
      * В случае, если запись новая - генерирует Exception.
      *
      * @param string $tableName название таблицы для привязки
-     * @param [] $ids массив идентификаторов автомобилей
+     * @param array $ids массив идентификаторов автомобилей
      * @throws Exception
      */
     protected function attachAutomobile($tableName, $ids)
@@ -485,7 +494,7 @@ class Advert extends \app\components\ActiveRecord
     /**
      * Прикрепить к объявлению марки.
      * В случае, если это новая запись - генерирует Exception.
-     * @param [] $markIds
+     * @param array $markIds
      */
     public function attachMark($markIds)
     {
@@ -495,7 +504,7 @@ class Advert extends \app\components\ActiveRecord
     /**
      * Прикрепить к объявлению модели.
      * В случае, если это новая запись - генерирует Exception.
-     * @param [] $modelIds
+     * @param array $modelIds
      */
     public function attachModel($modelIds)
     {
@@ -505,7 +514,7 @@ class Advert extends \app\components\ActiveRecord
     /**
      * Прикрепить к объявлению серии.
      * В случае, если это новая запись - генерирует Exception.
-     * @param [] $serieIds
+     * @param array $serieIds
      */
     public function attachSerie($serieIds)
     {
@@ -515,7 +524,7 @@ class Advert extends \app\components\ActiveRecord
     /**
      * Прикрепить к объявлению модификации.
      * В случае, если это новая запись - генерирует Exception.
-     * @param [] $modificationIds
+     * @param array $modificationIds
      */
     public function attachModification($modificationIds)
     {
@@ -525,7 +534,7 @@ class Advert extends \app\components\ActiveRecord
     /**
      * Выпадающий список категорий
      * @param boolean $getFirstEmpty получать первый пустой элемент
-     * @return []
+     * @return array
      */
     public static function getCategoryDropDownList($getFirstEmpty = false)
     {
@@ -546,7 +555,7 @@ class Advert extends \app\components\ActiveRecord
     /**
      * Выпадающий список состояния запчасти
      * @param boolean $getFirstEmpty получать первый пустой элемент
-     * @return []
+     * @return array
      */
     public static function getConditionDropDownList($getFirstEmpty = false)
     {
@@ -566,7 +575,7 @@ class Advert extends \app\components\ActiveRecord
 
     /**
      * Возвращает массив идентификаторов привязанных марок
-     * @return []
+     * @return array
      */
     public function getMarks()
     {
@@ -578,7 +587,7 @@ class Advert extends \app\components\ActiveRecord
 
     /**
      * Возвращает массив идентификаторов привязанных моделей
-     * @return []
+     * @return array
      */
     public function getModels()
     {
@@ -590,7 +599,7 @@ class Advert extends \app\components\ActiveRecord
 
     /**
      * Возвращает массив идентификаторов привязанных серий
-     * @return []
+     * @return array
      */
     public function getSeries()
     {
@@ -602,7 +611,7 @@ class Advert extends \app\components\ActiveRecord
 
     /**
      * Возвращает массив идентификаторов привязанных модификаций
-     * @return []
+     * @return array
      */
     public function getModifications()
     {
@@ -614,7 +623,7 @@ class Advert extends \app\components\ActiveRecord
 
     /**
      * Установить новые марки
-     * @param [] $ids
+     * @param array $ids
      */
     public function setMarks($ids)
     {
@@ -628,7 +637,7 @@ class Advert extends \app\components\ActiveRecord
 
     /**
      * Установить новые модели
-     * @param [] $ids
+     * @param array $ids
      */
     public function setModels($ids)
     {
@@ -642,7 +651,7 @@ class Advert extends \app\components\ActiveRecord
 
     /**
      * Установить новые серии
-     * @param [] $ids
+     * @param array $ids
      */
     public function setSeries($ids)
     {
@@ -656,7 +665,7 @@ class Advert extends \app\components\ActiveRecord
 
     /**
      * Установить новые модификации
-     * @param [] $ids
+     * @param array $ids
      */
     public function setModifications($ids)
     {
@@ -671,7 +680,7 @@ class Advert extends \app\components\ActiveRecord
     /**
      * Поиск объявлений авторизованного пользователя
      *
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      * @throws Exception в случае, если пользователь не авторизован
      */
     public static function findUserList()
@@ -688,7 +697,7 @@ class Advert extends \app\components\ActiveRecord
 
     /**
      * Поиск активных и опубликованных объявлений
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public static function findActiveAndPublished()
     {
@@ -719,7 +728,7 @@ class Advert extends \app\components\ActiveRecord
 
     /**
      * Получить массив дерева категорий
-     * @return []
+     * @return array
      */
     public function getCategoriesTree()
     {

@@ -40,15 +40,33 @@ AdvertDetail::register($this);
             <?=$model->getPriceFormated()?>
         </span>
     </div>
-    <div class="item-details-row item-details-contacts">
-        <strong><?=Yii::t('frontend/advert', 'Contacts')?>:</strong>
-        <?=Html::encode($model->getUserName())?>
-        (<?=Yii::t('frontend/advert', 'private person')?>)
-        <span class="item-details-phone label label-primary">
-            <span class="glyphicon glyphicon-earphone"></span>
-            <?=Html::encode($model->getUserPhone())?>
-        </span>
-    </div>
+    <?php if ($tradePoint = $model->tradePoint):?>
+        <?php
+        /* @var $tradePoint \partner\models\TradePoint */
+        /* @var $partner \partner\models\Partner */
+        $partner = $tradePoint->partner;
+        ?>
+        <div class="item-details-row item-details-contacts">
+            <strong><?=Yii::t('frontend/advert', 'Seller')?>:</strong>
+            <?=Html::encode($partner->name)?>
+            <span class="item-details-phone label label-primary">
+                <span class="glyphicon glyphicon-earphone"></span>
+                <?=Html::encode($tradePoint->phone)?>
+            </span><br />
+            <strong><?=Yii::t('frontend/advert', 'Address')?>:</strong>
+            <?=Html::encode($tradePoint->address)?>
+        </div>
+    <?php else:?>
+        <div class="item-details-row item-details-contacts">
+            <strong><?=Yii::t('frontend/advert', 'Contacts')?>:</strong>
+            <?=Html::encode($model->getUserName())?>
+            (<?=Yii::t('frontend/advert', 'private person')?>)
+            <span class="item-details-phone label label-primary">
+                <span class="glyphicon glyphicon-earphone"></span>
+                <?=Html::encode($model->getUserPhone())?>
+            </span>
+        </div>
+    <?php endif;?>
     <div class="item-details-row item-details-condition">
         <strong><?=Yii::t('frontend/advert', 'Condition')?>:</strong>
         <?=$model->getConditionName()?>

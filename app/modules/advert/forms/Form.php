@@ -1,25 +1,21 @@
 <?php
 namespace advert\forms;
 
-use Yii;
-
-use user\models\User;
-
-use advert\models\Category;
-
 use advert\models\Advert;
-
-use auto\models\Mark;
-use auto\models\Model;
-use auto\models\Serie;
-use auto\models\Modification;
-
+use advert\models\Category;
 use app\components\AdvertEmailValidator;
 use app\components\AdvertPhoneValidator;
-
 use app\components\PhoneValidator;
-
+use auto\models\Mark;
+use auto\models\Model;
+use auto\models\Modification;
+use auto\models\Serie;
 use handbook\models\HandbookValue;
+use partner\models\Partner;
+use partner\models\TradePoint;
+use user\models\User;
+use Yii;
+use yii\base\Model as BaseModel;
 
 /**
  * Форма добавления/редактирования объявления.
@@ -30,13 +26,15 @@ use handbook\models\HandbookValue;
  * - submit - будет происходить валидация на правильность ввода реальных ID
  *  марок, моделей, серий и модификаций, а также категорий и состояний;
  */
-class Form extends \yii\base\Model
+class Form extends BaseModel
 {
+    // Привязки к автомобилям
     protected $_mark = [];
     protected $_model = [];
     protected $_serie = [];
     protected $_modification = [];
 
+    // загрузка изображений
     protected $_uploadImage;
 
     /**
@@ -44,7 +42,15 @@ class Form extends \yii\base\Model
      */
     protected $_exists;
 
+    /**
+     * @var int идентификатор пользователя
+     */
     protected $_user_id;
+
+    /**
+     * @var int установить торговую точку
+     */
+    protected $_trade_point_id;
 
     /**
      * Максимальная длина описания
@@ -63,7 +69,7 @@ class Form extends \yii\base\Model
 
     /**
      * Правила валидации
-     * @return []
+     * @return array
      */
     public function rules()
     {
@@ -100,6 +106,11 @@ class Form extends \yii\base\Model
             [['description'], 'string', 'max' => self::DESCRIPTION_MAX_LENGTH],
             [['user_name', 'user_phone', 'user_email'], 'required', 'when' => function($model) {
                 return !$model->getUserId();
+            }],
+            ['trade_point_id', 'required', 'when' => function($data) {
+                /* @var $data Form */
+                $user = $data->getUser();
+                return $user instanceof User && $user->type == User::TYPE_LEGAL_PERSON;
             }],
             ['price', 'filter', 'filter' => function($value) {
                 return str_replace(',', '.', $value);
@@ -209,7 +220,7 @@ class Form extends \yii\base\Model
     /**
      * Очистить массив от значений, отличных от integer.
      * @params [] $availValues доступные значения для массива
-     * @return []
+     * @return array
      */
     protected function clearIntArray($arr, $availValues = [])
     {
@@ -237,7 +248,7 @@ class Form extends \yii\base\Model
 
     /**
      * Подписи полей
-     * @return []
+     * @return array
      */
     public function attributeLabels()
     {
@@ -250,6 +261,7 @@ class Form extends \yii\base\Model
             'user_phone' => Yii::t('frontend/advert', 'Contact phone'),
             'user_email' => Yii::t('frontend/advert', 'Contact email'),
             'user_id' => Yii::t('frontend/advert', 'User id'),
+            'trade_point_id' => Yii::t('frontend/advert', 'Trade point'),
             'price' => Yii::t('frontend/advert', 'Part price'),
             'mark' => Yii::t('frontend/advert', 'Choose mark'),
             'model' => Yii::t('frontend/advert', 'Choose model'),
@@ -260,7 +272,7 @@ class Form extends \yii\base\Model
 
     /**
      * Получить атрибуты
-     * @return []
+     * @return array
      */
     public function attributes()
     {
@@ -286,7 +298,7 @@ class Form extends \yii\base\Model
 
     /**
      * Установить изображения для загрузки
-     * @param [] $files
+     * @param array $files
      */
     public function setUploadImage($files)
     {
@@ -315,7 +327,7 @@ class Form extends \yii\base\Model
     /**
      * Создать форму на основе существующего объявления.
      * @param Advert $advert
-     * @return \self
+     * @return self
      */
     public static function createFromExists(Advert $advert)
     {
@@ -324,6 +336,7 @@ class Form extends \yii\base\Model
         $ret->_exists = $advert;
 
         $ret->_user_id = $advert->user_id;
+        $ret->_trade_point_id = $advert->trade_point_id;
 
         $ret->setAttributes([
             'user_name' => $advert->user_name,
@@ -345,6 +358,26 @@ class Form extends \yii\base\Model
     }
 
     /**
+     * Установить идентификатор торговой точки
+     * @param int $val
+     */
+    public function setTrade_point_id($val)
+    {
+        $val = (int) $val;
+        $availValues = array_keys($this->getAvailTradePoints());
+        $this->_trade_point_id = in_array($val, $availValues) ? $val : null;
+    }
+
+    /**
+     * Получить идентификатор торговой точки
+     * @return int
+     */
+    public function getTrade_point_id()
+    {
+        return $this->_trade_point_id;
+    }
+
+    /**
      * Получить идентификатор пользователя
      * @return int
      */
@@ -354,9 +387,58 @@ class Form extends \yii\base\Model
     }
 
     /**
+     * Получить модель пользователя
+     *
+     * @return User|null
+     */
+    public function getUser()
+    {
+        return $this->_user_id ? User::find()->andWhere(['id' => $this->_user_id])->one() : null;
+    }
+
+    /**
+     * Получить массив доступных торговых точек для пользователя user_id.
+     *
+     * @return TradePoint[]
+     */
+    public function getAvailTradePoints()
+    {
+        $ret = [];
+        $user = $this->getUser();
+
+        if ($user instanceof User && $user->type == User::TYPE_LEGAL_PERSON) {
+            /* @var $partner Partner */
+            $partner = $user->partner;
+            if ($partner) {
+                $res = TradePoint::find()->andWhere(['partner_id' => $partner->id])->all();
+                foreach ($res as $row) {
+                    /* @var $row TradePoint */
+                    $ret[$row->id] = $row;
+                }
+            }
+        }
+
+        return $ret;
+    }
+
+    public function getTradePointsDropDown()
+    {
+        $ret = [];
+
+        $list = $this->getAvailTradePoints();
+        foreach ($list as $row) {
+            $label = '<strong>' . Yii::t('frontend/advert', 'Address') . ':</strong> ' . $row->address;
+            $label .= '<br /><strong>' . Yii::t('frontend/advert', 'Phone') . ':</strong> ' . $row->phone;
+            $ret[$row->id] = $label;
+        }
+
+        return $ret;
+    }
+
+    /**
      * Создать новое объявление для существующего пользователя
      *
-     * @param \user\models\User $user
+     * @param User $user
      * @return self
      */
     public static function createNewForUser(User $user)

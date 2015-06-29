@@ -17,7 +17,10 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'Name' => 'Название',
+    'Address' => 'Адрес',
+    'Phone' => 'Телефон',
+    'Seller' => 'Продавец',
+    'Trade point' => 'Торговая точка',
     'Advert description' => 'Описание',
     'Advert title' => 'Заголовок объявления',
     'Advert was created' => 'Объявление создано',
@@ -52,6 +55,7 @@ return [
     'Model' => 'Модель',
     'Modification' => 'Модификация',
     'My adverts' => 'Мои объявления',
+    'Name' => 'Название',
     'Part category' => 'Категория запчасти',
     'Part condition' => 'Состояние запчасти',
     'Part for' => 'Запчасть для',

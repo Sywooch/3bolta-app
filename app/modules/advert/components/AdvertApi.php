@@ -193,6 +193,7 @@ class AdvertApi extends \yii\base\Component
             'description' => $form->description,
             'category_id' => $form->category_id,
             'condition_id' => $form->condition_id,
+            'trade_point_id' => $form->trade_point_id,
             'confirmation' => md5(uniqid() . $form->name . time()),
         ]);
 

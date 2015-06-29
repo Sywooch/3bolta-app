@@ -74,6 +74,20 @@
 .advert-form-contacts .help-block-error {
     background-color: #660000;
 }
+.advert-form-trade-point .list-group {
+    height: 178px;
+    overflow-y: scroll;
+    margin-bottom: 15px;
+}
+.advert-form-trade-point a {
+    background-color: #fff;
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+.advert-form-trade-point a.active {
+    text-decoration: none;
+}
 @media (max-width: 767px) {
     .field-form-uploadimage .file-preview {
         display: none;
