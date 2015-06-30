@@ -24,110 +24,113 @@ $automobiles = $searchApi->getAutomobilesLink(['search'], $model);
 AdvertDetail::register($this);
 ?>
 
-<div class="col-lg-10 col-xs-12 col-sm-12 item-details">
-    <div class="item-details-title">
-        <h2><?=Html::encode($model->advert_name)?></h2>
-    </div>
-    <div class="item-details-row item-details-date">
+<div class="item-details-title col-md-9 col-xs-12">
+    <h2><?=Html::encode($model->advert_name)?></h2>
+    <div class="item-details-date">
         <i class="publish-date">
             <?=Yii::t('frontend/advert', 'Published at')?>
             <?=$model->getPublishedFormatted()?>
         </i>
     </div>
-    <div class="item-details-row item-details-price">
-        <span class="label label-primary">
-            <span class="glyphicon glyphicon-ruble"></span>
-            <?=$model->getPriceFormated()?>
-        </span>
+</div>
+<div class="item-details-price col-md-2 col-xs-12">
+    <span class="label label-primary">
+        <i class="icon-rouble"></i>
+        <?=$model->getPriceFormated()?>
+    </span>
+</div>
+<div class="item-details-row item-details-condition col-md-6 col-xs-12">
+    <i class="icon-wrench"></i>
+    <?=$model->getConditionName()?>
+</div>
+<div class="item-details-row item-details-condition col-md-6 col-xs-12">
+    <i class="icon-tag"></i>
+    <?=implode(', ', $model->getCategoriesTree())?>
+</div>
+<?php if (!empty($automobiles)):?>
+    <div class="item-details-row item-details-automobiles col-xs-12">
+        <i class="icon-cab"></i>
+        <?=implode(', ', $automobiles)?>
     </div>
-    <?php if ($tradePoint = $model->tradePoint):?>
-        <?php
-        /* @var $tradePoint \partner\models\TradePoint */
-        /* @var $partner \partner\models\Partner */
-        $partner = $tradePoint->partner;
-        ?>
-        <div class="item-details-row item-details-contacts">
-            <strong><?=Yii::t('frontend/advert', 'Seller')?>:</strong>
-            <?=Html::encode($partner->name)?>
-            <span class="item-details-phone label label-primary">
-                <span class="glyphicon glyphicon-earphone"></span>
-                <?=Html::encode($tradePoint->phone)?>
-            </span><br />
-            <strong><?=Yii::t('frontend/advert', 'Address')?>:</strong>
-            <?=Html::encode($tradePoint->address)?>
-        </div>
-    <?php else:?>
-        <div class="item-details-row item-details-contacts">
-            <strong><?=Yii::t('frontend/advert', 'Contacts')?>:</strong>
-            <?=Html::encode($model->getUserName())?>
-            (<?=Yii::t('frontend/advert', 'private person')?>)
-            <span class="item-details-phone label label-primary">
-                <span class="glyphicon glyphicon-earphone"></span>
-                <?=Html::encode($model->getUserPhone())?>
-            </span>
-        </div>
-    <?php endif;?>
-    <div class="item-details-row item-details-condition">
-        <strong><?=Yii::t('frontend/advert', 'Condition')?>:</strong>
-        <?=$model->getConditionName()?>
-    </div>
-    <div class="item-details-row item-details-condition">
-        <strong><?=Yii::t('frontend/advert', 'Category')?>:</strong>
-        <?=implode(', ', $model->getCategoriesTree())?>
-    </div>
-    <?php if (!empty($automobiles)):?>
-        <div class="item-details-row item-details-automobiles">
-            <strong><?=Yii::t('frontend/advert', 'Apply to')?>:</strong>
-            <?=implode(', ', $automobiles)?>
-        </div>
-    <?php endif;?>
+<?php endif;?>
 
-    <?php if ($images = $model->images):?>
-        <div class="item-details-images item-details-row">
-            <div class="item-details-images-full">
-                <?=Html::img(reset($images)->file->getUrl(), [
-                    'class' => 'full-image',
+<?php if ($images = $model->images):?>
+    <div class="item-details-images item-details-row no-content-margin">
+        <div class="item-details-images-full js-item-image-full">
+            <div class="prev js-item-image-prev"><span class="glyphicon glyphicon-chevron-left"></span></div>
+            <div class="next js-item-image-next"><span class="glyphicon glyphicon-chevron-right"></span></div>
+            <?=Html::img(reset($images)->file->getUrl(), [
+                'class' => 'full-image',
+            ])?>
+        </div>
+        <?php if (count($images) > 1):?>
+            <div class="item-details-images-list js-item-image-list">
+                <?php foreach ($images as $k => $image):?>
+                    <?php
+                    /* @var $image \advert\models\AdvertImage */
+                    ?>
+                    <div>
+                        <a href="<?=$image->file->getUrl()?>" class="thumbnail<?php if ($k == 0):?> active<?php endif;?>">
+                            <?=Html::img($image->thumbnail->getUrl())?>
+                        </a>
+                    </div>
+                <?php endforeach;?>
+            </div>
+        <?php endif;?>
+    </div>
+<?php endif;?>
+
+
+<?php if ($tradePoint = $model->tradePoint):?>
+    <?php
+    /* @var $tradePoint \partner\models\TradePoint */
+    /* @var $partner \partner\models\Partner */
+    $partner = $tradePoint->partner;
+    ?>
+    <div class="item-details-row item-details-contacts col-md-4 col-xs-12">
+        <i class="icon-user"></i>
+        <?=Html::encode($partner->name)?>
+    </div>
+    <div class="item-details-row item-details-contacts col-md-4 col-xs-12">
+        <i class="icon-phone"></i>
+        <?=Html::encode($tradePoint->phone)?>
+    </div>
+    <div class="item-details-row item-details-contacts col-md-4 col-xs-12">
+        <i class="icon-location"></i>
+        <?=Html::encode($tradePoint->address)?>
+    </div>
+<?php else:?>
+    <div class="item-details-row item-details-contacts col-md-4 col-xs-12">
+        <i class="icon-user"></i>
+        <?=Html::encode($model->getUserName())?>
+        (<?=Yii::t('frontend/advert', 'private person')?>)
+    </div>
+    <div class="item-details-row item-details-contacts col-md-4 col-xs-12">
+        <i class="icon-phone"></i>
+        <?=Html::encode($model->getUserPhone())?>
+    </div>
+<?php endif;?>
+
+<?php if (!empty($model->description)):?>
+    <div class="col-xs-12 item-details-row item-details-description">
+        <?=nl2br(Html::encode($model->description))?>
+    </div>
+<?php endif;?>
+<?php if ($related->getCount() > 0 && $relatedList = $related->getModels()):?>
+    <?php advert\assets\AdvertList::register($this); ?>
+    <div class="col-xs-12"><h2><?=Yii::t('frontend/advert', 'Related adverts')?></h2></div>
+    <div class="item-details-related">
+        <?php foreach ($relatedList as $advert):?>
+            <div class="col-lg-6 col-xs-12 list-item">
+                <?=$this->render('_list_item', [
+                    'model' => $advert,
+                    'dataProvider' => $related,
+                    'hideDropDown' => true,
                 ])?>
             </div>
-            <?php if (count($images) > 1):?>
-                <div class="item-details-images-list">
-                    <?php foreach ($images as $image):?>
-                        <?php
-                        /* @var $image \advert\models\AdvertImage */
-                        ?>
-                        <div class="col-lg-2 col-xs-4">
-                            <a href="<?=$image->file->getUrl()?>" class="thumbnail">
-                                <?=Html::img($image->thumbnail->getUrl())?>
-                            </a>
-                        </div>
-                    <?php endforeach;?>
-                </div>
-            <?php endif;?>
-        </div>
-    <?php endif;?>
-
-    <?php if (!empty($model->description)):?>
-        <div class="item-details-row item-details-description">
-            <strong><?=Yii::t('frontend/advert', 'Description')?>:</strong><br />
-            <?=nl2br(Html::encode($model->description))?>
-        </div>
-    <?php endif;?>
-    <?php if ($related->getCount() > 0 && $relatedList = $related->getModels()):?>
-        <?php advert\assets\AdvertList::register($this); ?>
-        <div class="col-lg-12"><h2><?=Yii::t('frontend/advert', 'Related adverts')?></h2></div>
-        <div class="item-details-related">
-            <?php foreach ($relatedList as $advert):?>
-                <div class="col-lg-6 col-sm-12 col-md-6 list-item">
-                    <?=$this->render('_list_item', [
-                        'model' => $advert,
-                        'dataProvider' => $related,
-                        'hideDropDown' => true,
-                    ])?>
-                </div>
-            <?php endforeach;?>
-        </div>
-    <?php endif;?>
-</div>
+        <?php endforeach;?>
+    </div>
+<?php endif;?>
 
 <?php if (($id = Yii::$app->session->getFlash('advert_published')) && $id == $model->id):?>
     <?php

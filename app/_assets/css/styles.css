@@ -1,6 +1,11 @@
 body {
     background-color: #eee;
 }
+@media (max-width: 767px) {
+    body {
+        /*background-color: #fff;*/
+    }
+}
 
 .form-control::-webkit-input-placeholder {color:#bbb;}
 .form-control::-moz-placeholder          {color:#bbb;}
@@ -477,6 +482,7 @@ a.desc:after {
         width: 100%;
         padding: 0;
         margin: 0;
+        background-color: #fff;
     }
 }
 .bottom-menu.navbar-nav>li>a {
