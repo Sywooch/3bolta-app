@@ -30,13 +30,13 @@ document.removeLoader = function() {
 
 // смена локации документа
 document.changeLocation = function(href) {
-    $('body').appendLoader();
+    document.appendLoader('body');
     location.href = href;
 };
 
 // перезагрузка страницы
 document.reloadLocation = function() {
-    $('body').appendLoader();
+    document.appendLoader('body');
     location.href = href;
 };
 

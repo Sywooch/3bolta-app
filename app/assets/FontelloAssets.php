@@ -12,7 +12,7 @@ class FontelloAssets extends AssetBundle
     public $baseUrl = '@web';
     public $css = [
         'fontello/css/fontello.css',
-        'fontello/css/fontello-embed.css',
+        'fontello/css/fontello-embedded.css',
         'fontello/css/fontello-codes.css',
         'fontello/css/animation.css',
     ];
