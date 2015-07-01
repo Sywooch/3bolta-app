@@ -21,5 +21,12 @@ return ArrayHelper::merge(include __DIR__ . '/common.php', [
             'rules' => include __DIR__ . '/frontend.routing.php',
         ],
     ],
+    'params' => [
+        // крон-задания
+        'cron-jobs' => [
+            // демон по ресайзу картинок
+            'adverts-images/resize' => '* * * * *',
+        ]
+    ]
 ], include __DIR__ . '/console.local.php');
 

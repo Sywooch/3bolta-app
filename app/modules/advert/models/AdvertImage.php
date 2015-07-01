@@ -1,24 +1,29 @@
 <?php
 namespace advert\models;
 
+use Imagine\Image\Box;
+use Imagine\Image\ManipulatorInterface;
+use storage\components\Storage;
+use storage\models\File;
 use Yii;
-
 use yii\base\Exception;
+use yii\db\ActiveQuery;
+use yii\db\ActiveRecord;
 use yii\imagine\Image;
 use yii\web\UploadedFile;
-use storage\models\File;
-use Imagine\Image\ManipulatorInterface;
 
 /**
  * Модель изображения объявления
  */
-class AdvertImage extends \yii\db\ActiveRecord
+class AdvertImage extends ActiveRecord
 {
     const PREVIEW_WIDTH = 123;
     const PREVIEW_HEIGHT = 123;
 
     const THUMB_WIDTH = 100;
     const THUMB_HEIGHT = 100;
+
+    const IMAGE_WIDTH = 1000;
 
     /**
      * @var Storage
@@ -36,13 +41,13 @@ class AdvertImage extends \yii\db\ActiveRecord
 
     /**
      * Правила валидации
-     * @return []
+     * @return array
      */
     public function rules()
     {
         return [
-            [['advert_id', 'thumb_id', 'file_id'], 'required'],
-            [['advert_id', 'thumb_id', 'preview_id', 'file_id'], 'integer'],
+            [['advert_id', 'file_id'], 'required'],
+            [['image_id', 'advert_id', 'thumb_id', 'preview_id', 'file_id'], 'integer'],
             [['is_preview'], 'boolean'],
         ];
     }
@@ -64,8 +69,8 @@ class AdvertImage extends \yii\db\ActiveRecord
      * Возвращает объект File или null.
      *
      * @param File $file
-     * @param type $width
-     * @param type $height
+     * @param int $width
+     * @param int $height
      * @return File|null
      * @throws Exception
      */
@@ -80,8 +85,17 @@ class AdvertImage extends \yii\db\ActiveRecord
 
         $transaction = File::getDb()->beginTransaction();
         try {
-            Image::thumbnail($file->getPath(), $width, $height, ManipulatorInterface::THUMBNAIL_OUTBOUND)
-                ->save($path, ['quality' => 80]);
+            if ($file->width <= $width || $file->height <= $height) {
+                // создать рамку вокруг
+                Image::getImagine()->open($file->getPath())
+                    ->resize(new Box($width, $height))
+                    ->save($path, ['quality' => 100]);
+            }
+            else {
+                Image::thumbnail($file->getPath(), $width, $height, ManipulatorInterface::THUMBNAIL_OUTBOUND)
+                    ->save($path, ['quality' => 80]);
+            }
+
             if (!is_file($path)) {
                 throw new Exception();
             }
@@ -103,46 +117,167 @@ class AdvertImage extends \yii\db\ActiveRecord
     }
 
     /**
+     * Создать тултип, если его еще нет
+     *
+     * @return File
+     * @throws Exception
+     */
+    public function createThumb()
+    {
+        if ($this->thumb_id) {
+            // если картинка уже есть - возвращаем ее
+            return $this->thumbnail;
+        }
+
+        $fileMain = $this->file;
+
+        // вновь создаваемый файл
+        $file = null;
+
+        $transaction = $this->getDb()->beginTransaction();
+
+        try {
+            // создать тултип для изображения
+            $file = self::createThumbCopy($fileMain, self::THUMB_WIDTH, self::THUMB_HEIGHT);
+
+            $this->thumb_id = $file->id;
+            if (!$this->save(false, ['thumb_id'])) {
+                throw new Exception();
+            }
+
+            $transaction->commit();
+        }
+        catch (Exception $ex) {
+            $transaction->rollBack();
+            if ($file instanceof File) {
+                $file->getStorage()->delete($file->file_path);
+            }
+            throw new Exception();
+        }
+
+        return $file;
+    }
+
+    /**
+     * Создать превью, если его еще нет
+     *
+     * @return File
+     * @throws Exception
+     */
+    public function createPreview()
+    {
+        if ($this->preview_id) {
+            // если картинка уже есть - возвращаем ее
+            return $this->preview;
+        }
+
+        $fileMain = $this->file;
+
+        // вновь создаваемый файл
+        $file = null;
+
+        $transaction = $this->getDb()->beginTransaction();
+
+        try {
+            // создать превью
+            $file = self::createThumbCopy($fileMain, self::PREVIEW_WIDTH, self::PREVIEW_HEIGHT);
+
+            $this->preview_id = $file->id;
+            if (!$this->save(false, ['preview_id'])) {
+                throw new Exception();
+            }
+
+            $transaction->commit();
+        }
+        catch (Exception $ex) {
+            $transaction->rollBack();
+            if ($file instanceof File) {
+                $file->getStorage()->delete($file->file_path);
+            }
+            throw new Exception();
+        }
+
+        return $file;
+    }
+
+    /**
+     * Создать сжатую копию, если его еще нет
+     *
+     * @return File
+     * @throws Exception
+     */
+    public function createImage()
+    {
+        if ($this->image_id) {
+            // если картинка уже есть - возвращаем ее
+            return $this->image;
+        }
+
+        $fileMain = $this->file;
+
+        // вновь создаваемый файл
+        $file = null;
+
+        $transaction = $this->getDb()->beginTransaction();
+
+        try {
+            // получить размеры
+            $scale = self::IMAGE_WIDTH / $fileMain->width;
+            $height = $fileMain->height * $scale;
+            $width = self::IMAGE_WIDTH;
+
+            // создать сжатое изображение
+            $file = self::createThumbCopy($fileMain, $width, $height);
+
+            $this->image_id = $file->id;
+            if (!$this->save(false, ['image_id'])) {
+                throw new Exception();
+            }
+
+            $transaction->commit();
+        }
+        catch (Exception $ex) {
+            $transaction->rollBack();
+            if ($file instanceof File) {
+                $file->getStorage()->delete($file->file_path);
+            }
+            throw $ex;
+        }
+
+        return $file;
+    }
+
+    /**
      * Загрузить изображение к объявлению
      *
-     * @param \advert\models\Advert $advert
-     * @param \yii\web\UploadedFile $file
+     * @param Advert $advert
+     * @param UploadedFile $uploadedFile
      * @param boolean $isPreview
      * @return self|null модель загруженной фотографии
-     * @throws \yii\base\Exception
+     * @throws Exception
      */
     public static function attachToAdvert(Advert $advert, UploadedFile $uploadedFile, $isPreview = false)
     {
         $ret = null;
 
-        $fileMain = null;
-        $fileThumb = null;
-        $filePreview = null;
+        $file = null;
 
         $transaction = self::getDb()->beginTransaction();
 
         try {
             // загрузить основной файл
-            $fileMain = File::uploadFile(self::getStorage(), $uploadedFile);
-            if (!($fileMain instanceof File)) {
+            $file = File::uploadFile(self::getStorage(), $uploadedFile);
+            if (!($file instanceof File) || !$file->width || !$file->height) {
+                // без файла дальше не работаем,
+                // либо это не изображение
                 throw new Exception();
-            }
-
-            // создать тултип
-            $fileThumb = self::createThumbCopy($fileMain, self::THUMB_WIDTH, self::THUMB_HEIGHT);
-
-            // создать превьюху, если надо
-            if ($isPreview) {
-                $filePreview = self::createThumbCopy($fileMain, self::PREVIEW_WIDTH, self::PREVIEW_HEIGHT);
             }
 
             // создать привязку к объявлению
             $ret = new self();
             $ret->setAttributes([
                 'advert_id' => $advert->id,
-                'file_id' => $fileMain->id,
-                'thumb_id' => $fileThumb->id,
-                'preview_id' => !empty($filePreview) ? $filePreview->id : null,
+                'file_id' => $file->id,
                 'is_preview' => $isPreview && !empty($filePreview),
             ]);
             if (!$ret->save()) {
@@ -155,14 +290,8 @@ class AdvertImage extends \yii\db\ActiveRecord
             $transaction->rollBack();
 
             // удалить файлы, если они были созданы
-            if ($fileMain instanceof File) {
-                $fileMain->getStorage()->delete($fileMain->file_path);
-            }
-            if ($fileThumb instanceof File) {
-                $fileThumb->getStorage()->delete($fileThumb->file_path);
-            }
-            if ($filePreview instanceof File) {
-                $filePreview->getStorage()->delete($filePreview->file_path);
+            if ($file instanceof File) {
+                $file->getStorage()->delete($file->file_path);
             }
 
             throw $ex;
@@ -173,7 +302,7 @@ class AdvertImage extends \yii\db\ActiveRecord
 
     /**
      * Получить файл
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getFile()
     {
@@ -182,7 +311,7 @@ class AdvertImage extends \yii\db\ActiveRecord
 
     /**
      * Получить превью
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getPreview()
     {
@@ -191,10 +320,74 @@ class AdvertImage extends \yii\db\ActiveRecord
 
     /**
      * Получить иконку
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getThumbnail()
     {
         return $this->hasOne(File::className(), ['id' => 'thumb_id']);
+    }
+
+    /**
+     * Получить сжатую картинку
+     *
+     * @return ActiveQuery
+     */
+    public function getImage()
+    {
+        return $this->hasOne(File::className(), ['id' => 'image_id']);
+    }
+
+    /**
+     * Удаление
+     */
+    public function delete()
+    {
+        $ret = 0;
+
+        $transaction = $this->getDb()->beginTransaction();
+
+        try {
+            $ret = parent::delete();
+
+            if ($ret) {
+                $image = $this->image;
+                if ($image instanceof File) {
+                    $image->delete();
+                }
+                $thumb = $this->thumbnail;
+                if ($thumb instanceof File) {
+                    $thumb->delete();
+                }
+                $preview = $this->preview;
+                if ($preview instanceof File) {
+                    $preview->delete();
+                }
+            }
+
+            $transaction->commit();
+        }
+        catch (\Exception $ex) {
+            $transaction->rollBack();
+            throw $ex;
+        }
+
+        return $ret;
+    }
+
+    /**
+     * Получить URL по полю
+     *
+     * @param string $field название поля: thumbnail, preview, image, file
+     * @return string|null
+     */
+    public function getUrl($field)
+    {
+        $file = $this->{$field};
+
+        if ($file instanceof File) {
+            return $file->getUrl();
+        }
+
+        return null;
     }
 }

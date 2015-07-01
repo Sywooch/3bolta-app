@@ -91,6 +91,17 @@ $form = ActiveForm::begin([
     </div>
 
     <div class="col-md-12">
+        <?php
+        $previews = [];
+        foreach ($advert->images as $image) {
+            /* @var $image \advert\models\AdvertImage */
+            /* @var $preview \storage\models\File */
+            $preview = $image->file;
+            if ($preview instanceof \storage\models\File) {
+                $previews[] = Html::img($preview->getUrl(), ['width' => 100]);
+            }
+        }
+        ?>
         <?=$form->field($model, 'uploadImage', [
             'template' => '{input}',
         ])->widget(FileInput::className(), [
@@ -100,6 +111,7 @@ $form = ActiveForm::begin([
                 'name' => Html::getInputName($model, 'uploadImage') . '[]',
             ],
             'pluginOptions' => [
+                'initialPreview' => $previews,
                 'uploadUrl' => 'ss',
                 'multiple' => 'multiple',
                 'maxFileCount' => Advert::UPLOAD_MAX_FILES,
@@ -107,6 +119,7 @@ $form = ActiveForm::begin([
                 'layoutTemplates' => [
                     'actions' => '{delete}',
                 ],
+                'showRemove' => true,
                 'showUpload' => false,
                 'overwriteInitial' => false,
                 'dropZoneTitle' => Yii::t('main', 'Drag & drop files here for upload'),

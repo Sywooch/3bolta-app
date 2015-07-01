@@ -343,6 +343,17 @@ class Advert extends ActiveRecord
     }
 
     /**
+     * Получить URL на превью
+     *
+     * @return string
+     */
+    public function getPreviewUrl()
+    {
+        $image = $this->getPreview();
+        return $image instanceof AdvertImage ? $image->getUrl() : null;
+    }
+
+    /**
      * Получить изображения
      * @return ActiveQuery
      */

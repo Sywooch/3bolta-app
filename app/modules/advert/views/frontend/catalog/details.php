@@ -59,7 +59,7 @@ AdvertDetail::register($this);
         <div class="item-details-images-full js-item-image-full">
             <div class="prev js-item-image-prev"><span class="glyphicon glyphicon-chevron-left"></span></div>
             <div class="next js-item-image-next"><span class="glyphicon glyphicon-chevron-right"></span></div>
-            <?=Html::img(reset($images)->file->getUrl(), [
+            <?=Html::img(reset($images)->getUrl('image'), [
                 'class' => 'full-image',
             ])?>
         </div>
@@ -70,8 +70,8 @@ AdvertDetail::register($this);
                     /* @var $image \advert\models\AdvertImage */
                     ?>
                     <div>
-                        <a href="<?=$image->file->getUrl()?>" class="thumbnail<?php if ($k == 0):?> active<?php endif;?>">
-                            <?=Html::img($image->thumbnail->getUrl())?>
+                        <a href="<?=$image->getUrl('image')?>" class="thumbnail<?php if ($k == 0):?> active<?php endif;?>">
+                            <?=Html::img($image->getUrl('thumbnail'))?>
                         </a>
                     </div>
                 <?php endforeach;?>
