@@ -3,6 +3,7 @@ namespace app\commands;
 
 use advert\models\AdvertImage;
 use app\components\DaemonController;
+use Exception;
 
 /**
  * Демон по созданию сжатых изображений для объявлений.
@@ -36,8 +37,12 @@ class AdvertsImagesController extends DaemonController
 
                     $this->stdout("done\n");
                 }
-                catch (\Exception $ex) {
-                    throw $ex;
+                catch (Exception $ex) {
+                    try {
+                        $image->delete();
+                    }
+                    catch (Exception $e) { }
+
                     $this->stdout("error\n");
                 }
             }

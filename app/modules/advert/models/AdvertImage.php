@@ -3,6 +3,7 @@ namespace advert\models;
 
 use Imagine\Image\Box;
 use Imagine\Image\ManipulatorInterface;
+use Imagine\Image\Point;
 use storage\components\Storage;
 use storage\models\File;
 use Yii;
@@ -24,6 +25,7 @@ class AdvertImage extends ActiveRecord
     const THUMB_HEIGHT = 100;
 
     const IMAGE_WIDTH = 1000;
+    const IMAGE_HEIGHT = 750;
 
     /**
      * @var Storage
@@ -85,14 +87,21 @@ class AdvertImage extends ActiveRecord
 
         $transaction = File::getDb()->beginTransaction();
         try {
-            if ($file->width <= $width || $file->height <= $height) {
+
+            if ($file->width <= $width && $file->height <= $height) {
                 // создать рамку вокруг
-                Image::getImagine()->open($file->getPath())
-                    ->resize(new Box($width, $height))
+                $origImage = Image::getImagine()->open($file->getPath());
+                $newImage = Image::getImagine()->create(new Box($width, $height))
+                    //->fill(new \Imagine\Image\Color('#FFF'))
+                    ->paste($origImage, new Point(
+                        ($width - $file->width) / 2,
+                        ($height - $file->height) / 2
+                    ))
                     ->save($path, ['quality' => 100]);
             }
             else {
-                Image::thumbnail($file->getPath(), $width, $height, ManipulatorInterface::THUMBNAIL_OUTBOUND)
+                Image::getImagine()->open($file->getPath())
+                    ->thumbnail(new Box($width, $height), ManipulatorInterface::THUMBNAIL_OUTBOUND)
                     ->save($path, ['quality' => 80]);
             }
 
@@ -221,13 +230,8 @@ class AdvertImage extends ActiveRecord
         $transaction = $this->getDb()->beginTransaction();
 
         try {
-            // получить размеры
-            $scale = self::IMAGE_WIDTH / $fileMain->width;
-            $height = $fileMain->height * $scale;
-            $width = self::IMAGE_WIDTH;
-
             // создать сжатое изображение
-            $file = self::createThumbCopy($fileMain, $width, $height);
+            $file = self::createThumbCopy($fileMain, self::IMAGE_WIDTH, self::IMAGE_HEIGHT);
 
             $this->image_id = $file->id;
             if (!$this->save(false, ['image_id'])) {
