@@ -18,9 +18,6 @@
  */
 return [
     'Address' => 'Адрес',
-    'Phone' => 'Телефон',
-    'Seller' => 'Продавец',
-    'Trade point' => 'Торговая точка',
     'Advert description' => 'Описание',
     'Advert title' => 'Заголовок объявления',
     'Advert was created' => 'Объявление создано',
@@ -61,6 +58,7 @@ return [
     'Part for' => 'Запчасть для',
     'Part name' => 'Название запчасти',
     'Part price' => 'Цена',
+    'Phone' => 'Телефон',
     'Publish to {date}' => 'Опубликовать до {date}',
     'Published at' => 'Опубликовано',
     'Published to' => 'Опубликовано до',
@@ -70,6 +68,7 @@ return [
     'Seller type' => 'Продавец',
     'Serie' => 'Серия',
     'Stop advert publication' => 'Завершить публикацию',
+    'Trade point' => 'Торговая точка',
     'Unpublished' => 'Неопубликовано',
     'Update advert' => 'Обновить объявление',
     'User id' => 'Пользователь',

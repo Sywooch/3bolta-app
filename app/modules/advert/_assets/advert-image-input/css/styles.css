@@ -1,0 +1,28 @@
+.file-preview {
+    border: 0px;
+}
+.fileinput-remove {
+    display: none;
+}
+.file-preview-frame {
+    box-shadow: none;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+}
+.file-preview-frame:hover {
+    box-shadow: 0px 0px 1px 0px #a2958a;
+}
+.kv-file-remove {
+    color: rgb(144, 43, 43);
+}
+.kv-file-remove:hover {
+    background: none;
+    color: #000;
+}
+.file-preview-frame-img img {
+    max-height: 100%;
+    max-width: 100%;
+}
+.file-caption-name {
+    display: none;
+}

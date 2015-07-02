@@ -3,34 +3,26 @@
  * Форма редактирования/добавления объявления
  */
 
-use yii\helpers\Url;
+use advert\assets\AdvertForm;
 use advert\forms\Form;
-use kartik\widgets\FileInput;
 use advert\models\Advert;
+use advert\widgets\AdvertImageInput;
+use app\assets\FrontendAssets;
+use app\widgets\ItemsList;
+use user\models\User;
+use yii\base\View;
 use yii\bootstrap\ActiveForm;
 use yii\helpers\Html;
-use advert\assets\AdvertForm;
-
-use app\assets\FrontendAssets;
+use yii\helpers\Url;
 
 $frontendAssets = new FrontendAssets();
 $assetsUrl = Yii::$app->assetManager->getPublishedUrl($frontendAssets->sourcePath);
 
-/* @var $this \yii\base\View */
-/* @var $model \advert\forms\Form */
-/* @var $user \user\models\User */
+/* @var $this View */
+/* @var $model Form */
+/* @var $user User */
 
 AdvertForm::register($this);
-
-$existImages = [];
-if ($advert = $model->getExists()) {
-    foreach ($advert->images as $file) {
-        /* @var $file \advert\models\AdvertImage */
-        $existImages[] = Html::img($file->file->getUrl(), [
-            'class' => 'file-preview-image',
-        ]);
-    }
-}
 
 $form = ActiveForm::begin([
     'id' => 'create-advert',
@@ -91,39 +83,10 @@ $form = ActiveForm::begin([
     </div>
 
     <div class="col-md-12">
-        <?php
-        $previews = [];
-        foreach ($advert->images as $image) {
-            /* @var $image \advert\models\AdvertImage */
-            /* @var $preview \storage\models\File */
-            $preview = $image->file;
-            if ($preview instanceof \storage\models\File) {
-                $previews[] = Html::img($preview->getUrl(), ['width' => 100]);
-            }
-        }
-        ?>
         <?=$form->field($model, 'uploadImage', [
             'template' => '{input}',
-        ])->widget(FileInput::className(), [
-            'options' => [
-                'accept' => 'image/*',
-                'multiple' => true,
-                'name' => Html::getInputName($model, 'uploadImage') . '[]',
-            ],
-            'pluginOptions' => [
-                'initialPreview' => $previews,
-                'uploadUrl' => 'ss',
-                'multiple' => 'multiple',
-                'maxFileCount' => Advert::UPLOAD_MAX_FILES,
-                'allowedFileExtensions' => Advert::$_imageFileExtensions,
-                'layoutTemplates' => [
-                    'actions' => '{delete}',
-                ],
-                'showRemove' => true,
-                'showUpload' => false,
-                'overwriteInitial' => false,
-                'dropZoneTitle' => Yii::t('main', 'Drag & drop files here for upload'),
-            ],
+        ])->widget(AdvertImageInput::className(), [
+            'existsImages' => $model->getExists() ? $model->getExists()->images : [],
         ])?>
     </div>
 
@@ -166,7 +129,7 @@ $form = ActiveForm::begin([
                 <?=Html::tag('h3', Yii::t('frontend/advert', 'Contacts'))?>
             </div>
 
-            <?php if ($user->type != \user\models\User::TYPE_LEGAL_PERSON):?>
+            <?php if ($user->type != User::TYPE_LEGAL_PERSON):?>
                 <div class="col-md-12">
                     <div class="form-group">
                         В объявлении будет отображаться следующая контактная информация:<br /><br />
@@ -181,7 +144,7 @@ $form = ActiveForm::begin([
                 </div>
             <?php else:?>
                 <div class="col-md-12 advert-form-trade-point">
-                    <?=$form->field($model, 'trade_point_id')->widget(\app\widgets\ItemsList::className(), [
+                    <?=$form->field($model, 'trade_point_id')->widget(ItemsList::className(), [
                         'items' => $model->getTradePointsDropDown(),
                     ])?>
                     <?php

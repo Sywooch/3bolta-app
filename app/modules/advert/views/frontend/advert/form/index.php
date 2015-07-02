@@ -1,24 +1,24 @@
 <?php
-use yii\helpers\Html;
-use yii\bootstrap\ActiveForm;
-use advert\models\Advert;
-use advert\forms\Form;
-use kartik\widgets\FileInput;
-use yii\widgets\MaskedInput;
-use app\components\PhoneValidator;
 
 use advert\assets\AdvertForm;
-
+use advert\forms\Form;
+use advert\models\Advert;
+use advert\widgets\AdvertImageInput;
 use app\assets\FrontendAssets;
+use app\components\PhoneValidator;
+use yii\base\View;
+use yii\bootstrap\ActiveForm;
+use yii\helpers\Html;
+use yii\widgets\MaskedInput;
 
 $frontendAssets = new FrontendAssets();
 $assetsUrl = Yii::$app->assetManager->getPublishedUrl($frontendAssets->sourcePath);
 
 AdvertForm::register($this);
 
-/* @var $form advert\forms\Form */
-/* @var $this yii\base\View */
-/* @var $form yii\bootstrap\ActiveForm */
+/* @var $form Form */
+/* @var $this View */
+/* @var $form ActiveForm */
 ?>
 <div class="col-lg-12">
     <?=Html::tag('h1', Yii::t('frontend/advert', 'Append advert'))?>
@@ -92,28 +92,11 @@ $form = ActiveForm::begin([
         <?=Html::tag('h3', Yii::t('frontend/advert', 'Images'))?>
     </div>
 
+
     <div class="col-md-12">
         <?=$form->field($model, 'uploadImage', [
             'template' => '{input}',
-        ])->widget(FileInput::className(), [
-            'options' => [
-                'accept' => 'image/*',
-                'multiple' => true,
-                'name' => Html::getInputName($model, 'uploadImage') . '[]',
-            ],
-            'pluginOptions' => [
-                'uploadUrl' => 'ss',
-                'multiple' => 'multiple',
-                'maxFileCount' => Advert::UPLOAD_MAX_FILES,
-                'allowedFileExtensions' => Advert::$_imageFileExtensions,
-                'layoutTemplates' => [
-                    'actions' => '{delete}',
-                ],
-                'showUpload' => false,
-                'overwriteInitial' => false,
-                'dropZoneTitle' => Yii::t('main', 'Drag & drop files here for upload'),
-            ],
-        ])?>
+        ])->widget(AdvertImageInput::className())?>
     </div>
 
     <div class="col-md-12">
