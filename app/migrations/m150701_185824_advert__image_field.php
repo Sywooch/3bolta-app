@@ -17,9 +17,9 @@ class m150701_185824_advert__image_field extends Migration
             'thumb_id' => 'int null',
             'preview_id' => 'int null',
             'image_id' => 'int null',
-            'is_preview' => 'boolean not null default false',
+            'is_preview' => 'boolean null',
         ]);
-        $this->db->createCommand('INSERT INTO {{%advert_image_new}} SELECT file_id, advert_id, thumb_id, preview_id, is_preview FROM {{%advert_image}}')->execute();
+        $this->db->createCommand('INSERT INTO {{%advert_image_new}} (file_id, advert_id, thumb_id, preview_id, is_preview) SELECT file_id, advert_id, thumb_id, preview_id, is_preview FROM {{%advert_image}}')->execute();
         $this->dropTable($this->table);
         $this->renameTable('{{%advert_image_new}}', $this->table);
     }

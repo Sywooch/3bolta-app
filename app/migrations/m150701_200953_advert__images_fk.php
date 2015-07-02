@@ -11,7 +11,7 @@ class m150701_200953_advert__images_fk extends Migration
 
     public function safeUp()
     {
-        $this->db->createCommand('delete from {{%advert_image}} where advert_id not in (select id from {{%app_advert}})')->execute();
+        $this->db->createCommand('delete from {{%advert_image}} where advert_id not in (select id from {{%advert}})')->execute();
         $this->addForeignKey('fk_advert_image_advert_id',
             $this->table, 'advert_id',
             $this->tableAdvert, 'id',
