@@ -89,9 +89,6 @@
     text-decoration: none;
 }
 @media (max-width: 767px) {
-    .field-form-uploadimage .file-preview {
-        display: none;
-    }
     .advert-form-common > div,
     .advert-form-contacts > div, 
     .advert-form-auto > div {
