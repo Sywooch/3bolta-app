@@ -126,11 +126,11 @@ $form = ActiveForm::begin([
 
     <div class="no-content-margin">
         <div class="advert-form-contacts">
-            <div class="col-md-12">
-                <?=Html::tag('h3', Yii::t('frontend/advert', 'Contacts'))?>
-            </div>
-
             <?php if ($user->type != User::TYPE_LEGAL_PERSON):?>
+                <div class="col-md-12">
+                    <?=Html::tag('h3', Yii::t('frontend/advert', 'Contacts'))?>
+                </div>
+
                 <div class="col-md-12">
                     <div class="form-group">
                         В объявлении будет отображаться следующая контактная информация:<br /><br />
@@ -144,16 +144,26 @@ $form = ActiveForm::begin([
                     </div>
                 </div>
             <?php else:?>
-                <div class="col-md-12 advert-form-trade-point">
-                    <?=$form->field($model, 'trade_point_id')->widget(ItemsList::className(), [
-                        'items' => $model->getTradePointsDropDown(),
-                    ])?>
-                    <?php
-                    /*
-                    <?=$form->field($model, 'trade_point_id')->radioList($model->getTradePointsDropDown(), ['encode' => false])?>
-                     */
-                    ?>
+                <div class="col-md-12">
+                    <?=Html::tag('h3', Yii::t('frontend/advert', 'Trade point'))?>
                 </div>
+                <?php $tradePoints = $model->getTradePointsDropDown(); ?>
+                <?php if (empty($tradePoints)):?>
+                    <div class="col-md-12">
+                        <p>
+                            В настройках вашей организации не добавлено еще ни одной торговой точки.
+                            Пожалуйста, пройдите в <a href="<?=Url::toRoute(['/partner/partner/index'])?>">настройки организации</a>
+                            и добавьте хотя бы одну торговую точку.
+                        </p>
+                    </div>
+                <?php else:?>
+                    <div class="col-md-12 advert-form-trade-point">
+                        Выберите торговую точку из списка:
+                        <?=$form->field($model, 'trade_point_id')->widget(ItemsList::className(), [
+                            'items' => $model->getTradePointsDropDown(),
+                        ])?>
+                    </div>
+                <?php endif;?>
             <?php endif;?>
 
             <div class="col-md-12">

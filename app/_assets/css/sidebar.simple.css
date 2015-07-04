@@ -40,7 +40,7 @@
     
     .logo-head {
         position: fixed;
-        z-index: 1100;
+        z-index: 998;
     }
    
     .footer {
@@ -61,7 +61,7 @@
 
     #sidebar-wrapper {
         padding-top: 46px;
-        z-index: 1000;
+        z-index: 997;
         position: fixed;
         right: 0px;
         width: 250px;
