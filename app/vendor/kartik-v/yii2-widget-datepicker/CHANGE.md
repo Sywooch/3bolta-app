@@ -1,3 +1,25 @@
+version 1.3.2
+=============
+**Date:** 25-Feb-2015
+
+- (enh #21): Add new remove button to clear dates. Applicable only for following `DatePicker` types:
+    - `DatePicker::TYPE_COMPONENT_PREPEND` and 
+    - `DatePicker::TYPE_COMPONENT_APPEND` 
+- (enh #22): Ability to configure picker button options. Applicable only for following `DatePicker` types:
+    - `DatePicker::TYPE_COMPONENT_PREPEND` and 
+    - `DatePicker::TYPE_COMPONENT_APPEND` 
+- (bug #24): Removes BOM charecters from the messages/ru/kvdate.php.
+- (enh #25): Improve validation to retrieve the right translation messages folder.
+
+version 1.3.1
+=============
+**Date:** 13-Feb-2015
+
+- (enh #19): Store date picker widget type as data attribute
+- Update datepicker plugin to the latest release.
+- Use minified js files for locales.
+- Set copyright year to current.
+
 version 1.3.0
 =============
 **Date:** 25-Jan-2015

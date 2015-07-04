@@ -1,7 +1,13 @@
 bootstrap-star-rating
 =====================
 
-> NOTE: Version 3.5.0 has been released. Refer [change log](https://github.com/kartik-v/bootstrap-star-rating/blob/master/CHANGE.md) for details.
+[![Bower version](https://badge.fury.io/bo/bootstrap-star-rating.svg)](http://badge.fury.io/bo/bootstrap-star-rating)
+[![Latest Stable Version](https://poser.pugx.org/kartik-v/bootstrap-star-rating/v/stable)](https://packagist.org/packages/kartik-v/bootstrap-star-rating)
+[![License](https://poser.pugx.org/kartik-v/bootstrap-star-rating/license)](https://packagist.org/packages/kartik-v/bootstrap-star-rating)
+[![Packagist Downloads](https://poser.pugx.org/kartik-v/bootstrap-star-rating/downloads)](https://packagist.org/packages/kartik-v/bootstrap-star-rating)
+[![Monthly Downloads](https://poser.pugx.org/kartik-v/bootstrap-star-rating/d/monthly)](https://packagist.org/packages/kartik-v/bootstrap-star-rating)
+
+> NOTE: Version 3.5.3 has been released. Refer [change log](https://github.com/kartik-v/bootstrap-star-rating/blob/master/CHANGE.md) for details.
 
 A simple yet powerful JQuery star rating plugin for Bootstrap which supports advanced features like fractional star fill and RTL input support. 
 Developed with a focus on utlizing pure CSS-3 styling to render the control. The plugin uses Bootstrap markup and styling by default, but it 
@@ -19,6 +25,7 @@ at Krajee JQuery plugins.
   However, number inputs have a problem with decimal values on the Chrome Browser. Read the Browser Support section below.
 - Involves pure CSS3 styling of the stars. Say goodbye to image sprites or playing with image backgrounds. Offers clean scalable vector 
   icons for consistent display across devices. Optionally one can use the Unicode character set to override symbols.
+- Use any of your favorite font icon frameworks to render your star symbols (for example you can easily use the icons from the FontAwesome library).
 - Render and display fractional star ratings. Configure number of stars, min, max, step, and theoretically  support any fractional rating.
 - Uses Bootstrap 3.x styles & glyphs by default. But this can be overridden with plugin parameters and your own CSS styles.
 - Support for RIGHT TO LEFT (RTL) input. Automatically changes star styling for RTL.
@@ -57,11 +64,11 @@ You can use the `bower` package manager to install. Run:
 ### Using Composer
 You can use the `composer` package manager to install. Either run:
 
-    $ php composer.phar require kartik-v/bootstrap-star-rating "dev-master"
+    $ php composer.phar require kartik-v/bootstrap-star-rating "@dev"
 
 or add:
 
-    "kartik-v/bootstrap-star-rating": "dev-master"
+    "kartik-v/bootstrap-star-rating": "@dev"
 
 to your composer.json file
 
@@ -112,12 +119,14 @@ The plugin supports these following options:
 _int_ number of stars to display. Defaults to `5`.
 
 #### glyphicon
-_boolean_ whether to use the glyphicon star symbol. Defaults to `true`. If set to `false`,
-will use the unicode black star symbol.
+_boolean_ whether to use the glyphicon star symbol. Defaults to `true`. If set to `false`, will use the unicode black star symbol by default. You can also configure the `ratingClass` to set your own icon framework font CSS class to render the symbols.
 
 #### symbol
 _string_ any custom star symbol or unicode character to display. This will override the 
 `glyphicon` settings above. 
+
+#### ratingClass
+_string_ the CSS class to be appended to the star rating. This is useful when you wish to render the stars using other third party icon font libraries. For example, to render the symbols using [Font Awesome icons](http://fortawesome.github.io/Font-Awesome/icons/), you can set this to `rating-fa`. The `rating-fa` class is a prebuilt CSS style within this plugin, but you can build similar CSS styles for your other font icons. You need to also set `glyphicon` property to `false` to ensure the symbols do not conflict with glyphicons.
 
 #### min
 _float_ the minimum value for the rating input. Defaults to `1`.
@@ -147,7 +156,7 @@ _boolean_ whether the rating caption is to be displayed. Defaults to `true`.
 _string_ size of the rating control. One of `xl`, `lg`, `md`, `sm`, or `xs`. Defaults to `md`.
 
 #### defaultCaption
-_string_ the default caption text, which will be displayed when no caption is setup for the rating in the `starCaptions` array. This variable defaults to `{rating} Stars`, where the variable `{rating}` will be replaced with the selected star rating.</p>
+_string_ the default caption text, which will be displayed when no caption is setup for the rating in the `starCaptions` array. This variable defaults to `{rating} Stars`, where the variable `{rating}` will be replaced with the selected star rating.
 
 #### starCaptions
 _array | function_ the caption titles corresponding to each of the star rating selected. Defaults to

@@ -85,7 +85,7 @@ class Generator extends \yii\gii\Generator
     public function attributeLabels()
     {
         return array_merge(parent::attributeLabels(), [
-            'modelClass' => $this->context->getSubstanceName(),
+            'modelClass' => 'Model Class',
             'controllerClass' => 'Controller Class',
             'viewPath' => 'View Path',
             'baseControllerClass' => 'Base Controller Class',
@@ -100,8 +100,8 @@ class Generator extends \yii\gii\Generator
     public function hints()
     {
         return array_merge(parent::hints(), [
-            'modelClass' => $this->context->getSubstanceName(),
-                'You should provide a fully qualified class name, e.g., <code>app\models\Post</code>.',
+            'modelClass' => 'This is the ActiveRecord class associated with the table that CRUD will be built upon.
+                You should provide a fully qualified class name, e.g., <code>app\models\Post</code>.',
             'controllerClass' => 'This is the name of the controller class to be generated. You should
                 provide a fully qualified namespaced class (e.g. <code>app\controllers\PostController</code>),
                 and class name should be in CamelCase with an uppercase first letter. Make sure the class
@@ -250,7 +250,7 @@ class Generator extends \yii\gii\Generator
             } elseif ($column->phpType !== 'string' || $column->size === null) {
                 return "\$form->field(\$model, '$attribute')->$input()";
             } else {
-                return "\$form->field(\$model, '$attribute')->$input(['maxlength' => $column->size])";
+                return "\$form->field(\$model, '$attribute')->$input(['maxlength' => true])";
             }
         }
     }
@@ -317,6 +317,7 @@ class Generator extends \yii\gii\Generator
                     $types['boolean'][] = $column->name;
                     break;
                 case Schema::TYPE_FLOAT:
+                case Schema::TYPE_DOUBLE:
                 case Schema::TYPE_DECIMAL:
                 case Schema::TYPE_MONEY:
                     $types['number'][] = $column->name;
@@ -405,6 +406,7 @@ class Generator extends \yii\gii\Generator
                 case Schema::TYPE_BIGINT:
                 case Schema::TYPE_BOOLEAN:
                 case Schema::TYPE_FLOAT:
+                case Schema::TYPE_DOUBLE:
                 case Schema::TYPE_DECIMAL:
                 case Schema::TYPE_MONEY:
                 case Schema::TYPE_DATE:

@@ -1,3 +1,34 @@
+version 1.7.7
+=============
+**Date:** 16-Jun-2015
+
+- (enh #37): Set range input caption to change during slide.
+- (enh #38): Update to use `Json::htmlEncode` as per yii release v2.0.4.
+
+version 1.7.6
+=============
+**Date:** 09-May-2015
+
+- (enh #36): Add kv-input-group-hide class.
+
+version 1.7.5
+=============
+**Date:** 03-May-2015
+
+- (enh #30): Improve translation trait for determining messages folder.
+- (enh #33): Better styling of html5 inputs.
+- (enh #34): New `addLanguage` method in `AssetBundle`.
+- (enh #35): Allow extending translation messages.
+
+version 1.7.4
+=============
+**Date:** 13-Feb-2015
+
+- (enh #28): Create WidgetTrait for better code reuse.
+- Code cleanup and reformatting.
+- (enh #29): New `getModule` and `initModule` methods in `Config`.
+- Set copyright year to current.
+
 version 1.7.3
 =============
 **Date:** 25-Jan-2015

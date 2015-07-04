@@ -2,8 +2,8 @@
  * @package    yii2-krajee-base
  * @subpackage yii2-widget-activeform
  * @author     Kartik Visweswaran <kartikv2@gmail.com>
- * @copyright  Copyright &copy; Kartik Visweswaran, Krajee.com, 2014
- * @version    1.7.3
+ * @copyright  Copyright &copy; Kartik Visweswaran, Krajee.com, 2014 - 2015
+ * @version    1.7.7
  *
  * Common CSS file for all kartik\widgets.
  *
@@ -18,4 +18,9 @@
 
 .kv-hide {
     display: none;
+}
+
+.kv-input-group-hide .input-group-addon,
+.kv-input-group-hide .input-group-btn {
+    visibility: hidden;
 }

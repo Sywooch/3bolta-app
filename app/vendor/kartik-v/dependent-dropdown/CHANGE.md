@@ -1,3 +1,19 @@
+version 1.4.2
+=============
+**Date:** 18-Jun-2015
+
+1. (enh #23): New property `initDepends` to set all dependent parents in the chain.
+2. (enh #24): Enhancement for Select2 plugin.
+
+version 1.4.1
+=============
+**Date:** 22-May-2015
+
+1. (enh #19): New `depdrop_all_params` that will be sent as an associative array (keys & values) to the server ajax action.
+2. (enh #20): Ability to configure `id` and `name` param names in json response.
+3. (bug kartik-v/yii2-widget-depdrop#10): Fix process dependency params.
+4. (enh #22): Fixes for JQuery v2.1.4 & Select2.
+
 version 1.4.0
 =============
 **Date:** 01-Feb-2015

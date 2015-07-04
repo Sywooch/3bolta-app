@@ -1,11 +1,17 @@
 dependent-dropdown
 ==================
 
+[![BOWER version](https://badge-me.herokuapp.com/api/bower/kartik-v/dependent-dropdown.png)](http://badges.enytc.com/for/bower/kartik-v/dependent-dropdown)
+[![Latest Stable Version](https://poser.pugx.org/kartik-v/dependent-dropdown/v/stable)](https://packagist.org/packages/kartik-v/dependent-dropdown)
+[![License](https://poser.pugx.org/kartik-v/dependent-dropdown/license)](https://packagist.org/packages/kartik-v/dependent-dropdown)
+[![Packagist Downloads](https://poser.pugx.org/kartik-v/dependent-dropdown/downloads)](https://packagist.org/packages/kartik-v/dependent-dropdown)
+[![Monthly Downloads](https://poser.pugx.org/kartik-v/dependent-dropdown/d/monthly)](https://packagist.org/packages/kartik-v/dependent-dropdown)
+
 A multi level dependent dropdown JQuery plugin that allows nested dependencies. The plugin allows you to convert normal
 select inputs, whose options are derived based on value selected in another input/or a group of inputs. It works both
 with normal select options and select with optgroups as well.
 
-> NOTE: The latest version of the plugin v1.4.0 has been released. Refer the [CHANGE LOG](https://github.com/kartik-v/dependent-dropdown/blob/master/CHANGE.md) for details.
+> NOTE: The latest version of the plugin v1.4.2 has been released. Refer the [CHANGE LOG](https://github.com/kartik-v/dependent-dropdown/blob/master/CHANGE.md) for details.
 
 ## Features
 
@@ -71,11 +77,11 @@ You can use the `bower` package manager to install. Run:
 ### Using Composer
 You can use the `composer` package manager to install. Either run:
 
-    $ php composer.phar require kartik-v/dependent-dropdown "dev-master"
+    $ php composer.phar require kartik-v/dependent-dropdown "@dev"
 
 or add:
 
-    "kartik-v/dependent-dropdown": "dev-master"
+    "kartik-v/dependent-dropdown": "@dev"
 
 to your composer.json file
 
@@ -137,11 +143,33 @@ $("#child-2").depdrop({
 The plugin supports these following options:
 
 ##### depends
-_array_ The list of parent input `ID` attributes on which the current dropdown is dependent on. DO NOT prepend any hash
+_array_ the list of parent input `ID` attributes on which the current dropdown is dependent on. DO NOT prepend any hash
 before the input id.
 
+##### initDepends
+_array_ the list of INITIAL nested parent input`ID` attributes on which the current dropdown is dependent on. This is applicable only when`initialize` is set to`true` (for firing the ajax requests on page initialization). Usually you may set it to the topmost parent in the hierarchy while initializing, unless you have complex multiple many to many dependencies. The ajax requests will be fired in sequence based on these dependent ids. DO NOT prepend any hash before the input id. If not set, this will default to`depends`. For example you could use`depends` and`initDepends` in the following manner:
+
+```js
+$("#child-1").depdrop({
+    depends: ['parent-1'],
+    url: '/path/to/child_1_list'
+});
+
+$("#child-2").depdrop({
+    depends: ['child-1'], // dependent only on child-1
+    url: '/path/to/child_1_list'
+});
+
+$("#child-3").depdrop({
+    depends: ['child-2'], // dependent only on child-2
+    initDepends: ['parent-1'], // initial ajax loading will be fired first for parent-1, then child-1, and child-2
+    initialize: true,
+    url: '/path/to/child_2_list'
+});
+```
+
 ##### params
-_array_ The list of additional input `ID` attributes, whose values will be parsed and passed to the ajax call. DO NOT 
+_array_ the list of additional input `ID` attributes, whose values will be parsed and passed to the ajax call. DO NOT 
 prepend  any hash before the input id. When this is setup, the `$_POST` request would contain an array named `depdrop_params`
 with the values of these input identifiers. For example in PHP you can retrieve this as:
 
@@ -154,6 +182,8 @@ with the values of these input identifiers. For example in PHP you can retrieve 
     }
 ```
 
+> NOTE: In addition to `depdrop_params`, the plugin sends `depdrop_all_params` as an associative array of keys and values. This is sent merged along with the keys and values of `depdrop_parents`. Read more about this in the `url` section below.
+
 ##### url
 _string_ the ajax url action which will process the dependent list. The server action must return a JSON encoded
 specified format like `{output: <dependent-list>, selected: <default-selected-value>}`.
@@ -161,7 +191,7 @@ where, the `output` is an array of data for the dependent list of the format `{i
 and `selected` is the default selected value after the dependent dropdown is generated. If you desire a dependent list
 containing optgroups then the `output` must be of the format `{group-name: {id: <option-value>, name: <option-name>}}`.
 
-The plugin passes an array of dependent values as a POST request to the server under a variable name `depdrop_parents`.
+The plugin passes an array of dependent values as a POST request to the server under a variable name `depdrop_parents`. In addition, the plugin also passes a property `depdrop_all_params` that will be an associative array of keys and values (it merges the values of `depdrop_parents` and `depdrop_params`). The keys are the element identifiers for dependent dropdown parent elements and the element identifiers set via `params` property.
 This can be read by the server action to generate a dependent dropdown list. An example for a PHP server action could be:
 
 ```php
@@ -177,6 +207,12 @@ public function generateChildren() {
              */
             echo json_encode(['output' => $out, 'selected'=>'']);
             return;
+        }
+    }
+    if (isset($_POST['depdrop_all_params'])) {
+        for ($_POST['depdrop_all_params'] as $key => $value) {
+            // $key = Element ID 
+            // $value = Element Value
         }
     }
     echo json_encode(['output' => '', 'selected'=>'']);
@@ -214,6 +250,12 @@ set this to `false`, it will not be displayed. Defaults to `Select ...`.
 ##### emptyMsg
 _string_ the message to display when the ajax response returned from the server is null or an empty array. Defaults to
 `No data found`.
+
+##### idParam
+_string_ the name of the parameter that returns the `id` value for each list option item via json response. Defaults to `id`.
+
+##### nameParam
+_string_ the name of the parameter that returns the `name` value for each list option item via json response. Defaults to `name`.
 
 ### Plugin Events
 The plugin supports these events:

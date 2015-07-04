@@ -1,3 +1,25 @@
+version 3.5.3
+=============
+**Date:** 18-Jun-2015
+
+1. (enh #58): Remove redundant tooltip title on hover of caption element.
+2. Fixes for composer.json dependencies.
+
+version 3.5.2
+=============
+**Date:** 10-May-2015
+
+1. (enh #45): Validate on `touchstart` for devices that do not support `click` event.
+2. (enh #46): More correct init of `clear` and `caption` elements.
+
+version 3.5.1
+=============
+**Date:** 13-Feb-2015
+
+1. (enh #44): Ability to integrate with other font icon CSS frameworks like Font Awesome.
+    - New property `ratingClass` added to allow configuring other icon framework css classes.
+2. Set copyright year to current.
+
 version 3.5.0
 =============
 **Date:** 31-Jan-2015
