@@ -1,31 +1,34 @@
 <?php
 namespace advert\controllers\frontend;
 
+use advert\components\AdvertApi;
+use advert\forms\Form;
+use advert\models\Advert;
+use advert\models\AdvertImage;
+use app\components\Controller;
+use user\models\User;
 use Yii;
-
+use yii\base\Action;
+use yii\base\Exception;
+use yii\data\ActiveDataProvider;
+use yii\filters\AccessControl;
+use yii\helpers\ArrayHelper;
+use yii\helpers\Url;
+use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
-
-use yii\web\UploadedFile;
-
 use yii\web\Response;
+use yii\web\UploadedFile;
 use yii\widgets\ActiveForm;
 
-use yii\filters\AccessControl;
-use advert\models\Advert;
-use advert\forms\Form;
-use yii\helpers\Url;
-
-use yii\data\ActiveDataProvider;
-
-class UserAdvertController extends \app\components\Controller
+class UserAdvertController extends Controller
 {
     /**
      * Фильтры
-     * @return []
+     * @return array
      */
     public function behaviors()
     {
-        return \yii\helpers\ArrayHelper::merge(parent::behaviors(), [
+        return ArrayHelper::merge(parent::behaviors(), [
             'access' => [
                 'class' => AccessControl::className(),
                 'rules' => [
@@ -35,8 +38,8 @@ class UserAdvertController extends \app\components\Controller
                     ]
                 ],
                 'denyCallback' => function($rule, $action) {
-                    if ($action instanceof \yii\base\Action) {
-                        /* @var $action \yii\base\Action */
+                    if ($action instanceof Action) {
+                        /* @var $action Action */
                         return $action->controller->goHome();
                     }
                 }
@@ -71,7 +74,7 @@ class UserAdvertController extends \app\components\Controller
             throw new NotFoundHttpException();
         }
 
-        /* @var $advertApi \advert\components\AdvertApi */
+        /* @var $advertApi AdvertApi */
         $advertApi = Yii::$app->getModule('advert')->advert;
 
         $advertApi->stopPublication($advert);
@@ -92,7 +95,7 @@ class UserAdvertController extends \app\components\Controller
             throw new NotFoundHttpException();
         }
 
-        /* @var $advertApi \advert\components\AdvertApi */
+        /* @var $advertApi AdvertApi */
         $advertApi = Yii::$app->getModule('advert')->advert;
 
         $advertApi->updatePublication($advert);
@@ -105,7 +108,7 @@ class UserAdvertController extends \app\components\Controller
      */
     public function actionAppend()
     {
-        /* @var $user \user\models\User */
+        /* @var $user User */
         $user = Yii::$app->user->getIdentity();
 
         $model = Form::createNewForUser($user);
@@ -115,13 +118,12 @@ class UserAdvertController extends \app\components\Controller
             return ActiveForm::validate($model);
         }
 
-        if ($model->load($_POST) && $model->validate()) {
+        if ($model->load($_POST) &&
+                $model->loadImages(UploadedFile::getInstances($model, 'uploadImage')) &&
+                $model->validate()) {
             $model->setScenario('submit');
-            if ($files = UploadedFile::getInstances($model, 'uploadImage')) {
-                $model->setUploadImage($files);
-            }
 
-            /* @var $advertApi \advert\components\AdvertApi */
+            /* @var $advertApi AdvertApi */
             $advertApi = Yii::$app->getModule('advert')->advert;
             if ($advert = $advertApi->appendRegisterAdvert($model)) {
                 $link = Url::toRoute(['/advert/catalog/details', 'id' => $advert->id], true);
@@ -150,6 +152,46 @@ class UserAdvertController extends \app\components\Controller
     }
 
     /**
+     * Удаление изображения с идентификатором = $_POST['key'] для объявления с идентификатором = $_GET['id'].
+     * Производится проверка, что объявление действительно принадлежит пользователю.
+     */
+    public function actionRemoveAdvertImage($id)
+    {
+        if (!Yii::$app->request->isAjax) {
+            throw new ForbiddenHttpException();
+        }
+
+        // получить объявление и идентификатор изображение
+        $id = (int) $id;
+        $imageId = (int) Yii::$app->request->post('key');
+        // проверить, что объявление принадлежит авторизованному пользователю
+        /* @var $advert Advert */
+        $advert = Advert::findUserList()->andWhere(['id' => $id])->one();
+        if (!($advert instanceof Advert)) {
+            throw new NotFoundHttpException();
+        }
+
+        // получить изображение
+        /* @var $image AdvertImage */
+        $image = $advert->getImages()->andWhere(['id' => $imageId])->one();
+        if (!($image instanceof AdvertImage)) {
+            throw new NotFoundHttpException();
+        }
+
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $result = [];
+        try {
+            $image->delete();
+            $advert->updateDefaultImage();
+        }
+        catch (Exception $ex) {
+            $result['error'] = Yii::t('frontend/advert', 'System error.');
+        }
+        return $result;
+    }
+
+    /**
      * Редактировать объявление
      *
      * @param int $id
@@ -157,7 +199,7 @@ class UserAdvertController extends \app\components\Controller
      */
     public function actionEdit($id)
     {
-        /* @var $user \user\models\User */
+        /* @var $user User */
         $user = Yii::$app->user->getIdentity();
 
         $advert = Advert::findUserList()->andWhere(['id' => $id])->one();
@@ -172,13 +214,12 @@ class UserAdvertController extends \app\components\Controller
             return ActiveForm::validate($model);
         }
 
-        if ($model->load($_POST) && $model->validate()) {
+        if ($model->load($_POST) &&
+                $model->loadImages(UploadedFile::getInstances($model, 'uploadImage')) &&
+                $model->validate()) {
             $model->setScenario('submit');
-            if ($files = UploadedFile::getInstances($model, 'uploadImage')) {
-                $model->setUploadImage($files);
-            }
 
-            /* @var $advertApi \advert\components\AdvertApi */
+            /* @var $advertApi AdvertApi */
             $advertApi = Yii::$app->getModule('advert')->advert;
             if ($advertApi->updateAdvert($model)) {
                 $link = Url::toRoute(['/advert/catalog/details', 'id' => $advert->id], true);

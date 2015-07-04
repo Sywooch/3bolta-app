@@ -41,7 +41,7 @@ FrontendAssets::register($this);
                 <div class="top-logo-add-advert">
                     <a href="<?=Url::toRoute(['/advert/advert/append'])?>" class="btn btn-primary btn-top-add-advert">
                         <span class="glyphicon glyphicon-plus"></span>
-                        <span class="text">&nbsp;&nbsp;<?=Yii::t('frontend/menu', 'Append advert')?></span>
+                        <span class="text">&nbsp;&nbsp;<?=Yii::t('frontend/menu', 'Place an advert')?></span>
                     </a>
                 </div>
                 <div class="top-logo-menu">
@@ -94,7 +94,7 @@ FrontendAssets::register($this);
                 'items' => [
                     ['label' => Yii::t('frontend/menu', 'Search parts'), 'url' => ['/advert/catalog/search']],
                     ['label' => Yii::t('frontend/menu', 'Search organization'), 'url' => ['/partner/search/index']],
-                    ['label' => Yii::t('frontend/menu', 'Append advert'), 'url' => ['/advert/advert/append']],
+                    ['label' => Yii::t('frontend/menu', 'Place an advert'), 'url' => ['/advert/advert/append']],
                     ['label' => Yii::t('frontend/menu', 'About project'), 'url' => '#'],
                 ],
             ]);
@@ -111,7 +111,8 @@ FrontendAssets::register($this);
             'options' => ['class' => 'navbar-nav navbar-right bottom-menu'],
             'items' => [
                 ['label' => Yii::t('frontend/menu', 'Search parts'), 'url' => ['/advert/catalog/search']],
-                ['label' => Yii::t('frontend/menu', 'Append advert'), 'url' => ['/advert/advert/append']],
+                ['label' => Yii::t('frontend/menu', 'Search organization'), 'url' => ['/partner/search/index']],
+                ['label' => Yii::t('frontend/menu', 'Place an advert'), 'url' => ['/advert/advert/append']],
                 ['label' => Yii::t('frontend/menu', 'About project'), 'url' => '#'],
             ],
         ])?>

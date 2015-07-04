@@ -21,7 +21,7 @@ AdvertForm::register($this);
 /* @var $form ActiveForm */
 ?>
 <div class="col-lg-12">
-    <?=Html::tag('h1', Yii::t('frontend/advert', 'Append advert'))?>
+    <?=Html::tag('h1', Yii::t('frontend/advert', 'Place an advert'))?>
 </div>
 
 <div class="no-content-margin">
@@ -177,7 +177,7 @@ $form = ActiveForm::begin([
             </div>
 
             <div class="col-xs-12">
-                <?=Html::submitButton(Yii::t('frontend/advert', 'Create advert'), ['class' => 'btn btn-primary']);?>
+                <?=Html::submitButton(Yii::t('frontend/advert', 'Place an advert'), ['class' => 'btn btn-primary']);?>
             </div>
         </div>
     </div>

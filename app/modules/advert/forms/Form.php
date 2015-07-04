@@ -34,7 +34,9 @@ class Form extends BaseModel
     protected $_serie = [];
     protected $_modification = [];
 
-    // загрузка изображений
+    /**
+     * @var array загрузка изображений
+     */
     protected $_uploadImage;
 
     /**
@@ -137,12 +139,37 @@ class Form extends BaseModel
                 return !$model->getUserId();
             }],
 
-            [['uploadImage'], 'file',
+            ['uploadImage', 'validateImagesCount', 'skipOnEmpty' => false],
+            ['uploadImage', 'file',
                 'skipOnEmpty' => true,
                 'extensions' => Advert::$_imageFileExtensions,
-                'maxFiles' => Advert::UPLOAD_MAX_FILES
+                'maxFiles' => Advert::UPLOAD_MAX_FILES,
+                'maxSize' => Advert::UPLOAD_MAX_FILE_SIZE,
             ],
         ];
+    }
+
+    /**
+     * Валидация максимального количества загружаемых файлов.
+     * Суммируется количество уже подгруженных файлов и количество вновь подгружаемых файлов.
+     *
+     * @param string $attribute
+     * @param array $params
+     */
+    public function validateImagesCount($attribute, $params)
+    {
+        $count = 0;
+        if ($this->getExists()) {
+            $count += $this->getExists()->getImages()->count();
+        }
+        if (!empty($this->_uploadImage)) {
+            $count += count($this->_uploadImage);
+        }
+        if ($count > Advert::UPLOAD_MAX_FILES) {
+            $this->addError($attribute, \Yii::t('frontend/advert', 'Max files is: {n}', [
+                'n' => Advert::UPLOAD_MAX_FILES,
+            ]));
+        }
     }
 
     /**
@@ -288,12 +315,12 @@ class Form extends BaseModel
 
     /**
      * Получить изображения для загрузки.
-     * Возвращает всегда null, иначе начинаются глюки в виджете FileInput.
-     * @return null
+     *
+     * @return array
      */
     public function getUploadImage()
     {
-        return null;
+        return $this->_uploadImage;
     }
 
     /**
@@ -433,6 +460,53 @@ class Form extends BaseModel
         }
 
         return $ret;
+    }
+
+    /**
+     * Метод подгружает файлы из массива $images.
+     * Должен вызываться сразу после метода load.
+     * Должен всегда возвращать true.
+     *
+     * @param array $images
+     * @return boolean true, всегда
+     */
+    public function loadImages($images)
+    {
+        if (is_array($images)) {
+            $this->_uploadImage = [];
+            foreach ($images as $image) {
+                if ($image instanceof \yii\web\UploadedFile) {
+                    $this->_uploadImage[] = $image;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Установить фотографии для удаления
+     * @param array $val
+     */
+    public function setRemoveImages($val)
+    {
+        $this->_removeImages = array();
+
+        foreach ($val as $imageId) {
+            $imageId = (int) $imageId;
+            if ($imageId) {
+                $this->_removeImages[] = $imageId;
+            }
+        }
+    }
+
+    /**
+     * Получить изображения для удаления
+     * @return array
+     */
+    public function getRemoveImages()
+    {
+        return $this->_removeImages;
     }
 
     /**

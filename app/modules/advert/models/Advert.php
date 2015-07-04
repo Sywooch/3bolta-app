@@ -36,7 +36,12 @@ class Advert extends ActiveRecord
     /**
      * Максимальное количество файлов для загрузки
      */
-    const UPLOAD_MAX_FILES = 10;
+    const UPLOAD_MAX_FILES = 5;
+
+    /**
+     * Максимальный размер загружаемых файлов
+     */
+    const UPLOAD_MAX_FILE_SIZE = 2097152;
 
     /**
      * @var array доступные расширения изображений
@@ -110,7 +115,8 @@ class Advert extends ActiveRecord
             [['uploadImage'], 'file',
                 'skipOnEmpty' => true,
                 'extensions' => self::$_imageFileExtensions,
-                'maxFiles' => self::UPLOAD_MAX_FILES
+                'maxFiles' => self::UPLOAD_MAX_FILES,
+                'maxSize' => self::UPLOAD_MAX_FILE_SIZE,
             ],
             [['confirmation'], 'safe'],
         ];
@@ -161,7 +167,39 @@ class Advert extends ActiveRecord
             $this->_uploadImage = [];
         }
 
+        // обновить изображение по умолчанию
+        $this->updateDefaultImage();
+
         return parent::afterSave($insert, $changedAttributes);
+    }
+
+    /**
+     * Если не установлено изображение с признаком "по умолчанию (is_preview)" - устанавливает его
+     */
+    public function updateDefaultImage()
+    {
+        if (empty($this->images)) {
+            return true;
+        }
+
+        $firstImage = null;
+        foreach ($this->images as $image) {
+            /* @var $image AdvertImage */
+            if ($image->is_preview) {
+                return true;
+            }
+            if (!$firstImage) {
+                /* @var $firstImage AdvertImage */
+                $firstImage = $image;
+            }
+        }
+
+        try {
+            $firstImage->is_preview = true;
+            return $firstImage->save(false, ['is_preview']);
+        } catch (Exception $ex) { }
+
+        return false;
     }
 
     /**

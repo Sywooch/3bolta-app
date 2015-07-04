@@ -17,6 +17,9 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
+    'Max files is: {n}' => 'Можно загрузить максимум {n} файлов',
+    'Place an advert' => 'Разместить объявление',
+    'System error.' => 'Системная ошибка.',
     'Address' => 'Адрес',
     'Advert description' => 'Описание',
     'Advert title' => 'Заголовок объявления',
@@ -42,7 +45,6 @@ return [
     'Contact name' => 'Контактное лицо',
     'Contact phone' => 'Контактный телефон',
     'Contacts' => 'Контакты',
-    'Create advert' => 'Создать объявление',
     'Description' => 'Описание',
     'E-mail' => 'E-mail',
     'Edit' => 'Редактировать',

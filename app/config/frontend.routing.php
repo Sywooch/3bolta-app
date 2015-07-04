@@ -34,7 +34,8 @@ return [
     '/cabinet/ads' => '/advert/user-advert/list',
     '/cabinet/ads/update-publication/<id:(\d+)>' => '/advert/user-advert/update-publication',
     '/cabinet/ads/stop-publication/<id:(\d+)>' => '/advert/user-advert/stop-publication',
-    '/cabinet/ads/edit/<id:(\d+)>' => '/advert/user-advert/edit',
+    '/cabinet/ads/<id:(\d+)>/edit/' => '/advert/user-advert/edit',
+    '/cabinet/ads/<id:(\d+)>/remove-image' => '/advert/user-advert/remove-advert-image',
     '/cabinet/ads/append' => '/advert/user-advert/append',
 
     // торговые точки

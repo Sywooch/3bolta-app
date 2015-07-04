@@ -12,6 +12,12 @@
 .file-preview-frame:hover {
     box-shadow: 0px 0px 1px 0px #a2958a;
 }
+.file-preview-frame.file-uploading .kv-file-remove {
+    display: none;
+}
+.kv-file-remove.disabled {
+    background-color: #fff;
+}
 .kv-file-remove {
     color: rgb(144, 43, 43);
 }

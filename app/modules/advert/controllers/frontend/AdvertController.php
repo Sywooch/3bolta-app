@@ -1,15 +1,14 @@
 <?php
 namespace advert\controllers\frontend;
 
-use Yii;
-use yii\web\UploadedFile;
-use yii\web\Response;
-use yii\widgets\ActiveForm;
-
+use advert\components\AdvertApi;
 use advert\forms\Form;
 use advert\models\Advert;
-
 use app\components\Controller;
+use Yii;
+use yii\web\Response;
+use yii\web\UploadedFile;
+use yii\widgets\ActiveForm;
 
 /**
  * Работа с объявлениями
@@ -21,7 +20,7 @@ class AdvertController extends Controller
      */
     public function actionConfirm($code)
     {
-        /* @var $api \advert\components\AdvertApi */
+        /* @var $api AdvertApi */
         $api = Yii::$app->getModule('advert')->advert;
 
         $id = $api->confirmAdvert($code);
@@ -47,7 +46,7 @@ class AdvertController extends Controller
             return $this->redirect(['/advert/user-advert/append']);
         }
 
-        /* @var $api \advert\components\AdvertApi */
+        /* @var $api AdvertApi */
         $api = Yii::$app->getModule('advert')->advert;
 
         $model = new Form();
@@ -57,20 +56,16 @@ class AdvertController extends Controller
             return ActiveForm::validate($model);
         }
 
-        if ($model->load($_POST)) {
-
+        if ($model->load($_POST) &&
+            $model->loadImages(UploadedFile::getInstances($model, 'uploadImage')) &&
+            $model->validate()) {
             $model->setScenario('submit');
-            if ($files = UploadedFile::getInstances($model, 'uploadImage')) {
-                $model->setUploadImage($files);
-            }
 
-            if ($model->validate()) {
-                // сохраняем объявление
-                $advert = $api->appendNotRegisterAdvert($model);
-                if ($advert instanceof Advert) {
-                    Yii::$app->session->setFlash('advert_success_created', $advert->id);
-                    return $this->refresh();
-                }
+            // сохраняем объявление
+            $advert = $api->appendNotRegisterAdvert($model);
+            if ($advert instanceof Advert) {
+                Yii::$app->session->setFlash('advert_success_created', $advert->id);
+                return $this->refresh();
             }
         }
 

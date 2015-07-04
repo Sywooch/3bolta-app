@@ -87,6 +87,7 @@ $form = ActiveForm::begin([
             'template' => '{input}',
         ])->widget(AdvertImageInput::className(), [
             'existsImages' => $model->getExists() ? $model->getExists()->images : [],
+            'removeImageUrl' => $model->getExists() ? ['remove-advert-image', 'id' => $model->getExists()->id] : '',
         ])?>
     </div>
 
@@ -157,7 +158,7 @@ $form = ActiveForm::begin([
 
             <div class="col-md-12">
                 <?php
-                $button = $model->getExists() ? Yii::t('frontend/advert', 'Update advert') : Yii::t('frontend/advert', 'Create advert');
+                $button = $model->getExists() ? Yii::t('frontend/advert', 'Update advert') : Yii::t('frontend/advert', 'Place an advert');
                 ?>
                 <?=Html::submitButton($button, ['class' => 'btn btn-primary'])?>
             </div>

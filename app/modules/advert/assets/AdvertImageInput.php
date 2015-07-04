@@ -19,6 +19,6 @@ class AdvertImageInput extends \yii\web\AssetBundle
     ];
 
     public $depends = [
-        '\kartik\file\FileInputAsset',
+        '\app\assets\FrontendAssets',
     ];
 }
