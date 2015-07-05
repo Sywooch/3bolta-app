@@ -4,6 +4,7 @@ namespace app\commands;
 use XMLReader;
 use Yii;
 use yii\console\Controller;
+use yii\db\Connection;
 
 /**
  * Из БД ФИАС (http://fias.nalog.ru/) производит выгрузку в таблицу {{%region}}.
@@ -70,7 +71,7 @@ class RegionsController extends Controller
         $this->stdout("Consume object: ");
         $this->stdout($this->getCsvRow($object));
 
-        /* @var $db \yii\db\Connection */
+        /* @var $db Connection */
         $db = Yii::$app->db;
 
         $row = $db->createCommand('SELECT * FROM ' . self::TABLE . ' WHERE external_id = :external_id AND region_code = :region_code', [
@@ -105,11 +106,69 @@ class RegionsController extends Controller
     }
 
     /**
+     * Для всех регионов обновляет координаты центра, используя Google Geocode.
+     */
+    public function actionUpdateCoordinates()
+    {
+        /* @var $db Connection */
+        $db = Yii::$app->db;
+
+        static $baseUrl = 'https://maps.googleapis.com/maps/api/geocode/json?address=';
+
+        // не более 5 - запросов подряд, а потом - ожидание 1 секунду
+        $cnt = 5;
+
+        $res = $db->createCommand('SELECT * FROM ' . self::TABLE . ' WHERE center_lat IS NULL and center_lng IS NULL')->query();
+
+        while ($row = $res->read()) {
+            if ($cnt == 0) {
+                $cnt = 5;
+                sleep(1);
+            }
+            $query = $row['site_name'];
+            if ($row['short_name'] == 'г') {
+                $query = 'город ' . $row['official_name'];
+            }
+            else if ($row['short_name'] == 'АО') {
+                $query = $row['official_name'] . ' Автономный Округ';
+            }
+            else if ($row['short_name'] == 'Респ') {
+                $query = 'Республика ' . $row['official_name'];
+            }
+            $json = file_get_contents($baseUrl . urlencode($query));
+            try {
+                $result = \yii\helpers\Json::decode($json);
+                if (!empty($result['status']) && $result['status'] == 'OK' && !empty($result['results'])) {
+                    $result = reset($result['results']);
+                    if (
+                            !empty($result['geometry']['location']) &&
+                            !empty($result['address_components'][0]) &&
+                            (
+                                in_array('administrative_area_level_1', $result['address_components'][0]['types']) ||
+                                in_array('political', $result['address_components'][0]['types'])
+                            )
+                    ) {
+                        $db->createCommand()->update(self::TABLE, [
+                            'center_lat' => $result['geometry']['location']['lat'],
+                            'center_lng' => $result['geometry']['location']['lng'],
+                        ], 'id=:id', [
+                            ':id' => $row['id'],
+                        ])->execute();
+                        $this->stdout("region {$row['id']} updated\n");
+                    }
+                }
+            }
+            catch (\Exception $ex) { }
+            $cnt--;
+        }
+    }
+
+    /**
      * Экспортировать регионы из БД в файл @app/data/regions.csv в формате csv.
      */
     public function actionExport()
     {
-        /* @var $db \yii\db\Connection */
+        /* @var $db Connection */
         $db = Yii::$app->db;
 
         $fileToExport = Yii::getAlias(self::EXCHANGE_FILE);
