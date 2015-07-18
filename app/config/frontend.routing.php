@@ -49,4 +49,7 @@ return [
     '/trade-points/search' => '/partner/search/search',
     '/trade-points/search-by-name' => '/partner/search/name-autocomplete',
     '/trade-points/search-by-mark' => '/partner/search/mark-autocomplete',
+
+    // работа с геоданными
+    '/geo/detect-user-region' => '/geo/geo/detect-user-region',
 ];

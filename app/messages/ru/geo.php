@@ -17,10 +17,11 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'About project' => 'О проекте',
-    'Organizations catalog' => 'Каталог организаций',
-    'Parts catalog' => 'Каталог запчастей',
-    'Place an advert' => 'Разместить объявление',
-    'Search organization' => 'Поиск организации',
-    'Search parts' => 'Поиск автозапчастей',
+    'Canonical name' => 'Каноническое название',
+    'Center latitude' => 'Широта центра',
+    'Center longitude' => 'Долгота центра',
+    'Official name' => 'Официальное название',
+    'Region code' => 'Код региона',
+    'Region type' => 'Тип региона',
+    'Site name' => 'Название для сайта',
 ];

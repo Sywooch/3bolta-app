@@ -3,12 +3,18 @@ namespace app\widgets;
 
 use Yii;
 use yii\base\Widget;
+use yii\web\View;
 
 /**
  * Виджет вставки JavaScript
  */
 class JS extends Widget
 {
+    /**
+     * @var string ключ скрипта
+     */
+    public $key;
+
     public static function begin($config = array())
     {
         ob_start();
@@ -26,7 +32,7 @@ class JS extends Widget
         else {
             $output = preg_replace('/<script[^>]*>/i', '', $output);
             $output = str_ireplace('</script>', '', $output);
-            $widget->view->registerJs($output);
+            $widget->view->registerJs($output, View::POS_READY, $widget->key);
         }
     }
 }

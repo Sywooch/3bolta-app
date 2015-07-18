@@ -99,6 +99,9 @@ $config = ArrayHelper::merge([
                 ],
             ],
         ],
+        'geo' => [
+            'class' => 'geo\Module',
+        ],
     ],
     'params' => [
         'defaultEmailFrom' => 'info@3bolta.com',

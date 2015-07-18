@@ -57,7 +57,9 @@ class RegionsController extends Controller
             $object['AOID'], $object['REGIONCODE'],
             $object['FORMALNAME'], $object['OFFNAME'],
             $object['SHORTNAME'],
-            !empty($object['SITENAME']) ? $object['SITENAME'] : ''
+            !empty($object['SITENAME']) ? $object['SITENAME'] : '',
+            !empty($object['sort']) ? $object['sort'] : 100,
+            !empty($object['as_default']) ? (int) $object['as_default'] : '',
         ]) . "\n";
     }
 
@@ -87,6 +89,14 @@ class RegionsController extends Controller
             'region_code' => $object['REGIONCODE'],
             'site_name' => !empty($object['SITENAME']) ? $object['SITENAME'] : null,
         ];
+
+        if (!empty($object['sort'])) {
+            $toUpdate['sort'] = (int) $object['sort'];
+        }
+
+        if (isset($object['as_default'])) {
+            $toUpdate['as_default'] = !empty($object['as_default']);
+        }
 
         if (!empty($row) &&
                 ($row['official_name'] != $object['OFFNAME'] ||
@@ -186,6 +196,8 @@ class RegionsController extends Controller
                 'OFFNAME' => $row['official_name'],
                 'SHORTNAME' => $row['short_name'],
                 'SITENAME' => $row['site_name'],
+                'as_default' => $row['as_default'],
+                'sort' => $row['sort'],
             ];
             file_put_contents($fileToExport, $this->getCsvRow($object), FILE_APPEND);
         }

@@ -103,7 +103,7 @@ button.selected-default span {
         float: left;
     }
 }
-.logo-head .slogan {
+.logo-head .region {
     width: 243px;
     height: 100%;
     line-height: 76px;
@@ -112,6 +112,15 @@ button.selected-default span {
     color: #f0ede4;
     float: left;
     font-weight: normal;
+}
+.logo-head .region a {
+    color: #f0ede4;
+    text-decoration: none;
+    border-bottom: 1px dashed #f0ede4;
+}
+.logo-head .region a:hover, .logo-head .region a:visited,
+.logo-head .region a:active {
+    text-decoration: none;
 }
 .logo-head .logo a {
     display: block;
@@ -188,7 +197,7 @@ button.selected-default span {
     .logo-main-navbar {
         display: block;
     }
-    .logo-head .slogan {
+    .logo-head .region {
         display: none;
     }
     .logo-head .top-logo-search {

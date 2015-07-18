@@ -17,10 +17,5 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'About project' => 'О проекте',
-    'Organizations catalog' => 'Каталог организаций',
-    'Parts catalog' => 'Каталог запчастей',
-    'Place an advert' => 'Разместить объявление',
-    'Search organization' => 'Поиск организации',
-    'Search parts' => 'Поиск автозапчастей',
+    'Select your region...' => 'Выберите ваш регион...',
 ];
