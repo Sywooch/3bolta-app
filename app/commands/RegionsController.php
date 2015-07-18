@@ -95,7 +95,7 @@ class RegionsController extends Controller
         }
 
         if (isset($object['as_default'])) {
-            $toUpdate['as_default'] = !empty($object['as_default']);
+            $toUpdate['as_default'] = $object['as_default'] == '1';
         }
 
         if (!empty($row) &&
