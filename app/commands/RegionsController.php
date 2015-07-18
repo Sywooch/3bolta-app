@@ -223,7 +223,7 @@ class RegionsController extends Controller
                 continue;
             }
             $object = array_combine(
-                array('AOID', 'REGIONCODE', 'FORMALNAME', 'OFFNAME', 'SHORTNAME', 'SITENAME'),
+                array('AOID', 'REGIONCODE', 'FORMALNAME', 'OFFNAME', 'SHORTNAME', 'SITENAME', 'as_default', 'sort'),
                 $row
             );
             $this->consumeObject($object);
