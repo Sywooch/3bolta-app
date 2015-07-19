@@ -37,7 +37,7 @@ document.changeLocation = function(href) {
 // перезагрузка страницы
 document.reloadLocation = function() {
     document.appendLoader('body');
-    location.href = href;
+    location.reload();
 };
 
 $(document).ready(function() {

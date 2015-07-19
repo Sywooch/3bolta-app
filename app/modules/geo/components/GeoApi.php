@@ -61,6 +61,7 @@ class GeoApi extends Component
     /**
      * Установить регион пользователя в куки
      * @param mixed $region идентификатор региона, либо модель класса Region
+     * @return Region|null
      */
     public function setUserRegion($region)
     {
@@ -74,6 +75,8 @@ class GeoApi extends Component
                 'value' => $region->id,
             ]));
         }
+
+        return $region;
     }
 
     /**

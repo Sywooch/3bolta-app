@@ -52,4 +52,5 @@ return [
 
     // работа с геоданными
     '/geo/detect-user-region' => '/geo/geo/detect-user-region',
+    '/geo/select-region' => '/geo/geo/select-region',
 ];

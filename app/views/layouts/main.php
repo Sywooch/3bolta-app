@@ -33,10 +33,7 @@ FrontendAssets::register($this);
     <div class="wrap page-wrap" id="wrapper">
         <div class="logo-head">
             <div class="logo"><a href="/">&nbsp;&nbsp;</a></div>
-            <div class="region">
-                <i class="icon icon-location"></i>
-                <?=geo\widgets\UserRegion::widget()?>
-            </div>
+            <?=geo\widgets\UserRegion::widget()?>
             <div class="logo-buttons">
                 <div class="top-logo-search">
                     <a href="<?=Url::toRoute(['/advert/catalog/search'])?>" id="toggleTopSearch" class="top-logo-search-btn"><span class="glyphicon glyphicon-search"></span></a>

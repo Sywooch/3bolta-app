@@ -1,8 +1,19 @@
 /**
+ * Выбор региона пользователя
+ * @param {Integer} id
+ * @param {String} name
+ */
+document.chooseUserRegion = function(id, name) {
+    $('.js-selected-region')
+        .data('data-region-id', id)
+        .text(name);
+    $('.js-select-region-dropdown').val(id);
+};
+
+/**
  * Определение и установка региона пользователя
  * Параметры:
  * - getNearestRegionUrl - url, по которому можно найти ближайший регион по широте и долготе;
- * - linkSelector - ссылка, в которую запишется идентификатор и название выбранного региона.
  */
 var DetectUserRegion = function(params) {
     /**
@@ -23,9 +34,7 @@ var DetectUserRegion = function(params) {
             'data'          : data,
             'success'       : function(d) {
                 if (d.id && d.name) {
-                    $(params.linkSelector)
-                        .data('data-region-id', d.id)
-                        .text(d.name);
+                    document.chooseUserRegion(d.id, d.name);
                 }
             }
         });
@@ -44,3 +53,22 @@ var DetectUserRegion = function(params) {
         });
     }
 };
+
+$(document).ready(function() {
+    // выбор региона вручную в модальном окне
+    $('.js-select-region-form').on('beforeSubmit', function(e) {
+        $.ajax({
+            'type'      : 'post',
+            'dataType'  : 'json',
+            'url'       : $(this).attr('action'),
+            'data'      : $(this).serialize(),
+            'success'   : function(d) {
+                if (d.success) {
+                    document.chooseUserRegion(d.id, d.name);
+                    document.reloadLocation();
+                }
+            }
+        });
+        return false;
+    });
+});

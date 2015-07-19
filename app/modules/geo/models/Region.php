@@ -57,6 +57,6 @@ class Region extends ActiveRecord
      */
     public static function find()
     {
-        return parent::find()->orderBy('sort ASC');
+        return parent::find()->orderBy('sort ASC, site_name ASC');
     }
 }
