@@ -17,5 +17,6 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
+    'Select' => 'Выбрать',
     'Select your region...' => 'Выберите ваш регион...',
 ];

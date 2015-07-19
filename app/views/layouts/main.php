@@ -2,9 +2,10 @@
 /* @var $this View */
 /* @var $content string */
 
-use advert\widgets\TopSearch;
 use app\assets\FrontendAssets;
 use app\widgets\ServiceMessage;
+use geo\widgets\SelectRegionModal;
+use geo\widgets\UserRegion;
 use user\widgets\LoginModal;
 use user\widgets\LostPasswordModal;
 use user\widgets\UserPanel;
@@ -33,7 +34,7 @@ FrontendAssets::register($this);
     <div class="wrap page-wrap" id="wrapper">
         <div class="logo-head">
             <div class="logo"><a href="/">&nbsp;&nbsp;</a></div>
-            <?=geo\widgets\UserRegion::widget()?>
+            <?=UserRegion::widget()?>
             <div class="logo-buttons">
                 <div class="top-logo-search">
                     <a href="<?=Url::toRoute(['/advert/catalog/search'])?>" id="toggleTopSearch" class="top-logo-search-btn"><span class="glyphicon glyphicon-search"></span></a>
@@ -85,6 +86,9 @@ FrontendAssets::register($this);
             <?= $content ?>
         </div>
         <div id="sidebar-wrapper">
+            <div class="mobile-region col-lg-12">
+                <?=UserRegion::widget()?>
+            </div>
             <div class="mobile-top-user col-lg-12">
                 <?=UserPanel::widget()?>
             </div>
@@ -120,6 +124,7 @@ FrontendAssets::register($this);
     <?=LoginModal::widget()?>
     <?=LostPasswordModal::widget()?>
     <?=ServiceMessage::widget()?>
+    <?=SelectRegionModal::widget()?>
 <?php $this->endBody() ?>
 </body>
 </html>

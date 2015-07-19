@@ -57,10 +57,25 @@ button.selected-default span {
 .mobile-top-user {
     display: none;
 }
+.mobile-region {
+    display: none;
+}
 @media (max-width: 767px) {
     .mobile-top-user {
         display: block; 
         padding: 0px 15px;
+    }
+    .mobile-region {
+        display: block;
+        margin: 10px 0px;
+    }
+    .mobile-region a, 
+    .mobile-region a:hover, 
+    .mobile-region a:visited, 
+    .mobile-region a:active,
+    .mobile-region a:focus {
+        text-decoration: none;
+        border-bottom: 1px dashed #fff;
     }
     .mobile-top-user .user-panel {
         float: none;
@@ -119,7 +134,7 @@ button.selected-default span {
     border-bottom: 1px dashed #f0ede4;
 }
 .logo-head .region a:hover, .logo-head .region a:visited,
-.logo-head .region a:active {
+.logo-head .region a:active, .logo-head .region a:focus {
     text-decoration: none;
 }
 .logo-head .logo a {
