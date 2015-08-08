@@ -1,19 +1,21 @@
 <?php
 namespace advert\forms;
 
-use Yii;
-
 use advert\models\PartAdvert;
-
 use auto\models\Mark;
 use auto\models\Model;
-use auto\models\Serie;
 use auto\models\Modification;
+use auto\models\Serie;
+use geo\models\Region;
+use handbook\models\HandbookValue;
+use Yii;
+use yii\base\Model as BaseModel;
+use yii\helpers\ArrayHelper;
 
 /**
  * Форма поиска запчастей
  */
-class PartSearch extends \yii\base\Model
+class PartSearch extends BaseModel
 {
     /**
      * Максимальная длина поисковой строки
@@ -21,11 +23,23 @@ class PartSearch extends \yii\base\Model
     const MAX_QUERY_LENGTH = 50;
 
     /**
-     * Автомобили: марка, модель, серия, модификация
+     * @var integer марка
      */
     public $a1;
+
+    /**
+     * @var integer модель
+     */
     public $a2;
+
+    /**
+     * @var integer серия
+     */
     public $a3;
+
+    /**
+     * @var integer модификация
+     */
     public $a4;
 
     /**
@@ -44,18 +58,39 @@ class PartSearch extends \yii\base\Model
     public $q;
 
     /**
+     * @var float цена "от"
+     */
+    public $p1;
+
+    /**
+     * @var float цена "до"
+     */
+    public $p2;
+
+    /**
+     * @var integer регион
+     */
+    public $r;
+
+    /**
+     * @var float тип продавца
+     */
+    public $st;
+
+    /**
      * @var boolean показывать также другие регионы
      */
     public $sor = true;
 
     /**
      * Правила валидации
-     * @return []
+     * @return array
      */
     public function rules()
     {
         return [
             [['a1', 'a2', 'a3', 'a4', 'cat', 'con'], 'integer'],
+            [['p1', 'p2'], 'safe'],
             [['q', 'sor'], 'safe'],
             [['q'], 'filter', 'filter' => function($q) {
                 // отсекаем символы
@@ -71,6 +106,19 @@ class PartSearch extends \yii\base\Model
                 $avail = array_keys(PartAdvert::getConditionDropDownList());
                 return in_array($i, $avail) ? $i : null;
             }],
+            [['p1', 'p2'], 'filter', 'filter' => function($val) {
+                $val = preg_replace('#[\D]+#', '', $val);
+                $val = (float) $val;
+                return $val > 0 ? $val : null;
+            }],
+            ['r', 'filter', 'filter' => function($val) {
+                $val = (int) $val;
+                return Region::find()->andWhere(['id' => $val])->exists() ? $val : null;
+            }],
+            ['st', 'filter', 'filter' => function($val) {
+                $availValues = PartSearch::getSellerTypeDropDown();
+                return isset($val, $availValues) ? $val : null;
+            }],
         ];
     }
 
@@ -85,7 +133,7 @@ class PartSearch extends \yii\base\Model
 
     /**
      * Подписи
-     * @return []
+     * @return array
      */
     public function attributeLabels()
     {
@@ -97,6 +145,10 @@ class PartSearch extends \yii\base\Model
             'cat' => Yii::t('frontend/advert', 'Category'),
             'con' => Yii::t('frontend/advert', 'Condition'),
             'q' => Yii::t('frontend/advert', 'Part name'),
+            'p1' => Yii::t('frontend/advert', 'Price from'),
+            'p2' => Yii::t('frontend/advert', 'Price to'),
+            'r' => Yii::t('frontend/advert', 'Region'),
+            'st' => Yii::t('frontend/advert', 'Seller type'),
             'sor' => Yii::t('frontend/advert', 'Show other regions'),
         ];
     }
@@ -151,5 +203,29 @@ class PartSearch extends \yii\base\Model
         }
 
         return $key;
+    }
+
+    /**
+     * Получить тип продавца в зависимости от настроек
+     * @return array
+     */
+    public static function getSellerTypeDropDown()
+    {
+        $ret = [
+            '' => '',
+            0 => Yii::t('frontend/advert', 'private person')
+        ];
+        return ArrayHelper::merge($ret, ArrayHelper::map(HandbookValue::find()->andWhere([
+            'handbook_code' => 'company_type'
+        ]), 'id', 'name'));
+    }
+
+    /**
+     * Получить идентификаторы регионов
+     * @return array
+     */
+    public static function getRegionsDropDownList()
+    {
+        return ArrayHelper::map(Region::find()->all(), 'id', 'site_name');
     }
 }

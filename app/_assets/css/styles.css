@@ -187,24 +187,6 @@ button.selected-default span {
 .logo-main-navbar {
     display: none;
 }
-.top-search {
-    background-color: #576676;
-    color: #fff;
-    border: 0px;
-    box-shadow: none;
-    -webkit-box-shadow: none;
-    margin-left: -15px;
-    margin-right: -15px;
-    margin-top: -15px;
-    padding: 15px;
-}
-.top-search a {
-    color: #ff5757;
-}
-.top-search .checkbox {
-    margin-top: 5px;
-    margin-bottom: 5px;
-}
 .top-logo-menu {
     float: left;
 }
@@ -414,23 +396,8 @@ a.desc:after {
 .content-container {
     width: 100%;
 }
-.top-search-choose-auto {
-     height:300px;
-}
-.top-search-choose-auto .list-group {
-     height:250px;
-     overflow:scroll;
-     border:0;
-}
 .list-group-item {
      border:0;
-}
-.top-search-choose-auto-button {
-     cursor: pointer;
-    color: #ff5757;
-    font-style: italic;
-    font-weight: normal;
-    text-decoration: underline;
 }
 .list-pager {
     clear: both;
@@ -495,16 +462,6 @@ a.desc:after {
     margin-bottom: 40px;
 }
 @media (max-width: 767px) {
-    .top-search {
-        margin: 0px;
-        padding: 15px;
-    }
-    .top-search-choose-auto {
-        height: 650px;
-    }
-    .top-search-choose-auto .list-group {
-        height: 120px;
-    }
     .content-container {
         max-width: 100%;
         width: 100%;

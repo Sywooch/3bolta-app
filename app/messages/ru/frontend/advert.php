@@ -17,7 +17,7 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'Show other regions' => 'Показывать результаты в других регионах',
+    'Seller' => 'Продавец',
     'Address' => 'Адрес',
     'Advert description' => 'Описание',
     'Advert title' => 'Заголовок объявления',
@@ -36,6 +36,7 @@ return [
     'Choose modification' => 'Выберите модификацию',
     'Choose one or more automobiles' => 'Выберите один или более автомобилей',
     'Choose serie' => 'Выберите серию',
+    'Collapse extended search params' => 'Скрыть расширенные параметры',
     'Complete publication' => 'Завершена публикация',
     'Condition' => 'Состояние',
     'Contact email' => 'E-mail (не публикуется)',
@@ -47,6 +48,7 @@ return [
     'E-mail' => 'E-mail',
     'Edit' => 'Редактировать',
     'Edit advert' => 'Редактирование объявления',
+    'Extend search params' => 'Расширенный поиск',
     'Images' => 'Изображения',
     'Mark' => 'Марка',
     'Max files is: {n}' => 'Можно загрузить максимум {n} файлов',
@@ -61,6 +63,8 @@ return [
     'Part price' => 'Цена',
     'Phone' => 'Телефон',
     'Place an advert' => 'Разместить объявление',
+    'Price from' => 'Цена от',
+    'Price to' => 'Цена до',
     'Publish to {date}' => 'Опубликовать до {date}',
     'Published at' => 'Опубликовано',
     'Published to' => 'Опубликовано до',
@@ -70,6 +74,7 @@ return [
     'Search' => 'Найти',
     'Seller type' => 'Продавец',
     'Serie' => 'Серия',
+    'Show other regions' => 'Показывать результаты в других регионах',
     'Stop advert publication' => 'Завершить публикацию',
     'System error.' => 'Системная ошибка.',
     'Trade point' => 'Торговая точка',
@@ -79,4 +84,5 @@ return [
     'View' => 'Просмотреть',
     'and {n, plural, =0{automobiles} =1{automobile} one{# automobile} few{# few automobiles} many{# automobiles} other{# automobiles}}' => 'и еще {n, plural, =0{автомобилей} =1{автомобиля} one{# автомобиля} few{# few автомобилей} many{# автомобилей} other{# автомобилей}}',
     'private person' => 'частное лицо',
+    'to' => 'до',
 ];

@@ -7,7 +7,7 @@ document.chooseUserRegion = function(id, name) {
     $('.js-selected-region')
         .data('data-region-id', id)
         .text(name);
-    $('.js-select-region-dropdown').val(id);
+    $('.js-select-region-dropdown').val(id).trigger('change');
 };
 
 /**

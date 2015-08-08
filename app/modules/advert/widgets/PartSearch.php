@@ -4,6 +4,7 @@ namespace advert\widgets;
 use Yii;
 
 use advert\forms\PartSearch as Form;
+use advert\assets\PartAdvertSearch as PartSearchAssets;
 
 /**
  * Виджет поиска по автозапчастям
@@ -33,6 +34,7 @@ class PartSearch extends \yii\bootstrap\Widget
 
     public function run()
     {
+        PartSearchAssets::register($this->view);
         return $this->render('index', [
             'model' => $this->model,
         ]);
