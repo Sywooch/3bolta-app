@@ -4,7 +4,7 @@ namespace app\controllers;
 use yii\web\Controller;
 
 use Yii;
-use advert\models\Advert;
+use advert\models\PartAdvert;
 
 /**
  * Основной контроллер сайта
@@ -16,8 +16,8 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        /* @var $advertApi \advert\components\SearchApi */
-        $advertApi = Yii::$app->getModule('advert')->search;
+        /* @var $advertApi \advert\components\PartsSearchApi */
+        $advertApi = Yii::$app->getModule('advert')->partsSearch;
 
         // получить марки
         $marks = $advertApi->getDistinctMark();

@@ -5,11 +5,11 @@
 
 return [
     'components' => [
-        'search' => [
-            'class' => 'advert\components\SearchApi',
+        'partsSearch' => [
+            'class' => 'advert\components\PartsSearchApi',
         ],
-        'advert' => [
-            'class' => 'advert\components\AdvertApi',
+        'parts' => [
+            'class' => 'advert\components\PartsApi',
         ],
     ],
 ];

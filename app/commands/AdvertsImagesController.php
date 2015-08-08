@@ -1,7 +1,7 @@
 <?php
 namespace app\commands;
 
-use advert\models\AdvertImage;
+use advert\models\PartAdvertImage;
 use app\components\DaemonController;
 use Exception;
 
@@ -24,11 +24,11 @@ class AdvertsImagesController extends DaemonController
     {
         $this->_debug = $debug;
         while (true) {
-            $res = AdvertImage::find()
+            $res = PartAdvertImage::find()
                 ->andWhere('(thumb_id IS NULL OR preview_id IS NULL OR image_id IS NULL)')
                 ->limit(100);
             foreach ($res->each() as $image) {
-                /* @var $image AdvertImage */
+                /* @var $image PartAdvertImage */
                 $this->stdout("Create previews for {$image->file_id}: ");
                 try {
                     $image->createImage();

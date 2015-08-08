@@ -10,12 +10,12 @@ return [
     '/auto/choose/<action:(\w+)>' => '/auto/choose-auto/<action>',
 
     // объявления
-    '/ads/search' => '/advert/catalog/search',
-    '/ads/details/<id:(\d+)>' => '/advert/catalog/details',
+    '/ads/parts/search' => '/advert/part-catalog/search',
+    '/ads/parts/details/<id:(\d+)>' => '/advert/part-catalog/details',
 
     // работа с объявлениями
-    '/ads/append' => '/advert/advert/append',
-    '/ads/confirmation/<code:(\w+)>' => '/advert/advert/confirm',
+    '/ads/parts/append' => '/advert/part-advert/append',
+    '/ads/parts/confirmation/<code:(\w+)>' => '/advert/part-advert/confirm',
 
     // работа с пользователями
     '/registration' => '/user/user/register',
@@ -31,12 +31,12 @@ return [
     '/profile/<action:(change-password|update-company-data|update-email|update-contact-data)>' => '/user/profile/<action>',
 
     // объявления пользователя
-    '/cabinet/ads' => '/advert/user-advert/list',
-    '/cabinet/ads/update-publication/<id:(\d+)>' => '/advert/user-advert/update-publication',
-    '/cabinet/ads/stop-publication/<id:(\d+)>' => '/advert/user-advert/stop-publication',
-    '/cabinet/ads/<id:(\d+)>/edit/' => '/advert/user-advert/edit',
-    '/cabinet/ads/<id:(\d+)>/remove-image' => '/advert/user-advert/remove-advert-image',
-    '/cabinet/ads/append' => '/advert/user-advert/append',
+    '/cabinet/ads/parts' => '/advert/user-part-advert/list',
+    '/cabinet/ads/parts/update-publication/<id:(\d+)>' => '/advert/user-part-advert/update-publication',
+    '/cabinet/ads/parts/stop-publication/<id:(\d+)>' => '/advert/user-part-advert/stop-publication',
+    '/cabinet/ads/parts/<id:(\d+)>/edit/' => '/advert/user-part-advert/edit',
+    '/cabinet/ads/parts/<id:(\d+)>/remove-image' => '/advert/user-part-advert/remove-advert-image',
+    '/cabinet/ads/parts/append' => '/advert/user-part-advert/append',
 
     // торговые точки
     '/cabinet/company' => '/partner/partner/index',

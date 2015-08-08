@@ -5,7 +5,7 @@ use Yii;
 
 use app\components\PhoneValidator;
 
-use advert\models\Advert;
+use advert\models\PartAdvert;
 use user\models\User;
 
 /**
@@ -31,7 +31,7 @@ class AdvertPhoneValidator extends \yii\validators\Validator
                 $hasError = true;
             }
 
-            if (!$hasError && Advert::find()->where(['user_phone_canonical' => $value])->exists()) {
+            if (!$hasError && PartAdvert::find()->where(['user_phone_canonical' => $value])->exists()) {
                 $hasError = true;
             }
 

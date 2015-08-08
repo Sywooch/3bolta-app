@@ -31,12 +31,12 @@ return ArrayHelper::merge(include __DIR__ . '/common.php', [
                 '/user/<action:(\w+)>' => '/user/user/<action>',
 
                 // categories actions
-                '/advert/categories/<action:(delete|update)>/<id:(\w+)>' => '/advert/category/<action>',
-                '/advert/categories/<action:(\w+)>' => '/advert/category/<action>',
+                '/advert/part-categories/<action:(delete|update)>/<id:(\w+)>' => '/advert/part-category/<action>',
+                '/advert/part-categories/<action:(\w+)>' => '/advert/part-category/<action>',
 
                 // advert actions
-                '/advert/ads/<action:(delete|update)>/<id:(\w+)>' => '/advert/advert/<action>',
-                '/advert/ads/<action:(\w+)>' => '/advert/advert/<action>',
+                '/advert/parts/<action:(delete|update)>/<id:(\w+)>' => '/advert/part-advert/<action>',
+                '/advert/parts/<action:(\w+)>' => '/advert/part-advert/<action>',
 
                 // storage actions
                 '/storage/<action:(delete|update)>/<id:(\w+)>' => '/storage/storage/<action>',

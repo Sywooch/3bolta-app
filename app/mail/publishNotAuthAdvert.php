@@ -5,7 +5,7 @@
 
 use yii\helpers\Html;
 
-/* @var $advert \advert\models\Advert */
+/* @var $advert \advert\models\PartAdvert */
 /* @var $this \yii\base\View */
 /* @var $confirmationLink string */
 ?>

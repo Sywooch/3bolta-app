@@ -26,8 +26,8 @@ use user\models\User;
                     <li><a href="<?=Url::toRoute(['/partner/partner/index'])?>"><?=Yii::t('frontend/partner', 'Company data')?></a></li>
                     <li class="divider"></li>
                 <?php endif;?>
-                <li><a href="<?=Url::toRoute(['/advert/user-advert/list'])?>"><?=Yii::t('frontend/user', 'My adverts')?></a></li>
-                <li><a href="<?=Url::toRoute(['/advert/user-advert/append'])?>"><?=Yii::t('frontend/advert', 'Append advert')?></a></li>
+                <li><a href="<?=Url::toRoute(['/advert/user-part-advert/list'])?>"><?=Yii::t('frontend/user', 'My adverts')?></a></li>
+                <li><a href="<?=Url::toRoute(['/advert/user-part-advert/append'])?>"><?=Yii::t('frontend/advert', 'Append advert')?></a></li>
                 <li class="divider"></li>
                 <li><a href="<?=Url::toRoute(['/user/user/logout'])?>"><?=Yii::t('frontend/user', 'Exit')?></a></li>
             </ul>

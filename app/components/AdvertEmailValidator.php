@@ -3,7 +3,7 @@ namespace app\components;
 
 use Yii;
 
-use advert\models\Advert;
+use advert\models\PartAdvert;
 use user\models\User;
 
 /**
@@ -29,7 +29,7 @@ class AdvertEmailValidator extends \yii\validators\Validator
                 $hasError = true;
             }
 
-            if (!$hasError && Advert::find()->where(['user_email' => $value])->exists()) {
+            if (!$hasError && PartAdvert::find()->where(['user_email' => $value])->exists()) {
                 $hasError = true;
             }
 

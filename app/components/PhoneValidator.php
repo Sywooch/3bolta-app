@@ -4,7 +4,7 @@ namespace app\components;
 use Yii;
 use yii\validators\UniqueValidator;
 
-use advert\models\Advert;
+use advert\models\PartAdvert;
 use user\models\User;
 use partner\models\TradePoint;
 
@@ -42,7 +42,7 @@ class PhoneValidator extends UniqueValidator
     protected function getUniqueClasses()
     {
         return [
-            Advert::className() => [
+            PartAdvert::className() => [
                 'attribute' => 'user_phone',
                 'canonicalAttribute' => 'user_phone_canonical',
             ],

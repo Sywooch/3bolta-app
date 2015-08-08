@@ -73,8 +73,8 @@ class UserApi extends \yii\base\Component
                 throw new Exception();
             }
 
-            /* @var $advertApi \advert\components\AdvertApi */
-            $advertApi = Yii::$app->getModule('advert')->advert;
+            /* @var $advertApi \advert\components\PartsApi */
+            $advertApi = Yii::$app->getModule('advert')->parts;
 
             // прикрепить к пользователю все его неавторизованные объявления
             $advertApi->attachNotAuthAdvertsToUser($user);

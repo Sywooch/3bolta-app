@@ -7,7 +7,7 @@ use yii\helpers\Html;
 use app\helpers\Date;
 use yii\helpers\Url;
 
-/* @var $advert \advert\models\Advert */
+/* @var $advert \advert\models\PartAdvert */
 /* @var $this \yii\base\View */
 
 if (!$advert->user_id):?>
