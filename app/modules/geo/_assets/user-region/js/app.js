@@ -57,6 +57,7 @@ var DetectUserRegion = function(params) {
 $(document).ready(function() {
     // выбор региона вручную в модальном окне
     $('.js-select-region-form').on('beforeSubmit', function(e) {
+        var $form = $(this);
         $.ajax({
             'type'      : 'post',
             'dataType'  : 'json',
@@ -65,7 +66,9 @@ $(document).ready(function() {
             'success'   : function(d) {
                 if (d.success) {
                     document.chooseUserRegion(d.id, d.name);
-                    document.reloadLocation();
+                    if (!$form.data('do-not-reload')) {
+                        document.reloadLocation();
+                    }
                 }
             }
         });

@@ -66,6 +66,11 @@ use advert\forms\PartSearch;
         <div class="col-md-2 col-xs-12">
             <?=Html::submitButton(Yii::t('frontend/advert', 'Search'), ['class' => 'form-control btn btn-primary'])?>
         </div>
+        <div class="col-xs-12 col-md-6">
+            <?=$form->field($model, 'sor', ['options' => [
+                'class' => ''
+            ]])->checkbox()?>
+        </div>
     </div>
     <?php $form->end(); ?>
 </div>

@@ -58,7 +58,7 @@ $form = ActiveForm::begin([
                     ],
                 ])->textInput()?>
             </div>
-            <div class="col-sm-12 col-md-12">
+            <div class="col-sm-12 col-md-6">
                 <?=$form->field($model, 'category_id', [
                     'parts' => ['{icon}' => '<span class="form-control-icon icon-tag"></span>'],
                     'inputOptions' => [
@@ -75,6 +75,17 @@ $form = ActiveForm::begin([
                         'placeholder' => Yii::t('frontend/advert', 'Part condition'),
                     ],
                 ])->dropDownList(PartAdvert::getConditionDropDownList(true))?>
+            </div>
+            <div class="clearfix"></div>
+            <div class="col-sm-12 col-md-6">
+                <?=$form->field($model, 'region_id', [
+                    'parts' => ['{icon}' => '<span class="form-control-icon icon-location"></span>'],
+                    'inputOptions' => [
+                        'class' => 'form-control form-control-with-icon js-select-region-dropdown',
+                        'data-live-search' => 'true',
+                        'placeholder' => Yii::t('frontend/advert', 'Region'),
+                    ],
+                ])->dropDownList(PartForm::getRegionsDropDownList())?>
             </div>
             <div class="col-sm-12 col-md-6">
                 <?=$form->field($model, 'price', [

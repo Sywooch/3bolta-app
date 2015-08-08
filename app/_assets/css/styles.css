@@ -201,6 +201,10 @@ button.selected-default span {
 .top-search a {
     color: #ff5757;
 }
+.top-search .checkbox {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
 .top-logo-menu {
     float: left;
 }

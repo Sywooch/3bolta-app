@@ -4,28 +4,34 @@
  * Если передать переменную $hideDropDown, то будет скрыта выпадашка при наведении
  */
 
+use advert\components\PartsSearchApi;
+use advert\models\PartAdvert;
+use geo\models\Region;
+use storage\models\File;
+use yii\base\View;
+use yii\data\ActiveDataProvider;
 use yii\helpers\Html;
 use yii\helpers\Url;
 
 $hideDropDown = isset($hideDropDown) && $hideDropDown;
 
-/* @var $searchApi \advert\components\PartsSearchApi */
+/* @var $searchApi PartsSearchApi */
 $searchApi = Yii::$app->getModule('advert')->partsSearch;
 
 // ссылки на автомобили
 $automobiles = $searchApi->getAutomobilesLink(['search'], $model);
 
 // получить превью
-/* @var $preivew storage\models\File */
+/* @var $preivew File */
 $preview = $model->getPreview();
 
-/* @var $this \yii\base\View */
-/* @var $dataProvider \yii\data\ActiveDataProvider */
-/* @var $model \advert\models\PartAdvert */
+/* @var $this View */
+/* @var $dataProvider ActiveDataProvider */
+/* @var $model PartAdvert */
 ?>
 <?php if (!$hideDropDown):?>
-    <div class="panel panel-default list-item-hover">
-        <div class="panel-body">
+    <div class="list-item-hover">
+        <div class="panel panel-default panel-body">
             <div class="list-item-internal-desc<?php if ($preview):?> col-lg-8<?php endif;?>">
                 <div class="list-item-title">
                     <h3><?=Html::a(
@@ -46,8 +52,8 @@ $preview = $model->getPreview();
                     </span>
                 </div>
                 <div class="list-item-row list-item-seller-type">
-                    <strong><?=Yii::t('frontend/advert', 'Seller type')?>:</strong>
-                    <?=Yii::t('frontend/advert', 'private person')?>
+                    <i class="icon icon-user"></i>
+                    <?=$model->getSeller(true)?>
                 </div>
             </div>
             <?php if ($preview):?>
@@ -56,9 +62,19 @@ $preview = $model->getPreview();
                 </div>
             <?php endif;?>
 
+            <?php if ($region = $model->region):?>
+                <?php
+                /* @var $region Region */
+                ?>
+                <div class="col-lg-12 list-item-row list-item-region">
+                    <i class="icon icon-location"></i>
+                    <?=Html::encode($region->site_name)?>
+                </div>
+            <?php endif;?>
+
             <?php if (!empty($automobiles)):?>
                 <div class="col-lg-12 list-item-row list-item-automobiles">
-                    <strong><?=Yii::t('frontend/advert', 'Apply to')?>:</strong>
+                    <i class="icon icon-cab"></i>
                     <?php if (count($automobiles) > 10):?>
                         <?=implode(', ', array_slice($automobiles, 0, 8))?>,
                         <?=Html::a(
@@ -97,8 +113,8 @@ $preview = $model->getPreview();
                 </span>
             </div>
             <div class="list-item-row list-item-seller-type">
-                <strong><?=Yii::t('frontend/advert', 'Seller type')?>:</strong>
-                <?=Yii::t('frontend/advert', 'private person')?>
+                <i class="icon icon-user"></i>
+                <?=$model->getSeller(true)?>
             </div>
         </div>
         <?php if ($preview):?>

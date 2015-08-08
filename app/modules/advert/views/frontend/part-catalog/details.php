@@ -3,19 +3,27 @@
  * Вывод результов поиска
  */
 
-/* @var $model \advert\models\PartAdvert */
-use yii\helpers\Html;
-use advert\assets\AdvertDetail;
+/* @var $model PartAdvert */
 
+use advert\assets\AdvertDetail;
+use advert\assets\AdvertList;
+use advert\components\PartsSearchApi;
+use advert\models\PartAdvert;
+use advert\models\PartAdvertImage;
 use app\helpers\Date;
-use app\widgets\Modal;
 use app\widgets\JS;
+use app\widgets\Modal;
+use geo\models\Region;
+use partner\models\Partner;
+use partner\models\TradePoint;
+use yii\data\ActiveDataProvider;
+use yii\helpers\Html;
 use yii\helpers\Url;
 
-/* @var $searchApi \advert\components\PartsSearchApi */
+/* @var $searchApi PartsSearchApi */
 $searchApi = Yii::$app->getModule('advert')->partsSearch;
 
-/* @var $related \yii\data\ActiveDataProvider */
+/* @var $related ActiveDataProvider */
 $related = $searchApi->getRelated($model);
 
 // ссылки на автомобили
@@ -39,13 +47,9 @@ AdvertDetail::register($this);
         <?=$model->getPriceFormated()?>
     </span>
 </div>
-<div class="item-details-row item-details-condition col-md-6 col-xs-12">
+<div class="item-details-row item-details-condition col-xs-12">
     <i class="icon-wrench"></i>
-    <?=$model->getConditionName()?>
-</div>
-<div class="item-details-row item-details-condition col-md-6 col-xs-12">
-    <i class="icon-tag"></i>
-    <?=implode(', ', $model->getCategoriesTree())?>
+    <?=$model->getConditionName()?>, <?=implode(', ', $model->getCategoriesTree())?>
 </div>
 <?php if (!empty($automobiles)):?>
     <div class="item-details-row item-details-automobiles col-xs-12">
@@ -67,7 +71,7 @@ AdvertDetail::register($this);
             <div class="item-details-images-list js-item-image-list">
                 <?php foreach ($images as $k => $image):?>
                     <?php
-                    /* @var $image \advert\models\PartAdvertImage */
+                    /* @var $image PartAdvertImage */
                     ?>
                     <div>
                         <a href="<?=$image->getUrl('image')?>" class="thumbnail<?php if ($k == 0):?> active<?php endif;?>">
@@ -83,32 +87,41 @@ AdvertDetail::register($this);
 
 <?php if ($tradePoint = $model->tradePoint):?>
     <?php
-    /* @var $tradePoint \partner\models\TradePoint */
-    /* @var $partner \partner\models\Partner */
+    /* @var $tradePoint TradePoint */
+    /* @var $partner Partner */
     $partner = $tradePoint->partner;
     ?>
-    <div class="item-details-row item-details-contacts col-md-4 col-xs-12">
+    <div class="item-details-row item-details-contacts col-xs-12">
         <i class="icon-user"></i>
         <?=Html::encode($partner->name)?>
     </div>
-    <div class="item-details-row item-details-contacts col-md-4 col-xs-12">
+    <div class="item-details-row item-details-contacts col-xs-12">
         <i class="icon-phone"></i>
         <?=Html::encode($tradePoint->phone)?>
     </div>
-    <div class="item-details-row item-details-contacts col-md-4 col-xs-12">
+    <div class="item-details-row item-details-contacts col-xs-12">
         <i class="icon-location"></i>
         <?=Html::encode($tradePoint->address)?>
     </div>
 <?php else:?>
     <div class="item-details-row item-details-contacts col-md-4 col-xs-12">
         <i class="icon-user"></i>
-        <?=Html::encode($model->getUserName())?>
+        <?=$model->getSeller(false)?>
         (<?=Yii::t('frontend/advert', 'private person')?>)
     </div>
     <div class="item-details-row item-details-contacts col-md-4 col-xs-12">
         <i class="icon-phone"></i>
         <?=Html::encode($model->getUserPhone())?>
     </div>
+    <?php if ($region = $model->region):?>
+        <?php
+        /* @var $region Region */
+        ?>
+        <div class="item-details-row item-details-contacts col-md-4 col-xs-12">
+            <i class="icon-location"></i>
+            <?=Html::encode($region->site_name)?>
+        </div>
+    <?php endif;?>
 <?php endif;?>
 
 <?php if (!empty($model->description)):?>
@@ -117,7 +130,7 @@ AdvertDetail::register($this);
     </div>
 <?php endif;?>
 <?php if ($related->getCount() > 0 && $relatedList = $related->getModels()):?>
-    <?php advert\assets\AdvertList::register($this); ?>
+    <?php AdvertList::register($this); ?>
     <div class="col-xs-12"><h2><?=Yii::t('frontend/advert', 'Related adverts')?></h2></div>
     <div class="item-details-related">
         <?php foreach ($relatedList as $advert):?>

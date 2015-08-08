@@ -50,6 +50,10 @@
         max-width: 100%;
         margin-left: 15px;
         margin-right: 15px;
+        width: 100%;
+        padding-right: 30px;
+    }
+    .list-item-hover .panel-body {
         box-shadow:5px 5px 12px #c3c3c3;
         -moz-box-shadow:5px 5px 12px #c3c3c3;
         -webkit-box-shadow:5px 5px 12px #c3c3c3;

@@ -3,39 +3,48 @@
  * Форма создания/редактирования торговой точки
  */
 
+use app\components\PhoneValidator;
 use app\widgets\SelectMapLocation;
+use partner\assets\TradePointFormAssets;
+use partner\forms\TradePoint;
+use user\models\User;
 use yii\bootstrap\ActiveForm;
 use yii\helpers\Html;
-use partner\assets\TradePointFormAssets;
+use yii\helpers\Url;
+use yii\web\View;
 use yii\widgets\MaskedInput;
-use app\components\PhoneValidator;
 
 TradePointFormAssets::register($this);
 
 $user = Yii::$app->user->getIdentity();
 
-$phoneFromProfileLabel = $user instanceof \user\models\User ?
+$phoneFromProfileLabel = $user instanceof User ?
     Yii::t('frontend/partner', 'Use phone from <a href="{link}">profile</a>: {phone}', [
-        'link' => \yii\helpers\Url::toRoute(['/user/profile/index']),
+        'link' => Url::toRoute(['/user/profile/index']),
         'phone' => $user->phone,
     ]) :
     Yii::t('frontend/partner', 'Use phone from <a href="{link}">profile</a>', [
-        'link' => \yii\helpers\Url::toRoute(['/user/profile/index']),
+        'link' => Url::toRoute(['/user/profile/index']),
     ]);
 
-/* @var $model \partner\forms\TradePoint */
-/* @var $this \yii\web\View */
+/* @var $model TradePoint */
+/* @var $this View */
 print Html::tag('div', Yii::t('frontend/partner', 'Can\'t send request: system error'), [
     'class' => 'alert alert-danger',
     'style' => 'display: none;',
     'class' => 'trade-point-error',
 ]);
+/* @var $form ActiveForm */
 $form = ActiveForm::begin([
     'id' => 'trade-point-form',
     'enableClientValidation' => false,
     'enableAjaxValidation' => true,
     'validateOnChange' => false,
     'validateOnSubmit' => true,
+]);
+print $form->field($model, 'region_id')->dropDownList(TradePoint::getRegionsDropDownList(), [
+    'class' => 'form-control js-select-region-dropdown',
+    'data-live-search' => 'true',
 ]);
 print $form->field($model, 'address')->widget(SelectMapLocation::className(), [
     'wrapperOptions' => [

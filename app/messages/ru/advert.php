@@ -17,7 +17,7 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'Trade point' => 'Торговая точка',
+    'Region' => 'Регион',
     'Advert description' => 'Описание',
     'Category name' => 'Название категории',
     'Choose mark' => 'Выберите марку',
@@ -35,6 +35,7 @@ return [
     'Part name' => 'Название запчасти',
     'Part price' => 'Цена',
     'Sort' => 'Сортировка',
+    'Trade point' => 'Торговая точка',
     'Upload image' => 'Загрузить изображение',
     'User id' => 'Пользователь',
 ];

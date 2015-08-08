@@ -35,6 +35,7 @@ class PartnersApi extends Component
             'longitude' => $form->longitude,
             'phone' => $form->phone,
             'phone_from_profile' => (boolean) $form->phone_from_profile,
+            'region_id' => (int) $form->region_id,
         ]);
 
         $transaction = $tradePoint->getDb()->beginTransaction();
@@ -74,6 +75,7 @@ class PartnersApi extends Component
             'longitude' => $form->longitude,
             'phone' => $form->phone,
             'phone_from_profile' => (boolean) $form->phone_from_profile,
+            'region_id' => (int) $form->region_id,
             'partner_id' => $partner->id,
         ]);
 

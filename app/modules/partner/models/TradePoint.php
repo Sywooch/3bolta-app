@@ -53,6 +53,7 @@ class TradePoint extends \yii\db\ActiveRecord
             ],
             [['latitude', 'longitude'], 'number', 'min' => -180, 'max' => 180],
             ['address', 'string', 'max' => self::MAX_ADDRESS_LENGTH],
+            ['region_id', 'number', 'integerOnly' => true, 'skipOnEmpty' => false],
         ];
     }
 
@@ -71,6 +72,7 @@ class TradePoint extends \yii\db\ActiveRecord
             'address' => Yii::t('partner', 'Address'),
             'phone' => Yii::t('partner', 'Contact phone'),
             'phone_from_profile' => Yii::t('partner', 'Use profile phone'),
+            'region_id' => Yii::t('partner', 'Region'),
         ];
     }
 

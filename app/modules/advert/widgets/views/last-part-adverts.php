@@ -40,8 +40,8 @@ use yii\helpers\Url;
                             </span>
                         </div>
                         <div class="list-item-row list-item-seller-type">
-                            <strong><?=Yii::t('frontend/advert', 'Seller type')?>:</strong>
-                            <?=Yii::t('frontend/advert', 'private person')?>
+                            <i class="icon icon-user"></i>
+                            <?=$model->getSeller(true)?>
                         </div>
                     </div>
                     <?php if ($preview):?>

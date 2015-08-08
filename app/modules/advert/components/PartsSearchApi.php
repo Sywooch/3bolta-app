@@ -88,6 +88,61 @@ class PartsSearchApi extends \yii\base\Component
     }
 
     /**
+     * Установить запрос по региону (только если не установлен параметр "Искать в других регионах")
+     *
+     * @param ActiveQuery $query
+     * @param PartSearch $form
+     */
+    public function makeRegionQuery(ActiveQuery $query, PartSearch $form)
+    {
+        if (!$form->sor) {
+            /* @var $geoApi \geo\components\GeoApi */
+            $geoApi = \Yii::$app->getModule('geo')->api;
+            /* @var $region \geo\models\Region */
+            $region = $geoApi->getUserRegion(true);
+            if (!$form->sor && $region instanceof \geo\models\Region) {
+                $query->andWhere(['partadvert.region_id' => $region->id]);
+            }
+        }
+    }
+
+    /**
+     * Установить сортировку
+     *
+     * @param ActiveQuery $query
+     * @param PartSearch $form
+     */
+    public function makeSort(ActiveQuery $query, PartSearch $form)
+    {
+        $sort = [];
+        if ($form->sor) {
+            // искать в других регионах, значит сортируем по ближайшим регионам
+            /* @var $geoApi \geo\components\GeoApi */
+            $geoApi = \Yii::$app->getModule('geo')->api;
+            /* @var $region \geo\models\Region */
+            $region = $geoApi->getUserRegion(true);
+            if ($region instanceof \geo\models\Region) {
+                // сортировка по регионам
+                $regionIds = $geoApi->getNearestRegionsIds($region);
+                if (!empty($regionIds)) {
+                    $s = 'CASE partadvert.region_id ' . "\n";
+                    $x = 0;
+                    foreach ($regionIds as $regionId) {
+                        $s .= 'WHEN ' . $regionId . ' THEN ' . ++$x;
+                    }
+                    $s .= 'END' . "\n";
+                    $sort[] = new \yii\db\Expression($s);
+                }
+            }
+        }
+
+        // сортировка по дате
+        $sort[] = new \yii\db\Expression('partadvert.published DESC');
+
+        $query->orderBy($sort);
+    }
+
+    /**
      * Получить результат поиска
      * @param [] $queryParams массив из $_REQUEST
      * @return \yii\data\ActiveDataProvider
@@ -107,11 +162,17 @@ class PartsSearchApi extends \yii\base\Component
             $this->makeCategoryQuery($query, $form->cat);
             // сформировать запрос по состоянию
             $this->makeConditionQuery($query, $form->con);
+            // запрос по региону
+            $this->makeRegionQuery($query, $form);
         }
 
         // своя сортировка
         $query->groupBy('partadvert.id');
-        $query->orderBy('partadvert.published DESC');
+        $sort = $this->makeSort($query, $form);
+
+        // в ActiveQuery не поддерживается сортировка по массиву
+        // соответственно, запрос формируем самостоятельно
+        $sql = $query->createCommand()->rawSql;
 
         return new ActiveDataProvider([
             'query' => $query,

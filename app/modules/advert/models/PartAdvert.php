@@ -8,7 +8,10 @@ use auto\models\Mark;
 use auto\models\Model;
 use auto\models\Modification;
 use auto\models\Serie;
+use geo\models\Region;
 use handbook\models\HandbookValue;
+use partner\models\Partner;
+use partner\models\TradePoint;
 use storage\models\File;
 use user\models\User;
 use Yii;
@@ -16,6 +19,7 @@ use yii\base\Exception;
 use yii\db\ActiveQuery;
 use yii\db\Expression;
 use yii\helpers\ArrayHelper;
+use yii\helpers\Html;
 use yii\web\UploadedFile;
 
 /**
@@ -119,6 +123,7 @@ class PartAdvert extends ActiveRecord
                 'maxSize' => self::UPLOAD_MAX_FILE_SIZE,
             ],
             [['confirmation'], 'safe'],
+            [['region_id'], 'integer', 'skipOnEmpty' => false],
         ];
     }
 
@@ -130,6 +135,7 @@ class PartAdvert extends ActiveRecord
     {
         return [
             'id' => 'ID',
+            'region_id' => Yii::t('advert', 'Region'),
             'advert_name' => Yii::t('advert', 'Part name'),
             'price' => Yii::t('advert', 'Part price'),
             'condition_id' => Yii::t('advert', 'Part condition'),
@@ -320,7 +326,16 @@ class PartAdvert extends ActiveRecord
      */
     public function getTradePoint()
     {
-        return $this->hasOne(\partner\models\TradePoint::className(), ['id' => 'trade_point_id']);
+        return $this->hasOne(TradePoint::className(), ['id' => 'trade_point_id']);
+    }
+
+    /**
+     * Получить регион
+     * @return ActiveQuery
+     */
+    public function getRegion()
+    {
+        return $this->hasOne(Region::className(), ['id' => 'region_id']);
     }
 
     /**
@@ -831,5 +846,34 @@ class PartAdvert extends ActiveRecord
             $ret = DateHelper::formatDate($this->published_to);
         }
         return $ret;
+    }
+
+    /**
+     * Получить продавца:
+     * 1) если компания - возвращает название партнера;
+     * 2) если частное лицо и нет признака $hidePrivatePerson - возаращет имя контактного лица;
+     * 3) иначе - "Частное лицо".
+     *
+     * @return type
+     */
+    public function getSeller($hidePrivatePerson = true)
+    {
+        if ($tradePoint = $this->tradePoint) {
+            /* @var $tradePoint TradePoint */
+            /* @var $partner Partner */
+            $partner = $tradePoint->partner;
+            if ($partner instanceof Partner) {
+                return Html::encode($partner->name);
+            }
+        }
+
+        if (!$hidePrivatePerson && $this->user_name) {
+            return Html::encode($this->user_name);
+        }
+        else if (!$hidePrivatePerson && $user = $this->user) {
+            return Html::encode($user->name);
+        }
+
+        return Yii::t('frontend/advert', 'private person');
     }
 }

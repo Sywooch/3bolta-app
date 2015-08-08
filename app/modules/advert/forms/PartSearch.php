@@ -29,19 +29,24 @@ class PartSearch extends \yii\base\Model
     public $a4;
 
     /**
-     * Категория
+     * @var integer Категория
      */
     public $cat;
 
     /**
-     * Состояние
+     * @var integer Состояние
      */
     public $con;
 
     /**
-     * Запрос
+     * @var string Запрос по строке
      */
     public $q;
+
+    /**
+     * @var boolean показывать также другие регионы
+     */
+    public $sor = true;
 
     /**
      * Правила валидации
@@ -51,7 +56,7 @@ class PartSearch extends \yii\base\Model
     {
         return [
             [['a1', 'a2', 'a3', 'a4', 'cat', 'con'], 'integer'],
-            [['q'], 'safe'],
+            [['q', 'sor'], 'safe'],
             [['q'], 'filter', 'filter' => function($q) {
                 // отсекаем символы
                 return strlen($q) > self::MAX_QUERY_LENGTH ? substr($q, 0, self::MAX_QUERY_LENGTH) : $q;
@@ -92,6 +97,7 @@ class PartSearch extends \yii\base\Model
             'cat' => Yii::t('frontend/advert', 'Category'),
             'con' => Yii::t('frontend/advert', 'Condition'),
             'q' => Yii::t('frontend/advert', 'Part name'),
+            'sor' => Yii::t('frontend/advert', 'Show other regions'),
         ];
     }
 

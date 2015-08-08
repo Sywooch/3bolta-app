@@ -10,12 +10,15 @@ use auto\models\Mark;
 use auto\models\Model;
 use auto\models\Modification;
 use auto\models\Serie;
+use geo\models\Region;
 use handbook\models\HandbookValue;
 use partner\models\Partner;
 use partner\models\TradePoint;
 use user\models\User;
 use Yii;
 use yii\base\Model as BaseModel;
+use yii\helpers\ArrayHelper;
+use yii\web\UploadedFile;
 
 /**
  * Форма добавления/редактирования запчасти.
@@ -53,6 +56,11 @@ class PartForm extends BaseModel
      * @var int установить торговую точку
      */
     protected $_trade_point_id;
+
+    /**
+     * @var integer идентификатор региона
+     */
+    protected $_region_id;
 
     /**
      * Максимальная длина описания
@@ -138,6 +146,7 @@ class PartForm extends BaseModel
             [['user_email'], 'email', 'when' => function($model) {
                 return !$model->getUserId();
             }],
+            ['region_id', 'in', 'range' => array_keys(self::getRegionsDropDownList())],
 
             ['uploadImage', 'validateImagesCount', 'skipOnEmpty' => false],
             ['uploadImage', 'file',
@@ -280,6 +289,7 @@ class PartForm extends BaseModel
     public function attributeLabels()
     {
         return [
+            'region_id' => Yii::t('frontend/advert', 'Region'),
             'name' => Yii::t('frontend/advert', 'Part name'),
             'category_id' => Yii::t('frontend/advert', 'Part category'),
             'condition_id' => Yii::t('frontend/advert', 'Part condition'),
@@ -374,6 +384,7 @@ class PartForm extends BaseModel
             'description' => $advert->description,
             'category_id' => $advert->category_id,
             'condition_id' => $advert->condition_id,
+            'region_id' => $advert->region_id,
         ]);
 
         $ret->setMark($advert->getMarks());
@@ -475,7 +486,7 @@ class PartForm extends BaseModel
         if (is_array($images)) {
             $this->_uploadImage = [];
             foreach ($images as $image) {
-                if ($image instanceof \yii\web\UploadedFile) {
+                if ($image instanceof UploadedFile) {
                     $this->_uploadImage[] = $image;
                 }
             }
@@ -520,5 +531,41 @@ class PartForm extends BaseModel
         $ret = new self();
         $ret->_user_id = $user->id;
         return $ret;
+    }
+
+    /**
+     * Получить идентификаторы регионов
+     * @return array
+     */
+    public static function getRegionsDropDownList()
+    {
+        return ArrayHelper::map(Region::find()->all(), 'id', 'site_name');
+    }
+
+    /**
+     * Получить идентификатор региона
+     * @return integer
+     */
+    public function getRegion_id()
+    {
+        if (is_null($this->_region_id)) {
+            // по умолчанию текущий регион пользователя
+            /* @var $userRegion GeoApi */
+            $geoApi = \Yii::$app->getModule('geo')->api;
+            /* @var $userRegion Region */
+            $userRegion = $geoApi->getUserRegion(true);
+            $this->_region_id = $userRegion instanceof Region ? $userRegion->id : 0;
+        }
+
+        return $this->_region_id;
+    }
+
+    /**
+     * Установить идентификатор региона
+     * @param integer $value
+     */
+    public function setRegion_id($value)
+    {
+        $this->_region_id = (int) $value;
     }
 }

@@ -80,6 +80,41 @@ class GeoApi extends Component
     }
 
     /**
+     * Получить идентификаторы регионов, ближайшие к указанному (включая сам регион).
+     * Максимум - 10 регионов.
+     *
+     * @param float $lat широта
+     * @param float $lng долгота
+     * @return array
+     */
+    public function getNearestRegionsIds(Region $region)
+    {
+        $lat = (float) $region->center_lat;
+        $lng = (float) $region->center_lng;
+
+        $sql = 'SELECT ' . Region::tableName() . '.id, ' . Region::tableName() . '.site_name, ';
+        $sql .= "((ACOS(SIN($lat * PI() / 180) * SIN(" . Region::tableName() . ".center_lat * PI() / 180)";
+        $sql .= "+ COS($lat * PI() / 180) * COS(" . Region::tableName() . ".center_lat * PI() / 180)";
+        $sql .= "* COS(($lng - " . Region::tableName() . ".center_lng) * PI() / 180)) * 180 / PI())";
+        $sql .= "* 60 * 1.1515) as distance";
+
+        $sql .= " FROM " . Region::tableName();
+        $sql .= " ORDER BY distance ASC LIMIT 10";
+
+        /* @var $db \yii\db\Connection */
+        $db = Region::getDb();
+        $res = $db->createCommand($sql)->queryAll();
+
+        $ret = [];
+
+        foreach ($res as $row) {
+            $ret[] = $row['id'];
+        }
+
+        return $ret;
+    }
+
+    /**
      * Получить ближайший регион по координатам
      *
      * @param float $lat широта
