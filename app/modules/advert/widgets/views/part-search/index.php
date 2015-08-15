@@ -66,7 +66,10 @@ use advert\forms\PartSearch;
     </div>
     <div class="row extend-search js-extended-search">
         <div class="extend-search-params">
-            <div class="col-xs-12 col-md-4 js-top-search-region">
+            <div
+                class="col-xs-12 col-md-4 js-top-search-region js-extended-param"
+                data-title="<?=Yii::t('frontend/advert', 'Region')?>"
+            >
                 <?=$form->field($model, 'r', [
                     'parts' => ['{icon}' => '<span class="form-control-icon icon-location"></span>'],
                     'template' => '{input}{icon}<br />' . Html::activeCheckbox($model, 'sor', ['labelOptions' => ['class' => 'top-search-all-regions']]),
@@ -77,13 +80,21 @@ use advert\forms\PartSearch;
                     ],
                 ])->dropDownList(PartSearch::getRegionsDropDownList())?>
             </div>
-            <div class="col-xs-12 col-md-4 form-group top-search-price js-top-search-price">
+            <div
+                class="col-xs-12 col-md-4 form-group top-search-price js-top-search-price js-extended-param"
+                data-title="<?=Yii::t('frontend/advert', 'Price')?>"
+                data-from="<?=Yii::t('frontend/advert', 'from')?>"
+                data-to="<?=Yii::t('frontend/advert', 'to')?>"
+            >
                 <?=Yii::t('frontend/advert', 'Price from')?>
                 <?=Html::activeTextInput($model, 'p1', ['maxlength' => 6, 'class' => 'form-control'])?>
                 <?=Yii::t('frontend/advert', 'to')?>
                 <?=Html::activeTextInput($model, 'p2', ['maxlength' => 6, 'class' => 'form-control'])?>
             </div>
-            <div class="col-xs-12 col-md-4 form-group js-top-search-seller-type">
+            <div
+                class="col-xs-12 col-md-4 form-group js-top-search-seller js-extended-param"
+                data-title="<?=Yii::t('frontend/advert', 'Seller')?>"
+            >
                 <?=$form->field($model, 'st', [
                     'parts' => ['{icon}' => '<span class="form-control-icon icon icon-user"></span>'],
                     'inputOptions' => [

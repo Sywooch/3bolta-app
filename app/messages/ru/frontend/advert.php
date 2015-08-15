@@ -17,7 +17,8 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'Seller' => 'Продавец',
+    'Price' => 'Цена',
+    'from' => 'от',
     'Address' => 'Адрес',
     'Advert description' => 'Описание',
     'Advert title' => 'Заголовок объявления',
@@ -72,6 +73,7 @@ return [
     'Related adverts' => 'Похожие объявления',
     'Required field' => 'Поле обязательно для заполнения',
     'Search' => 'Найти',
+    'Seller' => 'Продавец',
     'Seller type' => 'Продавец',
     'Serie' => 'Серия',
     'Show other regions' => 'Показывать результаты в других регионах',

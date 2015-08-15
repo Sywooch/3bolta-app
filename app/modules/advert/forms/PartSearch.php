@@ -217,7 +217,7 @@ class PartSearch extends BaseModel
         ];
         return ArrayHelper::merge($ret, ArrayHelper::map(HandbookValue::find()->andWhere([
             'handbook_code' => 'company_type'
-        ]), 'id', 'name'));
+        ])->all(), 'id', 'name'));
     }
 
     /**

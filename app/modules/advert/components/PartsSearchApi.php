@@ -1,20 +1,26 @@
 <?php
 namespace advert\components;
 
-use yii\helpers\StringHelper;
-use yii\helpers\ArrayHelper;
-use yii\helpers\Url;
-use yii\helpers\Html;
 use advert\forms\PartSearch;
-use yii\data\ActiveDataProvider;
 use advert\models\PartAdvert;
-use yii\db\ActiveQuery;
 use auto\models\Mark;
+use geo\components\GeoApi;
+use geo\models\Region;
+use Yii;
+use yii\base\Component;
+use yii\data\ActiveDataProvider;
+use yii\db\ActiveQuery;
+use yii\db\ActiveRecord;
+use yii\db\Expression;
+use yii\helpers\ArrayHelper;
+use yii\helpers\Html;
+use yii\helpers\StringHelper;
+use yii\helpers\Url;
 
 /**
  * API для поиска запчастей
  */
-class PartsSearchApi extends \yii\base\Component
+class PartsSearchApi extends Component
 {
     /**
      * Сформировать запрос по ключевому слову
@@ -93,15 +99,62 @@ class PartsSearchApi extends \yii\base\Component
      * @param ActiveQuery $query
      * @param PartSearch $form
      */
-    public function makeRegionQuery(ActiveQuery $query, PartSearch $form)
+    protected function makeRegionQuery(ActiveQuery $query, PartSearch $form)
     {
-        if (!$form->sor) {
-            /* @var $geoApi \geo\components\GeoApi */
-            $geoApi = \Yii::$app->getModule('geo')->api;
-            /* @var $region \geo\models\Region */
-            $region = $geoApi->getUserRegion(true);
-            if (!$form->sor && $region instanceof \geo\models\Region) {
+        if ($form->r && !$form->sor) {
+            /* @var $region Region */
+            $region = Region::find()->andWhere(['id' => (int) $form->r])->one();
+            if ($region instanceof Region) {
                 $query->andWhere(['partadvert.region_id' => $region->id]);
+            }
+        }
+    }
+
+    /**
+     * Установить запрос по цене (от и до)
+     *
+     * @param ActiveQuery $query
+     * @param PartSearch $form
+     */
+    protected function makePriceQuery(ActiveQuery $query, PartSearch $form)
+    {
+        $priceFrom = (float) $form->p1;
+        $priceTo = (float) $form->p2;
+
+        if ($priceFrom > 0) {
+            $query->andWhere(['>=', 'partadvert.price', $priceFrom]);
+        }
+
+        if ($priceTo > 0 && $priceTo >= $priceFrom) {
+            $query->andWhere(['<=', 'partadvert.price', $priceTo]);
+        }
+    }
+
+    /**
+     * Запрос по типу продавца:
+     * - пустая строка - нет поиска по продавцу;
+     * - 0 - всегда частное лицо;
+     * - остальные цифры - это всегда тип юр. лица.
+     *
+     * @param ActiveQuery $query
+     * @param PartSearch $form
+     */
+    protected function makeSellerQuery(ActiveQuery $query, PartSearch $form)
+    {
+        if ($form->st != '' && !is_null($form->st)) {
+            $st = (int) $form->st;
+
+            if ($st == 0) {
+                // частное лицо, не должно быть привязки к торговой точке
+                $query->andWhere(['trade_point_id' => null]);
+            }
+            else {
+                // в остальном - это тип продавца
+                $query->andWhere(['not', ['trade_point_id' => null]]);
+                $query->joinWith(['tradePoint', 'tradePoint.partner'], true, 'INNER JOIN');
+                $query->andWhere([
+                    \partner\models\Partner::tableName() . '.company_type' => $st
+                ]);
             }
         }
     }
@@ -115,13 +168,13 @@ class PartsSearchApi extends \yii\base\Component
     public function makeSort(ActiveQuery $query, PartSearch $form)
     {
         $sort = [];
-        if ($form->sor) {
+        if ($form->sor && $form->r) {
             // искать в других регионах, значит сортируем по ближайшим регионам
-            /* @var $geoApi \geo\components\GeoApi */
-            $geoApi = \Yii::$app->getModule('geo')->api;
-            /* @var $region \geo\models\Region */
-            $region = $geoApi->getUserRegion(true);
-            if ($region instanceof \geo\models\Region) {
+            /* @var $geoApi GeoApi */
+            $geoApi = Yii::$app->getModule('geo')->api;
+            /* @var $region Region */
+            $region = Region::find()->andWhere(['id' => (int) $form->r])->one();
+            if ($region instanceof Region) {
                 // сортировка по регионам
                 $regionIds = $geoApi->getNearestRegionsIds($region);
                 if (!empty($regionIds)) {
@@ -131,21 +184,21 @@ class PartsSearchApi extends \yii\base\Component
                         $s .= 'WHEN ' . $regionId . ' THEN ' . ++$x;
                     }
                     $s .= 'END' . "\n";
-                    $sort[] = new \yii\db\Expression($s);
+                    $sort[] = new Expression($s);
                 }
             }
         }
 
         // сортировка по дате
-        $sort[] = new \yii\db\Expression('partadvert.published DESC');
+        $sort[] = new Expression('partadvert.published DESC');
 
         $query->orderBy($sort);
     }
 
     /**
      * Получить результат поиска
-     * @param [] $queryParams массив из $_REQUEST
-     * @return \yii\data\ActiveDataProvider
+     * @param array $queryParams массив из $_REQUEST
+     * @return ActiveDataProvider
      */
     public function searchItems($queryParams = [])
     {
@@ -164,15 +217,15 @@ class PartsSearchApi extends \yii\base\Component
             $this->makeConditionQuery($query, $form->con);
             // запрос по региону
             $this->makeRegionQuery($query, $form);
+            // запрос по типу продавца
+            $this->makeSellerQuery($query, $form);
+            // запрос по цене
+            $this->makePriceQuery($query, $form);
         }
 
         // своя сортировка
         $query->groupBy('partadvert.id');
-        $sort = $this->makeSort($query, $form);
-
-        // в ActiveQuery не поддерживается сортировка по массиву
-        // соответственно, запрос формируем самостоятельно
-        $sql = $query->createCommand()->rawSql;
+        $this->makeSort($query, $form);
 
         return new ActiveDataProvider([
             'query' => $query,
@@ -194,7 +247,7 @@ class PartsSearchApi extends \yii\base\Component
             $advert->mark, $advert->model,
             $advert->serie, $advert->modification
         ), 'id', function($data) {
-            /* @var $data \yii\db\ActiveRecord */
+            /* @var $data ActiveRecord */
             $queryParam = strtolower(StringHelper::basename($data->className()));
             $parentKey = null;
             $parent = null;
@@ -219,7 +272,7 @@ class PartsSearchApi extends \yii\base\Component
                 'parent' => $parent,
             ];
         }, function($data) {
-            /* @var $data \yii\db\ActiveRecord */
+            /* @var $data ActiveRecord */
             return strtolower(StringHelper::basename($data->className()));
         });
 
