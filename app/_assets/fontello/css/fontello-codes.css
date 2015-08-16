@@ -9,4 +9,7 @@
 .icon-wrench:before { content: '\e807'; } /* '' */
 .icon-user:before { content: '\e808'; } /* '' */
 .icon-phone:before { content: '\e809'; } /* '' */
+.icon-barcode:before { content: '\e80a'; } /* '' */
 .icon-mail-alt:before { content: '\e80b'; } /* '' */
+.icon-comment:before { content: '\e80c'; } /* '' */
+.icon-help-circled:before { content: '\e80d'; } /* '' */

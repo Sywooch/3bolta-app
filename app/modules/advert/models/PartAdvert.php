@@ -33,6 +33,21 @@ class PartAdvert extends ActiveRecord
     const TABLE_SERIE = '{{%advert_serie}}';
 
     /**
+     * Максимальное количество символов в каталожном номере
+     */
+    const CATALOGUE_NUMBER_MAX_LENGTH = 100;
+
+    /**
+     * Максимальная длина названия запчасти
+     */
+    const NAME_MAX_LENGTH = 100;
+
+    /**
+     * Максимальная длина описания
+     */
+    const DESCRIPTION_MAX_LENGTH = 255;
+
+    /**
      * Количество дней по умолчанию для публикации объявлений
      */
     const DEFAULT_PUBLISH_DAYS = 30;
@@ -82,6 +97,9 @@ class PartAdvert extends ActiveRecord
     {
         return [
             [['advert_name', 'price', 'condition_id', 'category_id'], 'required'],
+            ['catalogue_number', 'string', 'max' => self::CATALOGUE_NUMBER_MAX_LENGTH, 'skipOnEmpty' => true],
+            ['advert_name', 'string', 'max' => self::NAME_MAX_LENGTH, 'skipOnEmpty' => false],
+            ['description', 'string', 'max' => self::DESCRIPTION_MAX_LENGTH],
             ['price', 'filter', 'filter' => function($value) {
                 return str_replace(',', '.', $value);
             }],
@@ -137,6 +155,7 @@ class PartAdvert extends ActiveRecord
             'id' => 'ID',
             'region_id' => Yii::t('advert', 'Region'),
             'advert_name' => Yii::t('advert', 'Part name'),
+            'catalogue_number' => Yii::t('advert', 'Catalogue number'),
             'price' => Yii::t('advert', 'Part price'),
             'condition_id' => Yii::t('advert', 'Part condition'),
             'category_id' => Yii::t('advert', 'Part category'),

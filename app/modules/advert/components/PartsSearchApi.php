@@ -31,7 +31,7 @@ class PartsSearchApi extends Component
         if ($q) {
             $query->andFilterWhere(['or',
                 ['like', 'partadvert.advert_name', $q],
-                ['like', 'partadvert.description', $q],
+                ['like', 'partadvert.catalogue_number', $q],
             ]);
         }
     }

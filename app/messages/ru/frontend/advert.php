@@ -17,11 +17,10 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'Price' => 'Цена',
-    'from' => 'от',
+    'Catalogue number' => 'Номер запчасти',
+    'Name or catalogue number' => 'Название или номер запчасти',
     'Address' => 'Адрес',
     'Advert description' => 'Описание',
-    'Advert title' => 'Заголовок объявления',
     'Advert was created' => 'Объявление создано',
     'Advert was published' => 'Объявление опубликовано',
     'Append advert' => 'Добавить объявление',
@@ -56,7 +55,6 @@ return [
     'Model' => 'Модель',
     'Modification' => 'Модификация',
     'My adverts' => 'Мои объявления',
-    'Name' => 'Название',
     'Part category' => 'Категория запчасти',
     'Part condition' => 'Состояние запчасти',
     'Part for' => 'Запчасть для',
@@ -64,6 +62,7 @@ return [
     'Part price' => 'Цена',
     'Phone' => 'Телефон',
     'Place an advert' => 'Разместить объявление',
+    'Price' => 'Цена',
     'Price from' => 'Цена от',
     'Price to' => 'Цена до',
     'Publish to {date}' => 'Опубликовать до {date}',
@@ -85,6 +84,7 @@ return [
     'User id' => 'Пользователь',
     'View' => 'Просмотреть',
     'and {n, plural, =0{automobiles} =1{automobile} one{# automobile} few{# few automobiles} many{# automobiles} other{# automobiles}}' => 'и еще {n, plural, =0{автомобилей} =1{автомобиля} one{# автомобиля} few{# few автомобилей} many{# автомобилей} other{# автомобилей}}',
+    'from' => 'от',
     'private person' => 'частное лицо',
     'to' => 'до',
 ];

@@ -13,6 +13,18 @@
       "src": "fontawesome"
     },
     {
+      "uid": "17ebadd1e3f274ff0205601eef7b9cc4",
+      "css": "help-circled",
+      "code": 59405,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "aa991e8e66ac54b33f0a4b0555597b08",
+      "css": "barcode",
+      "code": 59402,
+      "src": "fontawesome"
+    },
+    {
       "uid": "9937d762aee170b7350b15dd02dd34a3",
       "css": "cab",
       "code": 59397,
@@ -53,6 +65,12 @@
       "css": "wrench",
       "code": 59399,
       "src": "typicons"
+    },
+    {
+      "uid": "51fb22f9ff9d7f60c95ef31e4c59502d",
+      "css": "comment",
+      "code": 59404,
+      "src": "mfglabs"
     },
     {
       "uid": "630529f03c319c01101aa167181b650e",

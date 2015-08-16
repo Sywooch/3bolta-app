@@ -59,7 +59,7 @@ use advert\forms\PartSearch;
                 'parts' => ['{icon}' => '<span class="form-control-icon glyphicon glyphicon-search"></span>'],
                 'inputOptions' => [
                     'class' => 'form-control form-control-with-icon',
-                    'placeholder' => Yii::t('frontend/advert', 'Name'),
+                    'placeholder' => Yii::t('frontend/advert', 'Name or catalogue number'),
                 ]
             ])->textInput(['maxlength' => PartSearch::MAX_QUERY_LENGTH])?>
         </div>

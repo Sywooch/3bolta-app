@@ -189,6 +189,7 @@ class PartsApi extends \yii\base\Component
     {
         $advert->setAttributes([
             'advert_name' => $form->name,
+            'catalogue_number' => $form->catalogue_number,
             'price' => $form->price,
             'description' => $form->description,
             'category_id' => $form->category_id,

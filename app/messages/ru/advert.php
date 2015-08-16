@@ -17,7 +17,7 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'Region' => 'Регион',
+    'Catalogue number' => 'Номер запчасти',
     'Advert description' => 'Описание',
     'Category name' => 'Название категории',
     'Choose mark' => 'Выберите марку',
@@ -34,6 +34,7 @@ return [
     'Part condition' => 'Состояние запчасти',
     'Part name' => 'Название запчасти',
     'Part price' => 'Цена',
+    'Region' => 'Регион',
     'Sort' => 'Сортировка',
     'Trade point' => 'Торговая точка',
     'Upload image' => 'Загрузить изображение',

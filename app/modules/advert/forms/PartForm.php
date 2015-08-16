@@ -62,12 +62,8 @@ class PartForm extends BaseModel
      */
     protected $_region_id;
 
-    /**
-     * Максимальная длина описания
-     */
-    const DESCRIPTION_MAX_LENGTH = 255;
-
     public $name;
+    public $catalogue_number;
     public $category_id;
     public $condition_id;
     public $description;
@@ -113,7 +109,9 @@ class PartForm extends BaseModel
             [['name', 'category_id', 'condition_id', 'price'], 'required', 'message' => Yii::t('frontend/advert', 'Required field')],
             [['mark'], 'required', 'message' => Yii::t('frontend/advert', 'Choose one or more automobiles')],
             [['category_id', 'condition_id'], 'integer'],
-            [['description'], 'string', 'max' => self::DESCRIPTION_MAX_LENGTH],
+            ['catalogue_number', 'string', 'max' => PartAdvert::CATALOGUE_NUMBER_MAX_LENGTH],
+            ['name', 'string', 'max' => PartAdvert::NAME_MAX_LENGTH],
+            ['description', 'string', 'max' => PartAdvert::DESCRIPTION_MAX_LENGTH],
             [['user_name', 'user_phone', 'user_email'], 'required', 'when' => function($model) {
                 return !$model->getUserId();
             }],
@@ -347,6 +345,14 @@ class PartForm extends BaseModel
         }
     }
 
+    /**
+     * Сбросить установленные значения переменных перед выводом
+     */
+    public function resetOutputValues()
+    {
+        $this->_uploadImage = null;
+    }
+
     public function getImages()
     {
         return $this->_uploadImage;
@@ -380,6 +386,7 @@ class PartForm extends BaseModel
             'user_email' => $advert->user_email,
             'user_phone' => $advert->user_phone,
             'name' => $advert->advert_name,
+            'catalogue_number' => $advert->catalogue_number,
             'price' => $advert->price,
             'description' => $advert->description,
             'category_id' => $advert->category_id,

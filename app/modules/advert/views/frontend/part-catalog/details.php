@@ -47,6 +47,12 @@ AdvertDetail::register($this);
         <?=$model->getPriceFormated()?>
     </span>
 </div>
+<?php if ($model->catalogue_number):?>
+    <div class="item-details-row item-details-catalogue-number col-xs-12">
+        <i class="icon-barcode"></i>
+        <?=Html::encode($model->catalogue_number)?>
+    </div>
+<?php endif;?>
 <div class="item-details-row item-details-condition col-xs-12">
     <i class="icon-wrench"></i>
     <?=$model->getConditionName()?>, <?=implode(', ', $model->getCategoriesTree())?>

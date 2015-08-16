@@ -24,6 +24,8 @@ $assetsUrl = Yii::$app->assetManager->getPublishedUrl($frontendAssets->sourcePat
 
 AdvertForm::register($this);
 
+$model->resetOutputValues();
+
 $form = ActiveForm::begin([
     'id' => 'create-advert',
     'enableClientValidation' => false,
@@ -39,12 +41,23 @@ $form = ActiveForm::begin([
 ?>
     <div class="no-content-margin">
         <div class="advert-form-common col-md-12">
-            <div class="col-lg-12">
+            <div class="col-sm-12 col-md-6">
                 <?=$form->field($model, 'name', [
                     'parts' => ['{icon}' => '<span class="form-control-icon icon-megaphone"></span>'],
                     'inputOptions' => [
                         'class' => 'form-control form-control-with-icon',
-                        'placeholder' => Yii::t('frontend/advert', 'Advert title'),
+                        'placeholder' => Yii::t('frontend/advert', 'Part name'),
+                        'maxlength' => PartAdvert::NAME_MAX_LENGTH,
+                    ],
+                ])->textInput()?>
+            </div>
+            <div class="col-sm-12 col-md-6">
+                <?=$form->field($model, 'catalogue_number', [
+                    'parts' => ['{icon}' => '<span class="form-control-icon icon-barcode"></span>'],
+                    'inputOptions' => [
+                        'class' => 'form-control form-control-with-icon',
+                        'placeholder' => Yii::t('frontend/advert', 'Catalogue number'),
+                        'maxlength' => PartAdvert::NAME_MAX_LENGTH,
                     ],
                 ])->textInput()?>
             </div>
@@ -129,7 +142,7 @@ $form = ActiveForm::begin([
             <div class="col-md-12">
                 <?=$form->field($model, 'description')->textarea([
                     'placeholder' => Yii::t('frontend/advert', 'Description'),
-                    'maxlength' => PartForm::DESCRIPTION_MAX_LENGTH
+                    'maxlength' => PartAdvert::DESCRIPTION_MAX_LENGTH
                 ])?>
             </div>
         </div>
