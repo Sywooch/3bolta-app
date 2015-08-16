@@ -11,5 +11,8 @@ return [
         'parts' => [
             'class' => 'advert\components\PartsApi',
         ],
+        'questions' => [
+            'class' => 'advert\components\QuestionsApi',
+        ],
     ],
 ];

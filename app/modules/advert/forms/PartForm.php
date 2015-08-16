@@ -72,6 +72,7 @@ class PartForm extends BaseModel
     public $user_phone;
     public $user_phone_canonical;
     public $user_email;
+    public $allow_questions = true;
 
     /**
      * Правила валидации
@@ -153,6 +154,7 @@ class PartForm extends BaseModel
                 'maxFiles' => PartAdvert::UPLOAD_MAX_FILES,
                 'maxSize' => PartAdvert::UPLOAD_MAX_FILE_SIZE,
             ],
+            ['allow_questions', 'boolean'],
         ];
     }
 
@@ -302,6 +304,7 @@ class PartForm extends BaseModel
             'model' => Yii::t('frontend/advert', 'Choose model'),
             'serie' => Yii::t('frontend/advert', 'Choose serie'),
             'modification' => Yii::t('frontend/advert', 'Choose modification'),
+            'allow_questions' => Yii::t('advert', 'Allow questions by email'),
         ];
     }
 
@@ -392,6 +395,7 @@ class PartForm extends BaseModel
             'category_id' => $advert->category_id,
             'condition_id' => $advert->condition_id,
             'region_id' => $advert->region_id,
+            'allow_questions' => (boolean) $advert->allow_questions,
         ]);
 
         $ret->setMark($advert->getMarks());

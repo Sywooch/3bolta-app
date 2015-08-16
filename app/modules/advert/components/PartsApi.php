@@ -197,6 +197,7 @@ class PartsApi extends \yii\base\Component
             'trade_point_id' => $form->trade_point_id,
             'confirmation' => md5(uniqid() . $form->name . time()),
             'region_id' => $form->region_id,
+            'allow_questions' => (boolean) $form->allow_questions,
         ]);
 
         // привязать автомобили

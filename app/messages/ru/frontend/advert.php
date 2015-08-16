@@ -17,8 +17,11 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'Catalogue number' => 'Номер запчасти',
-    'Name or catalogue number' => 'Название или номер запчасти',
+    'Ask a question for part' => 'Задать вопрос по запчасти',
+    'Your answer' => 'Ваш ответ',
+    'Your e-mail' => 'Ваш e-mail',
+    'Your name' => 'Ваше имя',
+    'Your question' => 'Ваш вопрос',
     'Address' => 'Адрес',
     'Advert description' => 'Описание',
     'Advert was created' => 'Объявление создано',
@@ -27,6 +30,7 @@ return [
     'Apply to' => 'Подходит для',
     'Automobiles' => 'Автомобили',
     'Begin publication' => 'Опубликовано',
+    'Catalogue number' => 'Номер запчасти',
     'Category' => 'Категория',
     'Choose' => 'Выбрать',
     'Choose automobile' => 'Выберите автомобиль',
@@ -55,6 +59,7 @@ return [
     'Model' => 'Модель',
     'Modification' => 'Модификация',
     'My adverts' => 'Мои объявления',
+    'Name or catalogue number' => 'Название или номер запчасти',
     'Part category' => 'Категория запчасти',
     'Part condition' => 'Состояние запчасти',
     'Part for' => 'Запчасть для',

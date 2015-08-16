@@ -200,6 +200,10 @@ $form = ActiveForm::begin([
                 ])->textInput()?>
             </div>
 
+            <div class="col-md-12">
+                <?=$form->field($model, 'allow_questions')->checkbox()?>
+            </div>
+
             <div class="col-xs-12">
                 <?=Html::submitButton(Yii::t('frontend/advert', 'Place an advert'), ['class' => 'btn btn-primary']);?>
             </div>

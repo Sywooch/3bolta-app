@@ -17,8 +17,9 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'Catalogue number' => 'Номер запчасти',
+    'Allow questions by email' => 'Принимать вопросы от пользователей по e-mail',
     'Advert description' => 'Описание',
+    'Catalogue number' => 'Номер запчасти',
     'Category name' => 'Название категории',
     'Choose mark' => 'Выберите марку',
     'Choose model' => 'Выберите модель',

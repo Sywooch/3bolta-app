@@ -142,6 +142,7 @@ class PartAdvert extends ActiveRecord
             ],
             [['confirmation'], 'safe'],
             [['region_id'], 'integer', 'skipOnEmpty' => false],
+            ['allow_questions', 'boolean'],
         ];
     }
 
@@ -171,6 +172,7 @@ class PartAdvert extends ActiveRecord
             'series' => Yii::t('advert', 'Choose serie'),
             'modifications' => Yii::t('advert', 'Choose modificaion'),
             'uploadImage' => Yii::t('advert', 'Upload image'),
+            'allow_questions' => Yii::t('advert', 'Allow questions by email'),
         ];
     }
 
@@ -894,5 +896,22 @@ class PartAdvert extends ActiveRecord
         }
 
         return Yii::t('frontend/advert', 'private person');
+    }
+
+    /**
+     * Возвращает true, если это не объявление текущего пользвоателя
+     * и в объявлении проставлена галка "Разрешить вопросы по e-mail".
+     *
+     * @return boolean
+     */
+    public function allowQuestions()
+    {
+        $ret = $this->allow_questions;
+
+        if ($ret) {
+            $ret = !$this->user_id || $this->user_id != \Yii::$app->user->getId();
+        }
+
+        return $ret;
     }
 }

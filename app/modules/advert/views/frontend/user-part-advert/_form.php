@@ -191,6 +191,10 @@ $form = ActiveForm::begin([
             <?php endif;?>
 
             <div class="col-md-12">
+                <?=$form->field($model, 'allow_questions')->checkbox()?>
+            </div>
+
+            <div class="col-md-12">
                 <?php
                 $button = $model->getExists() ? Yii::t('frontend/advert', 'Update advert') : Yii::t('frontend/advert', 'Place an advert');
                 ?>

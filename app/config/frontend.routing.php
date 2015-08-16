@@ -12,6 +12,7 @@ return [
     // объявления
     '/ads/parts/search' => '/advert/part-catalog/search',
     '/ads/parts/details/<id:(\d+)>' => '/advert/part-catalog/details',
+    '/ads/parts/details/<id:(\d+)>/question' => '/advert/part-catalog/question',
 
     // работа с объявлениями
     '/ads/parts/append' => '/advert/part-advert/append',

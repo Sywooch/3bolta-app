@@ -3,11 +3,10 @@
  * Вывод результов поиска
  */
 
-/* @var $model PartAdvert */
-
 use advert\assets\AdvertDetail;
 use advert\assets\AdvertList;
 use advert\components\PartsSearchApi;
+use advert\forms\QuestionForm;
 use advert\models\PartAdvert;
 use advert\models\PartAdvertImage;
 use app\helpers\Date;
@@ -20,6 +19,8 @@ use yii\data\ActiveDataProvider;
 use yii\helpers\Html;
 use yii\helpers\Url;
 
+/* @var $model PartAdvert */
+/* @var $questionForm QuestionForm */
 /* @var $searchApi PartsSearchApi */
 $searchApi = Yii::$app->getModule('advert')->partsSearch;
 
@@ -128,6 +129,15 @@ AdvertDetail::register($this);
             <?=Html::encode($region->site_name)?>
         </div>
     <?php endif;?>
+<?php endif;?>
+
+<?php if ($model->allowQuestions() && $questionForm instanceof QuestionForm):?>
+    <div class="item-details-row item-details-question col-xs-12">
+        <?=$this->render('_details_message', [
+            'model' => $model,
+            'questionForm' => $questionForm,
+        ])?>
+    </div>
 <?php endif;?>
 
 <?php if (!empty($model->description)):?>
