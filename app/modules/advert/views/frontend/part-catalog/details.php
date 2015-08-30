@@ -6,6 +6,7 @@
 use advert\assets\AdvertDetail;
 use advert\assets\AdvertList;
 use advert\components\PartsSearchApi;
+use advert\forms\AnswerForm;
 use advert\forms\QuestionForm;
 use advert\models\PartAdvert;
 use advert\models\PartAdvertImage;
@@ -21,6 +22,7 @@ use yii\helpers\Url;
 
 /* @var $model PartAdvert */
 /* @var $questionForm QuestionForm */
+/* @var $answerForm AnswerForm */
 /* @var $searchApi PartsSearchApi */
 $searchApi = Yii::$app->getModule('advert')->partsSearch;
 
@@ -30,7 +32,7 @@ $related = $searchApi->getRelated($model);
 // ссылки на автомобили
 $automobiles = $searchApi->getAutomobilesLink(['search'], $model);
 
-AdvertDetail::register($this);
+AdvertDetail::register($this, $questionForm instanceof QuestionForm, $answerForm instanceof AnswerForm);
 ?>
 
 <div class="item-details-title col-md-9 col-xs-12">
@@ -131,7 +133,7 @@ AdvertDetail::register($this);
     <?php endif;?>
 <?php endif;?>
 
-<?php if ($model->allowQuestions() && $questionForm instanceof QuestionForm):?>
+<?php if ($questionForm instanceof QuestionForm):?>
     <div class="item-details-row item-details-question col-xs-12">
         <?=$this->render('_details_message', [
             'model' => $model,
@@ -139,6 +141,13 @@ AdvertDetail::register($this);
         ])?>
     </div>
 <?php endif;?>
+
+<?php if ($answerForm instanceof AnswerForm):
+    print $this->render('_details_answer', [
+        'model' => $model,
+        'answerForm' => $answerForm,
+    ]);
+endif;?>
 
 <?php if (!empty($model->description)):?>
     <div class="col-xs-12 item-details-row item-details-description">

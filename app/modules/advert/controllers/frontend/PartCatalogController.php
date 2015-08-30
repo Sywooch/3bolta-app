@@ -1,10 +1,21 @@
 <?php
 namespace advert\controllers\frontend;
 
-use Yii;
-use app\components\Controller;
-use yii\web\NotFoundHttpException;
+use advert\components\PartsSearchApi;
+use advert\components\QuestionsApi;
+use advert\components\QuestionsApiException;
+use advert\forms\AnswerForm;
+use advert\forms\QuestionForm;
 use advert\models\PartAdvert;
+use app\components\Controller;
+use Yii;
+use yii\data\ActiveDataProvider;
+use yii\filters\VerbFilter;
+use yii\helpers\ArrayHelper;
+use yii\web\ForbiddenHttpException;
+use yii\web\NotFoundHttpException;
+use yii\web\Response;
+use yii\widgets\ActiveForm;
 
 /**
  * Контроллер для вывода объявлений запчастей
@@ -17,46 +28,97 @@ class PartCatalogController extends Controller
      */
     public function behaviors()
     {
-        return \yii\helpers\ArrayHelper::merge([
+        return ArrayHelper::merge([
             'verbs' => [
-                'class' => \yii\filters\VerbFilter::className(),
+                'class' => VerbFilter::className(),
                 'actions' => [
                     'question' => ['post'],
+                    'answer' => ['post'],
                 ],
             ]
         ], parent::behaviors());
     }
 
     /**
-     * Вопрос по запчасти - отправка формы по AJAX.
+     * Ответ на вопрос по запчасти - отправка формы по AJAX.
      *
-     * @param integer $id
-     * @return array
-     * @throws \yii\web\ForbiddenHttpException
-     * @throws NotFoundHttpException
+     * @param integer $id идентификатор объявления
+     * @param string $hash хеш вопроса
      */
-    public function actionQuestion($id)
+    public function actionAnswer($id, $hash)
     {
-        if (!\Yii::$app->request->isAjax) {
-            throw new \yii\web\ForbiddenHttpException();
+        if (!Yii::$app->request->isAjax) {
+            throw new ForbiddenHttpException();
         }
-        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        /* @var $questionsApi QuestionsApi */
+        $questionsApi = \Yii::$app->getModule('advert')->questions;
+        // поиск вопроса
+        $question = $questionsApi->getQuestionByAnswerId($id, $hash);
+        if (!($question instanceof \advert\models\AdvertQuestion)) {
+            throw new NotFoundHttpException();
+        }
+
+        $answerForm = new AnswerForm([
+            'question' => $question,
+        ]);
+
+        $answerForm->load($_POST);
+
+        if (!empty($_POST['ajax'])) {
+            return ActiveForm::validate($answerForm);
+        }
 
         $result = [
             'success' => false,
             'errorCode' => 0,
         ];
 
-        /* @var $searchApi \advert\components\PartsSearchApi */
+        if ($answerForm->validate()) {
+            try {
+                if ($questionsApi->answerToQuestion($answerForm)) {
+                    $result['success'] = true;
+                }
+            } catch (QuestionsApiException $ex) {
+                $result['success'] = false;
+                $result['errorCode'] = $ex->getCode();
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Вопрос по запчасти - отправка формы по AJAX.
+     *
+     * @param integer $id идентификатор объявления
+     * @return array
+     * @throws ForbiddenHttpException
+     * @throws NotFoundHttpException
+     */
+    public function actionQuestion($id)
+    {
+        if (!\Yii::$app->request->isAjax) {
+            throw new ForbiddenHttpException();
+        }
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $result = [
+            'success' => false,
+            'errorCode' => 0,
+        ];
+
+        /* @var $searchApi PartsSearchApi */
         $searchApi = Yii::$app->getModule('advert')->partsSearch;
-        // поиск модели
+        // поиск объявления
         $model = $searchApi->getDetails($id);
         if (!($model instanceof PartAdvert)) {
             throw new NotFoundHttpException();
         }
 
         // создать форму
-        $form = new \advert\forms\QuestionForm();
+        $form = new QuestionForm();
         $form->setAdvert($model);
         if (!\Yii::$app->user->isGuest) {
             $form->setUser_id(\Yii::$app->user->getId());
@@ -64,14 +126,19 @@ class PartCatalogController extends Controller
 
         $form->load($_POST);
 
+        if (!empty($_POST['ajax'])) {
+            // AJAX-валидация
+            return ActiveForm::validate($form);
+        }
+
         if ($form->validate()) {
-            /* @var $questionsApi \advert\components\QuestionsApi */
+            /* @var $questionsApi QuestionsApi */
             $questionsApi = \Yii::$app->getModule('advert')->questions;
             try {
                 if ($questionsApi->createQuestion($form)) {
                     $result['success'] = true;
                 }
-            } catch (\advert\components\QuestionsApiException $ex) {
+            } catch (QuestionsApiException $ex) {
                 $result['success'] = false;
                 $result['errorCode'] = $ex->getCode();
             }
@@ -85,10 +152,10 @@ class PartCatalogController extends Controller
      */
     public function actionSearch()
     {
-        /* @var $searchApi \advert\components\PartsSearchApi */
+        /* @var $searchApi PartsSearchApi */
         $searchApi = Yii::$app->getModule('advert')->partsSearch;
 
-        /* @var $dataProvider \yii\data\ActiveDataProvider */
+        /* @var $dataProvider ActiveDataProvider */
         $dataProvider = $searchApi->searchItems(Yii::$app->request->getQueryParams());
 
         return $this->render('list', [
@@ -98,10 +165,12 @@ class PartCatalogController extends Controller
 
     /**
      * Детальная страница объявления
+     * @param int $id идентификатор объявления
+     * @param string $answer хеш вопроса, на который отвечает владелец объявления
      */
-    public function actionDetails($id)
+    public function actionDetails($id, $answer = '')
     {
-        /* @var $searchApi \advert\components\PartsSearchApi */
+        /* @var $searchApi PartsSearchApi */
         $searchApi = Yii::$app->getModule('advert')->partsSearch;
 
         $model = $searchApi->getDetails($id);
@@ -109,10 +178,24 @@ class PartCatalogController extends Controller
             throw new NotFoundHttpException();
         }
 
+        /* @var $questionsApi QuestionsApi */
+        $questionsApi = \Yii::$app->getModule('advert')->questions;
+        // сформировать форму ответа на вопрос об, если есть хеш ответа
+        $answerForm = null;
+        if ($answer) {
+            $question = $questionsApi->getQuestionByAnswerId($model->id, $answer);
+            if ($question) {
+                $answerForm = new AnswerForm([
+                    'question' => $question,
+                ]);
+            }
+        }
+
         // модель формы вопроса по запчасти
+        // только при условии, что пользователь не отвечает на вопрос
         $questionForm = null;
-        if ($model->allowQuestions()) {
-            $questionForm = new \advert\forms\QuestionForm();
+        if ($model->allowQuestions() && !($answerForm instanceof AnswerForm)) {
+            $questionForm = new QuestionForm();
             $questionForm->setAdvert($model);
             if (!\Yii::$app->user->isGuest) {
                 $questionForm->setUser_id(\Yii::$app->user->getId());
@@ -122,6 +205,7 @@ class PartCatalogController extends Controller
         return $this->render('details', [
             'model' => $model,
             'questionForm' => $questionForm,
+            'answerForm' => $answerForm,
         ]);
     }
 }

@@ -13,6 +13,7 @@ return [
     '/ads/parts/search' => '/advert/part-catalog/search',
     '/ads/parts/details/<id:(\d+)>' => '/advert/part-catalog/details',
     '/ads/parts/details/<id:(\d+)>/question' => '/advert/part-catalog/question',
+    '/ads/parts/details/<id:(\d+)>/answer/<hash:([A-Fa-f0-9]{8})\-([A-Fa-f0-9]{4})\-([A-Fa-f0-9]{4})\-([A-Fa-f0-9]{4})\-([A-Fa-f0-9]{12})>' => '/advert/part-catalog/answer',
 
     // работа с объявлениями
     '/ads/parts/append' => '/advert/part-advert/append',
