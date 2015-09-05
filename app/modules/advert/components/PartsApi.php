@@ -1,22 +1,24 @@
 <?php
 namespace advert\components;
 
-use Yii;
-
+use advert\forms\PartForm;
+use advert\models\Advert;
+use advert\models\AdvertContact;
+use advert\models\AdvertPartParam;
+use advert\models\PartAdvert;
 use DateInterval;
 use DateTime;
-use yii\helpers\Url;
-use yii\base\Exception;
-use advert\forms\PartForm;
-use advert\models\PartAdvert;
 use user\models\User;
-
+use Yii;
+use yii\base\Component;
+use yii\base\Exception;
+use yii\helpers\Url;
 use yii\web\UploadedFile;
 
 /**
  * Компонент для работы с запчастями: публикация, просмотр, редактирование и т.п.
  */
-class PartsApi extends \yii\base\Component
+class PartsApi extends Component
 {
     /**
      * Прикрепить все неавторизованные объявления к пользователю $user.
@@ -24,31 +26,63 @@ class PartsApi extends \yii\base\Component
      * Если у не авторизованных объявлений совпадает e-mail с пользователем - выполняется привязка,
      * иначе - нет.
      *
+     * @todo Крайне непроизводительный подход: сначала берутся все контакты объявлений,
+     *  потом их объявления обновляются, потом обновляются сами контакты.
+     *  Желательно сделать так, чтобы обновление происходило в один запрос.
+     *
      * @param User $user пользователь, к которому требуется прикрепить объявления
      * @return int количество привязанных объявлений
+     * @throws Exception
      */
     public function attachNotAuthAdvertsToUser(User $user)
     {
-        $cnt = PartAdvert::getDb()->createCommand()
-            ->update(PartAdvert::tableName(), [
-                'user_id' => $user->id,
-                'user_name' => null,
-                'user_phone' => null,
-                'user_email' => null,
-            ], "user_id IS NULL AND user_email=:user_email", [
-                ':user_email' => $user->email,
-            ])
-            ->execute();
+        $cnt = 0;
+
+        $res = AdvertContact::find()->andWhere([
+            'user_email' => $user->email
+        ]);
+        foreach ($res->each() as $contact) {
+            /* @var $contact AdvertContact */
+            $transaction = AdvertContact::getDb()->beginTransaction();
+            try {
+                // привязать объявление к пользователю
+                Advert::getDb()->createCommand()->update(Advert::tableName(), [
+                    'user_id' => $user->id,
+                ], "id=:id", [
+                    ':id' => $contact->advert_id,
+                ])
+                ->execute();
+
+                // очистить контакты объявления
+                $contact->setAttributes([
+                    'user_name' => null,
+                    'user_phone' => null,
+                    'user_email' => null,
+                ]);
+                if (!$contact->save()) {
+                    throw new Exception();
+                }
+
+                $cnt++;
+
+                $transaction->commit();
+            }
+            catch (Exception $ex) {
+                $transaction->rollBack();
+                throw $ex;
+            }
+        }
+
         return $cnt;
     }
 
     /**
      * Остановить публикацию объявления текущей датой
      *
-     * @param PartAdvert $advert
+     * @param Advert $advert
      * @return boolean true, в случае успеха
      */
-    public function stopPublication(PartAdvert $advert)
+    public function stopPublication(Advert $advert)
     {
         $ret = false;
 
@@ -68,17 +102,17 @@ class PartsApi extends \yii\base\Component
     /**
      * Обновить дату публикации объявления на DEFAULT_PUBLISH_DAYS дней.
      *
-     * @param PartAdvert $advert
+     * @param Advert $advert
      * @return boolean true в случае успеха
      */
-    public function updatePublication(PartAdvert $advert)
+    public function updatePublication(Advert $advert)
     {
         $ret = false;
 
         if ($advert->active && strtotime($advert->published_to) < time()) {
             try {
                 $date = new DateTime();
-                $date->add(new DateInterval('P' . PartAdvert::DEFAULT_PUBLISH_DAYS . 'D'));
+                $date->add(new DateInterval('P' . Advert::DEFAULT_PUBLISH_DAYS . 'D'));
                 $advert->published = date('Y-m-d H:i:s');
                 $advert->published_to = $date->format('Y-m-d H:i:s');
                 if ($advert->save(true, ['published', 'published_to'])) {
@@ -107,12 +141,12 @@ class PartsApi extends \yii\base\Component
 
         $ret = null;
 
-        $advert = PartAdvert::find()->where(['confirmation' => $code])->one();
+        $advert = Advert::find()->where(['confirmation' => $code])->one();
 
-        if ($advert instanceof PartAdvert && !$advert->active && !$advert->published) {
+        if ($advert instanceof Advert && !$advert->active && !$advert->published) {
             $dateFrom = new DateTime();
             $dateTo = new DateTime();
-            $dateTo->add(new DateInterval('P' . PartAdvert::DEFAULT_PUBLISH_DAYS . 'D'));
+            $dateTo->add(new DateInterval('P' . Advert::DEFAULT_PUBLISH_DAYS . 'D'));
             $advert->setAttributes([
                 'active' => true,
                 'published' => $dateFrom->format('Y-m-d H:i:s'),
@@ -137,17 +171,17 @@ class PartsApi extends \yii\base\Component
      * Отправить уведомление о прекращении публикации объявления по причине
      * истечения срока публикации
      *
-     * @param PartAdvert $advert
+     * @param Advert $advert
      * @return boolean
      */
-    public function sendExpiredConfirmation(PartAdvert $advert)
+    public function sendExpiredConfirmation(Advert $advert)
     {
         if ($advert->active && $advert->published) {
             try {
                 return Yii::$app->mailer->compose('expiredPublishAdvert', [
                     'advert' => $advert
                 ])
-                ->setTo($advert->user_email)
+                ->setTo($advert->getUserEmail())
                 ->setSubject(Yii::t('mail_subjects', 'Publish advert expired'))
                 ->send();
             }
@@ -159,11 +193,11 @@ class PartsApi extends \yii\base\Component
     /**
      * Отправить уведомление о публикации объявления
      *
-     * @param PartAdvert $advert
+     * @param Advert $advert
      * @return boolean
      * @throws Exception
      */
-    public function sendPublishConfirmation(PartAdvert $advert)
+    public function sendPublishConfirmation(Advert $advert)
     {
         if (!$advert->active && !$advert->published && !$advert->user_id) {
             return Yii::$app->mailer->compose('publishNotAuthAdvert', [
@@ -172,7 +206,7 @@ class PartsApi extends \yii\base\Component
                         '/advert/part-advert/confirm', 'code' => $advert->confirmation
                     ], true)
                 ])
-                ->setTo($advert->user_email)
+                ->setTo($advert->getUserEmail())
                 ->setSubject(Yii::t('mail_subjects', 'Publish advert'))
                 ->send();
         }
@@ -180,23 +214,89 @@ class PartsApi extends \yii\base\Component
     }
 
     /**
-     * Установить данные из формы в объявление
+     * Создать или получить модель контактов на основе формы редактирования объявления и
+     * уже созданного объявления
+     *
+     * @param PartForm $form
+     * @param Advert $advert
+     * @return AdvertContact
+     */
+    protected function getContactsFromForm(PartForm $form, Advert $advert)
+    {
+        // получить модель контактов из объявления или создать новую
+        /* @var $contacts AdvertContact */
+        $contacts = $advert->contact instanceof AdvertContact ? $advert->contact : new AdvertContact();
+        if ($contacts->isNewRecord && !$advert->isNewRecord) {
+            // новую модель прикрепляем к объявлению сразу же
+            $contacts->advert_id = $advert->id;
+        }
+
+        if (!$form->getUserId()) {
+            // если добавляется от неавторизованного пользователя
+            $contacts->setAttributes([
+                'user_name' => $form->user_name,
+                'user_phone' => $form->user_phone,
+                'user_email' => $form->user_email,
+            ]);
+        }
+        else {
+            // если от авторизованного пользователя - устанавливаем торговую точку
+            $contacts->setAttributes([
+                'trade_point_id' => $form->trade_point_id,
+            ]);
+        }
+
+        $contacts->setAttributes([
+            'region_id' => $form->region_id,
+        ]);
+
+        // обновить привязку контактов у объявления
+        unset ($advert->contact);
+
+        return $contacts;
+    }
+
+    /**
+     * Создать или получить модель параметров запчасти из формы редактирования
      *
      * @param PartForm $form
      * @param PartAdvert $advert
+     * @return AdvertPartParams
      */
-    protected function setDataFromForm(PartForm $form, PartAdvert $advert)
+    protected function getPartParamsFromForm(PartForm $form, PartAdvert $advert)
+    {
+        /* @var $params AdvertPartParam */
+        $params = $advert->partParam instanceof AdvertPartParam ? $advert->partParam : new AdvertPartParam();
+        if ($params->isNewRecord && !$advert->isNewRecord) {
+            // новую модель прикрепляем к объявлению
+            $params->advert_id = $advert->id;
+        }
+
+        $params->setAttributes([
+            'catalogue_number' => $form->catalogue_number,
+            'category_id' => $form->category_id,
+            'condition_id' => $form->condition_id,
+        ]);
+
+        // обновить привязку параметров у объявления
+        unset ($advert->partParam);
+
+        return $params;
+    }
+
+    /**
+     * Установить данные из формы в объявление
+     *
+     * @param PartForm $form
+     * @param Advert $advert
+     */
+    protected function setDataFromForm(PartForm $form, Advert $advert)
     {
         $advert->setAttributes([
             'advert_name' => $form->name,
-            'catalogue_number' => $form->catalogue_number,
             'price' => $form->price,
             'description' => $form->description,
-            'category_id' => $form->category_id,
-            'condition_id' => $form->condition_id,
-            'trade_point_id' => $form->trade_point_id,
             'confirmation' => md5(uniqid() . $form->name . time()),
-            'region_id' => $form->region_id,
             'allow_questions' => (boolean) $form->allow_questions,
         ]);
 
@@ -229,7 +329,7 @@ class PartsApi extends \yii\base\Component
      *
      * @param PartForm $form
      *
-     * @return PartAdvert|null
+     * @return Advert|null
      */
     public function appendRegisterAdvert(PartForm $form)
     {
@@ -244,14 +344,30 @@ class PartsApi extends \yii\base\Component
                 $advert->user_id = $form->getUserId();
                 $advert->active = true;
 
+                // установить данные из формы
                 $this->setDataFromForm($form, $advert);
 
                 if (!$advert->save()) {
                     throw new Exception();
                 }
 
-                $advert->updateAutomobiles();
+                // привязать контакты
+                /* @var $contacts AdvertContact */
+                $contacts = $this->getContactsFromForm($form, $advert);
+                if (!$contacts->save()) {
+                    throw new Exception();
+                }
 
+                // привязать параметры
+                /* @var $params AdvertPartParam */
+                $params = $this->getPartParamsFromForm($form, $advert);
+                if (!$params->save()) {
+                    throw new Exception();
+                }
+
+                // обновить автомобили
+                $advert->updateAutomobiles();
+                // обновить публикацию
                 $this->updatePublication($advert);
 
                 $ret = $advert;
@@ -260,6 +376,8 @@ class PartsApi extends \yii\base\Component
             } catch (Exception $ex) {
                 $transaction->rollback();
                 $ret = null;
+
+                throw $ex;
             }
         }
 
@@ -278,7 +396,7 @@ class PartsApi extends \yii\base\Component
      *
      * @param PartForm $form
      *
-     * @return PartAdvert|null
+     * @return Advert|null
      */
     public function appendNotRegisterAdvert(PartForm $form)
     {
@@ -290,27 +408,39 @@ class PartsApi extends \yii\base\Component
             try {
                 $advert = new PartAdvert();
 
+                // неавторизованные объявления первым делом создаются неактивными
                 $advert->active = false;
 
-                $advert->setAttributes([
-                    'user_email' => $form->user_email,
-                    'user_name' => $form->user_name,
-                    'user_phone' => $form->user_phone,
-                ]);
-
+                // установить данные из формы
                 $this->setDataFromForm($form, $advert);
 
                 if (!$advert->save()) {
                     throw new Exception();
                 }
 
+                // привязать контакты
+                $contacts = $this->getContactsFromForm($form, $advert);
+                if (!$contacts->save()) {
+                    throw new Exception();
+                }
+
+                // привязать параметры
+                /* @var $params AdvertPartParam */
+                $params = $this->getPartParamsFromForm($form, $advert);
+                if (!$params->save()) {
+                    throw new Exception();
+                }
+
+                // обновить автомобили
                 $advert->updateAutomobiles();
 
+                $transaction->commit();
+
+                // отправить e-mail о необходимости активировать объявление
                 $this->sendPublishConfirmation($advert);
 
                 $ret = $advert;
 
-                $transaction->commit();
             } catch (Exception $ex) {
                 $transaction->rollback();
                 $ret = null;
@@ -331,6 +461,7 @@ class PartsApi extends \yii\base\Component
     {
         $ret = false;
 
+        /* @var $advert PartAdvert */
         $advert = $form->getExists();
         if (!($advert instanceof PartAdvert) || !$form->validate()) {
             return $ret;
@@ -339,11 +470,26 @@ class PartsApi extends \yii\base\Component
         $transaction = PartAdvert::getDb()->beginTransaction();
 
         try {
+            // установить данные из формы
             $this->setDataFromForm($form, $advert);
             if (!$advert->save()) {
                 throw new Exception();
             }
 
+            // обновить контакты
+            $contacts = $this->getContactsFromForm($form, $advert);
+            if (!$contacts->save()) {
+                throw new Exception();
+            }
+
+            // обновить параметры
+            /* @var $params AdvertPartParam */
+            $params = $this->getPartParamsFromForm($form, $advert);
+            if (!$params->save()) {
+                throw new Exception();
+            }
+
+            // обновить автомобили
             $advert->updateAutomobiles();
 
             $transaction->commit();

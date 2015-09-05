@@ -1,11 +1,11 @@
 <?php
 use yii\widgets\DetailView;
-use advert\models\PartAdvert;
+use advert\models\Advert;
 use yii\widgets\MaskedInput;
 use app\components\PhoneValidator;
 
 /* @var $this yii\web\View */
-/* @var $model advert\models\PartAdvert */
+/* @var $model advert\models\Advert */
 /* @var $form yii\bootstrap\ActiveForm */
 if (!$model->isNewRecord) {
     DetailView::widget([
@@ -28,6 +28,6 @@ print $form->field($model, 'user_phone', [
     'mask' => PhoneValidator::PHONE_MASK,
 ]);
 print $form->field($model, 'user_email')->textInput();
-print $form->field($model, 'condition_id')->dropDownList(PartAdvert::getConditionDropDownList());
-print $form->field($model, 'category_id')->dropDownList(PartAdvert::getCategoryDropDownList());
+print $form->field($model, 'condition_id')->dropDownList(Advert::getConditionDropDownList());
+print $form->field($model, 'category_id')->dropDownList(Advert::getCategoryDropDownList());
 print $form->field($model, 'description')->textarea();

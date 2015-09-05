@@ -3,25 +3,32 @@
  * Вывод объявления в списке пользователя
  */
 
-use app\helpers\Date;
+use advert\components\PartsSearchApi;
+use advert\models\AdvertPartParam;
 use advert\models\PartAdvert;
-
+use app\helpers\Date;
+use storage\models\File;
+use yii\base\View;
+use yii\data\ActiveDataProvider;
 use yii\helpers\Html;
 use yii\helpers\Url;
 
-/* @var $searchApi \advert\components\PartsSearchApi */
+/* @var $searchApi PartsSearchApi */
 $searchApi = Yii::$app->getModule('advert')->partsSearch;
 
 // ссылки на автомобили
 $automobiles = $searchApi->getAutomobilesLink(['search'], $model);
 
+/* @var $partParam AdvertPartParam */
+$partParam = $model->partParam;
+
 // получить превью
-/* @var $preivew storage\models\File */
+/* @var $preivew File */
 $preview = $model->getPreview();
 
-/* @var $this \yii\base\View */
-/* @var $dataProvider \yii\data\ActiveDataProvider */
-/* @var $model \advert\models\PartAdvert */
+/* @var $this View */
+/* @var $dataProvider ActiveDataProvider */
+/* @var $model PartAdvert */
 ?>
 <div class="panel panel-default">
     <div class="panel-body">
@@ -55,8 +62,8 @@ $preview = $model->getPreview();
                     <?=$model->getPublishedToFormatted()?>
                     <br />
                     <?php
-                    $date = new \DateTime();
-                    $date->add(new \DateInterval('P' . PartAdvert::DEFAULT_PUBLISH_DAYS . 'D'));
+                    $date = new DateTime();
+                    $date->add(new DateInterval('P' . PartAdvert::DEFAULT_PUBLISH_DAYS . 'D'));
                     $date = Date::formatDate($date);
                     ?>
                     <a href="<?=Url::toRoute(['update-publication', 'id' => $model->id])?>"><?=Yii::t('frontend/advert', 'Publish to {date}', ['date' => $date])?></a>
@@ -81,14 +88,16 @@ $preview = $model->getPreview();
                     <?=$model->getPublishedFormatted()?>
                 </div>
             <?php endif;?>
-            <div class="list-item-row list-item-category">
-                <strong><?=Yii::t('frontend/advert', 'Condition')?>:</strong>
-                <?=$model->getConditionName()?>
-            </div>
-            <div class="list-item-row list-item-category">
-                <strong><?=Yii::t('frontend/advert', 'Category')?>:</strong>
-                <?=implode(', ', $model->getCategoriesTree())?>
-            </div>
+            <?php if ($partParam instanceof AdvertPartParam):?>
+                <div class="list-item-row list-item-category">
+                    <strong><?=Yii::t('frontend/advert', 'Condition')?>:</strong>
+                    <?=$partParam->getConditionName()?>
+                </div>
+                <div class="list-item-row list-item-category">
+                    <strong><?=Yii::t('frontend/advert', 'Category')?>:</strong>
+                    <?=implode(', ', $partParam->getCategoriesTree())?>
+                </div>
+            <?php endif;?>
             <?php if (!empty($automobiles)):?>
                 <div class="list-item-row list-item-automobiles">
                     <strong><?=Yii::t('frontend/advert', 'Apply to')?>:</strong>

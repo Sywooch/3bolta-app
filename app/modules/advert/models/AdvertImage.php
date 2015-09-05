@@ -16,7 +16,7 @@ use yii\web\UploadedFile;
 /**
  * Модель изображения объявления
  */
-class PartAdvertImage extends ActiveRecord
+class AdvertImage extends ActiveRecord
 {
     const PREVIEW_WIDTH = 123;
     const PREVIEW_HEIGHT = 123;
@@ -254,13 +254,13 @@ class PartAdvertImage extends ActiveRecord
     /**
      * Загрузить изображение к объявлению
      *
-     * @param PartAdvert $advert
+     * @param Advert $advert
      * @param UploadedFile $uploadedFile
      * @param boolean $isPreview
      * @return self|null модель загруженной фотографии
      * @throws Exception
      */
-    public static function attachToAdvert(PartAdvert $advert, UploadedFile $uploadedFile, $isPreview = false)
+    public static function attachToAdvert(Advert $advert, UploadedFile $uploadedFile, $isPreview = false)
     {
         $ret = null;
 
@@ -282,7 +282,7 @@ class PartAdvertImage extends ActiveRecord
             $ret->setAttributes([
                 'advert_id' => $advert->id,
                 'file_id' => $file->id,
-                'is_preview' => $isPreview && !empty($filePreview),
+                'is_preview' => $isPreview,
             ]);
             if (!$ret->save()) {
                 throw new Exception();
@@ -393,5 +393,15 @@ class PartAdvertImage extends ActiveRecord
         }
 
         return null;
+    }
+
+    /**
+     * Сортировка по умолчанию
+     *
+     * @return ActiveQuery
+     */
+    public static function find()
+    {
+        return parent::find()->orderBy(self::tableName() . '.is_preview desc');
     }
 }

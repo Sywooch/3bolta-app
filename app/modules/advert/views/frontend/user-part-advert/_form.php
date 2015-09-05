@@ -5,7 +5,8 @@
 
 use advert\assets\AdvertForm;
 use advert\forms\PartForm;
-use advert\models\PartAdvert;
+use advert\models\Advert;
+use advert\models\AdvertPartParam;
 use advert\widgets\AdvertImageInput;
 use app\assets\FrontendAssets;
 use app\widgets\ItemsList;
@@ -47,7 +48,7 @@ $form = ActiveForm::begin([
                     'inputOptions' => [
                         'class' => 'form-control form-control-with-icon',
                         'placeholder' => Yii::t('frontend/advert', 'Part name'),
-                        'maxlength' => PartAdvert::NAME_MAX_LENGTH,
+                        'maxlength' => Advert::NAME_MAX_LENGTH,
                     ],
                 ])->textInput()?>
             </div>
@@ -57,7 +58,7 @@ $form = ActiveForm::begin([
                     'inputOptions' => [
                         'class' => 'form-control form-control-with-icon',
                         'placeholder' => Yii::t('frontend/advert', 'Catalogue number'),
-                        'maxlength' => PartAdvert::NAME_MAX_LENGTH,
+                        'maxlength' => AdvertPartParam::CATALOGUE_NUMBER_MAX_LENGTH,
                     ],
                 ])->textInput()?>
             </div>
@@ -68,7 +69,7 @@ $form = ActiveForm::begin([
                         'class' => 'form-control form-control-with-icon',
                         'placeholder' => Yii::t('frontend/advert', 'Part category'),
                     ],
-                ])->dropDownList(PartAdvert::getCategoryDropDownList(true))?>
+                ])->dropDownList(AdvertPartParam::getCategoryDropDownList(true))?>
             </div>
             <div class="col-sm-12 col-md-6">
                 <?=$form->field($model, 'condition_id', [
@@ -77,7 +78,7 @@ $form = ActiveForm::begin([
                         'class' => 'form-control form-control-with-icon',
                         'placeholder' => Yii::t('frontend/advert', 'Part condition'),
                     ],
-                ])->dropDownList(PartAdvert::getConditionDropDownList(true))?>
+                ])->dropDownList(AdvertPartParam::getConditionDropDownList(true))?>
             </div>
             <div class="clearfix"></div>
             <div class="col-sm-12 col-md-6">
@@ -142,7 +143,7 @@ $form = ActiveForm::begin([
             <div class="col-md-12">
                 <?=$form->field($model, 'description')->textarea([
                     'placeholder' => Yii::t('frontend/advert', 'Description'),
-                    'maxlength' => PartAdvert::DESCRIPTION_MAX_LENGTH
+                    'maxlength' => Advert::DESCRIPTION_MAX_LENGTH
                 ])?>
             </div>
         </div>

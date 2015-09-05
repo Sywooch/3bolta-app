@@ -1,10 +1,10 @@
 <?php
 namespace app\commands;
 
+use advert\components\PartsApi;
+use advert\models\Advert;
 use Yii;
-
 use yii\console\Controller;
-use advert\models\PartAdvert;
 
 /**
  * Работа с объявлениями
@@ -16,12 +16,12 @@ class PartAdvertsController extends Controller
      */
     public function actionCheckExpiration()
     {
-        /* @var $advertApi \advert\components\PartsApi */
+        /* @var $advertApi PartsApi */
         $advertApi = Yii::$app->getModule('advert')->parts;
 
         // получить объявления, публикация которых закончится завтра
-        $res = PartAdvert::findActiveAndPublished()
-            ->andWhere("date(advert.published_to) = date(now()) + 1");
+        $res = Advert::findActiveAndPublished()
+            ->andWhere('date(' . Advert::tableName() . '.published_to) = date(now()) + 1');
 
         foreach ($res->each() as $advert) {
             $advertApi->sendExpiredConfirmation($advert);

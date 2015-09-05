@@ -1,7 +1,7 @@
 <?php
 namespace advert\forms;
 
-use advert\models\PartAdvert;
+use advert\models\AdvertPartParam;
 use auto\models\Mark;
 use auto\models\Model;
 use auto\models\Modification;
@@ -98,12 +98,12 @@ class PartSearch extends BaseModel
             }],
             [['cat'], 'filter', 'filter' => function($i) {
                 // удаляем не нужные категории
-                $avail = array_keys(PartAdvert::getCategoryDropDownList());
+                $avail = array_keys(AdvertPartParam::getCategoryDropDownList());
                 return in_array($i, $avail) ? $i : null;
             }],
             [['con'], 'filter', 'filter' => function($i) {
                 // удаляем не нужные состояния
-                $avail = array_keys(PartAdvert::getConditionDropDownList());
+                $avail = array_keys(AdvertPartParam::getConditionDropDownList());
                 return in_array($i, $avail) ? $i : null;
             }],
             [['p1', 'p2'], 'filter', 'filter' => function($val) {

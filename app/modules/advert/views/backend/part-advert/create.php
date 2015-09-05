@@ -1,6 +1,6 @@
 <?php
 /* @var $this yii\web\View */
-/* @var $model \advert\models\PartAdvert */
+/* @var $model \advert\models\Advert */
 
 $this->title = Yii::t('backend', 'Create {modelClass}', [
     'modelClass' => $this->context->getSubstanceName(),

@@ -3,18 +3,21 @@
  * Вывод виджета последних объявлений
  */
 
-/* @var $this \yii\web\View */
-/* @var $list \advert\models\PartAdvert[] */
-
+use advert\models\PartAdvert;
+use storage\models\File;
 use yii\helpers\Html;
 use yii\helpers\Url;
+use yii\web\View;
+
+/* @var $this View */
+/* @var $list PartAdvert[] */
 ?>
 <div class="index-last-adverts">
     <div class="col-lg-12"><h3><?=Yii::t('main', 'Last adverts')?></h3></div>
     <?php foreach ($list as $model):?>
         <?php
         // получить превью
-        /* @var $preivew storage\models\File */
+        /* @var $preivew File */
         $preview = $model->getPreview();
         ?>
         <div class="col-lg-6 col-sm-12 col-md-6 list-item">

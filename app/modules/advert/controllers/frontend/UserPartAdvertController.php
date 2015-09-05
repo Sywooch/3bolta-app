@@ -3,8 +3,8 @@ namespace advert\controllers\frontend;
 
 use advert\components\PartsApi;
 use advert\forms\PartForm;
+use advert\models\AdvertImage;
 use advert\models\PartAdvert;
-use advert\models\PartAdvertImage;
 use app\components\Controller;
 use user\models\User;
 use Yii;
@@ -69,7 +69,7 @@ class UserPartAdvertController extends Controller
      */
     public function actionStopPublication($id)
     {
-        $advert = PartAdvert::findUserList()->andWhere(['id' => $id])->one();
+        $advert = PartAdvert::findUserList()->andWhere(['id' => (int) $id])->one();
         if (!($advert instanceof PartAdvert)) {
             throw new NotFoundHttpException();
         }
@@ -90,7 +90,7 @@ class UserPartAdvertController extends Controller
      */
     public function actionUpdatePublication($id)
     {
-        $advert = PartAdvert::findUserList()->andWhere(['id' => $id])->one();
+        $advert = PartAdvert::findUserList()->andWhere(['id' => (int) $id])->one();
         if (!($advert instanceof PartAdvert)) {
             throw new NotFoundHttpException();
         }
@@ -172,9 +172,9 @@ class UserPartAdvertController extends Controller
         }
 
         // получить изображение
-        /* @var $image PartAdvertImage */
+        /* @var $image AdvertImage */
         $image = $advert->getImages()->andWhere(['id' => $imageId])->one();
-        if (!($image instanceof PartAdvertImage)) {
+        if (!($image instanceof AdvertImage)) {
             throw new NotFoundHttpException();
         }
 

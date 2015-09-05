@@ -1,12 +1,13 @@
 <?php
 namespace app\components;
 
-use Yii;
-use yii\validators\UniqueValidator;
-
-use advert\models\PartAdvert;
-use user\models\User;
+use advert\models\AdvertContact;
 use partner\models\TradePoint;
+use user\models\User;
+use Yii;
+use yii\base\Model;
+use yii\db\ActiveQuery;
+use yii\validators\UniqueValidator;
 
 /**
  * Валидатор телефона.
@@ -37,15 +38,11 @@ class PhoneValidator extends UniqueValidator
 
     /**
      * Возвращает классы и поля для валидации уникальности.
-     * @return []
+     * @return array
      */
     protected function getUniqueClasses()
     {
         return [
-            PartAdvert::className() => [
-                'attribute' => 'user_phone',
-                'canonicalAttribute' => 'user_phone_canonical',
-            ],
             User::className() => [
                 'attribute' => 'phone',
                 'canonicalAttribute' => 'phone_canonical',
@@ -65,7 +62,7 @@ class PhoneValidator extends UniqueValidator
      */
     public function validateAttribute($model, $attribute)
     {
-        /* @var $model \yii\base\Model */
+        /* @var $model Model */
         if (!preg_match(self::PHONE_PATTERN, $model->$attribute)) {
             // валидация формата телефона
             $this->addError($model, $attribute, Yii::t('main', 'Wrong phone format'));
@@ -78,7 +75,7 @@ class PhoneValidator extends UniqueValidator
             $classes = $this->getUniqueClasses();
             foreach ($classes as $className => $attributes) {
                 if ($className != $model->className() && $className != $this->targetClass) {
-                    /* @var $res \yii\db\ActiveQuery */
+                    /* @var $res ActiveQuery */
                     $res = $className::find();
                     $res->andWhere([$attributes['canonicalAttribute'] => $model->$canonicalAttribute]);
                     if ($res->exists()) {

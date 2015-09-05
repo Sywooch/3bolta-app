@@ -2,12 +2,12 @@
 namespace advert\forms;
 
 use yii\data\ActiveDataProvider;
-use advert\models\PartAdvert;
+use advert\models\Advert;
 
 /**
  * Поиск объявлений по запчастям в бекенде
  */
-class PartAdvertSearch extends PartAdvert
+class PartAdvertSearch extends Advert
 {
     /**
      * @inheritdoc

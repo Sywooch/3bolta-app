@@ -3,7 +3,7 @@ use yii\grid\GridView;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use yii\helpers\Url;
-use advert\models\PartAdvert;
+use advert\models\Advert;
 
 /* @var $this yii\web\View */
 $this->title = Yii::t('backend/advert', 'Advert list');
@@ -29,8 +29,8 @@ print Html::tag('p', Html::a(Yii::t('backend', 'Create {modelClass}', [
     <?= $form->field($searchModel, 'user_email') ?>
     <?= $form->field($searchModel, 'user_id') ?>
     <?= $form->field($searchModel, 'active')->checkbox() ?>
-    <?= $form->field($searchModel, 'category_id')->dropDownList(PartAdvert::getCategoryDropDownList()) ?>
-    <?= $form->field($searchModel, 'condition_id')->dropDownList(PartAdvert::getConditionDropDownList()) ?>
+    <?= $form->field($searchModel, 'category_id')->dropDownList(Advert::getCategoryDropDownList()) ?>
+    <?= $form->field($searchModel, 'condition_id')->dropDownList(Advert::getConditionDropDownList()) ?>
 
     <div class="form-group">
         <?= Html::submitButton(Yii::t('backend', 'Search'), ['class' => 'btn btn-primary']) ?>
@@ -64,7 +64,7 @@ print GridView::widget([
         [
             'attribute' => 'user_name',
             'value' => function($data) {
-                /* @var $data \advert\models\PartAdvert */
+                /* @var $data \advert\models\Advert */
                 if ($data->user_id && $user = $data->getUser()) {
                     return Html::a(
                         $user->name,
@@ -94,7 +94,7 @@ print GridView::widget([
         [
             'attribute' => 'category_id',
             'value' => function($data) {
-                /* @var $data \advert\models\PartAdvert */
+                /* @var $data \advert\models\Advert */
                 if ($data->category_id && $data->category instanceof \advert\models\PartCategory) {
                     return $data->category->name;
                 }
@@ -103,7 +103,7 @@ print GridView::widget([
         [
             'attribute' => 'condition_id',
             'value' => function($data) {
-                /* @var $data \advert\models\PartAdvert */
+                /* @var $data \advert\models\Advert */
                 if ($data->condition_id && $condition = $data->condition) {
                     return $condition->name;
                 }

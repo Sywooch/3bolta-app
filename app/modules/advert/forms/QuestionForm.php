@@ -2,7 +2,7 @@
 namespace advert\forms;
 
 use advert\models\AdvertQuestion;
-use advert\models\PartAdvert;
+use advert\models\Advert;
 use user\models\User;
 use Yii;
 use yii\base\Model;
@@ -37,7 +37,7 @@ class QuestionForm extends Model
     public $captcha;
 
     /**
-     * @var PartAdvert модель объявления
+     * @var Advert модель объявления
      */
     protected $_advert;
 
@@ -82,11 +82,11 @@ class QuestionForm extends Model
 
     /**
      * Установить объявление
-     * @param PartAdvert $val
+     * @param Advert $val
      */
     public function setAdvert($val)
     {
-        if ($val instanceof PartAdvert && $val->allowQuestions()) {
+        if ($val instanceof Advert && $val->allowQuestions()) {
             $this->_advert = $val;
         }
         else {
@@ -97,7 +97,7 @@ class QuestionForm extends Model
     /**
      * Получить объявление
      *
-     * @return PartAdvert|null
+     * @return Advert|null
      */
     public function getAdvert()
     {

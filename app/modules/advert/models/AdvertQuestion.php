@@ -73,7 +73,7 @@ class AdvertQuestion extends ActiveRecord
      */
     public function getAdvert()
     {
-        return $this->hasOne(PartAdvert::className(), ['id' => 'advert_id']);
+        return $this->hasOne(Advert::className(), ['id' => 'advert_id']);
     }
 
     /**

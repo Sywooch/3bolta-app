@@ -1,6 +1,6 @@
 <?php
 use kartik\widgets\FileInput;
-use advert\models\PartAdvert;
+use advert\models\Advert;
 use yii\helpers\Html;
 use yii\helpers\Url;
 
@@ -11,7 +11,7 @@ use yii\helpers\Url;
 $exists = [];
 
 foreach ($model->getImages()->all() as $file) {
-    /* @var $file \advert\models\PartAdvertImage */
+    /* @var $file \advert\models\AdvertImage */
     $exists[] = Html::img($file->file->getUrl(), [
         'class' => 'file-preview-image',
     ]);
@@ -26,8 +26,8 @@ print $form->field($model, 'uploadImage')->widget(FileInput::className(), [
         'initialPreview' => $exists,
         'uploadUrl' => 'ss',
         'multiple' => 'multiple',
-        'maxFileCount' => PartAdvert::UPLOAD_MAX_FILES,
-        'allowedFileExtensions' => PartAdvert::$_imageFileExtensions,
+        'maxFileCount' => Advert::UPLOAD_MAX_FILES,
+        'allowedFileExtensions' => Advert::$_imageFileExtensions,
         'layoutTemplates' => [
             'actions' => '{delete}',
         ],

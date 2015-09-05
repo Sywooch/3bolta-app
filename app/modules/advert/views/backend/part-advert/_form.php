@@ -4,7 +4,7 @@ use yii\bootstrap\ActiveForm;
 use yii\bootstrap\Tabs;
 
 /* @var $this yii\web\View */
-/* @var $model advert\models\PartAdvert */
+/* @var $model advert\models\Advert */
 /* @var $form yii\bootstrap\ActiveForm */
 ?>
 

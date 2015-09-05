@@ -89,9 +89,9 @@ class PartAdvertsGeneratorController extends Controller
     /**
      * Возвращает по $cnt случайных автомобиля из каждой группы
      *
-     * @param [] $data массив, откуда брать данные (@see self::getAutomobilesTree())
+     * @param array $data массив, откуда брать данные (@see self::getAutomobilesTree())
      * @param int $cnt количество случайных записей
-     * @return [] ассоциативный массив для привязок к автомобилям
+     * @return array ассоциативный массив для привязок к автомобилям
      */
     protected function getRandomAutomobiles($data, $cnt = 5)
     {
@@ -168,6 +168,18 @@ class PartAdvertsGeneratorController extends Controller
         return $ret;
     }
 
+    protected function getRegions()
+    {
+        $ret = [];
+
+        $res = \geo\models\Region::find()->all();
+        foreach ($res as $i) {
+            $ret[] = $i->id;
+        }
+
+        return $ret;
+    }
+
     /**
      * Генератор позиций
      *
@@ -188,6 +200,7 @@ class PartAdvertsGeneratorController extends Controller
         $categories = $this->getCategories();
         $conditions = $this->getConditions();
         $auto = $this->getAutomobilesTree();
+        $regions = $this->getRegions();
 
         for ($x = 0; $x < $cnt; $x++) {
             $publishedDate = new \DateTime();
@@ -202,6 +215,7 @@ class PartAdvertsGeneratorController extends Controller
             $userEmail = 'generator-' . uniqid() . '@3bolta.com';
             $category = $categories[array_rand($categories)];
             $condition = $conditions[array_rand($conditions)];
+            $region = $regions[array_rand($regions)];
 
             $transaction = PartAdvert::getDb()->beginTransaction();
 
@@ -215,12 +229,7 @@ class PartAdvertsGeneratorController extends Controller
                     'published' => $publishedDate->format('Y-m-d H:i:s'),
                     'published_to' => $publishedToDate->format('Y-m-d H:i:s'),
                     'advert_name' => $name,
-                    'user_name' => $userName,
-                    'user_phone' => $userPhone,
-                    'user_email' => $userEmail,
                     'price' => $price,
-                    'category_id' => $category,
-                    'condition_id' => $condition,
                 ]);
 
                 $advert->setMarks($autoXref['mark']);
@@ -251,6 +260,28 @@ class PartAdvertsGeneratorController extends Controller
 
                 $advert->updateAutomobiles();
 
+                $contacts = new \advert\models\AdvertContact();
+                $contacts->setAttributes([
+                    'user_name' => $userName,
+                    'user_phone' => $userPhone,
+                    'user_email' => $userEmail,
+                    'region_id' => $region,
+                    'advert_id' => $advert->id,
+                ]);
+                if (!$contacts->save()) {
+                    throw new \yii\base\Exception();
+                }
+
+                $params = new \advert\models\AdvertPartParam();
+                $params->setAttributes([
+                    'category_id' => $category,
+                    'condition_id' => $condition,
+                    'advert_id' => $advert->id,
+                ]);
+                if (!$params->save()) {
+                    throw new \yii\base\Exception();
+                }
+
                 $transaction->commit();
 
                 $this->stdout('done...' . "\n");
@@ -260,6 +291,5 @@ class PartAdvertsGeneratorController extends Controller
                 throw $ex;
             }
         }
-
     }
 }

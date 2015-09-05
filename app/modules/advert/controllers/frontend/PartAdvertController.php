@@ -3,7 +3,7 @@ namespace advert\controllers\frontend;
 
 use advert\components\PartsApi;
 use advert\forms\PartForm;
-use advert\models\PartAdvert;
+use advert\models\Advert;
 use app\components\Controller;
 use Yii;
 use yii\web\Response;
@@ -63,7 +63,7 @@ class PartAdvertController extends Controller
 
             // сохраняем объявление
             $advert = $api->appendNotRegisterAdvert($model);
-            if ($advert instanceof PartAdvert) {
+            if ($advert instanceof Advert) {
                 Yii::$app->session->setFlash('advert_success_created', $advert->id);
                 return $this->refresh();
             }

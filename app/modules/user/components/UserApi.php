@@ -1,23 +1,24 @@
 <?php
 namespace user\components;
 
-use Yii;
-
-use yii\helpers\Url;
-use yii\base\Exception;
-use user\models\User;
-use user\forms\Register;
-use user\models\UserConfirmation;
-use user\forms\LostPassword;
+use advert\components\PartsApi;
+use partner\components\PartnersApi;
 use user\forms\ChangePassword;
+use user\forms\LostPassword;
 use user\forms\Profile;
-
+use user\forms\Register;
+use user\models\User;
+use user\models\UserConfirmation;
+use Yii;
+use yii\base\Component;
+use yii\base\Exception;
+use yii\helpers\Url;
 use yii\web\NotFoundHttpException;
 
 /**
  * API для работы с пользователями
  */
-class UserApi extends \yii\base\Component
+class UserApi extends Component
 {
     /**
      * Подтвердить регистрацию пользователя.
@@ -73,7 +74,7 @@ class UserApi extends \yii\base\Component
                 throw new Exception();
             }
 
-            /* @var $advertApi \advert\components\PartsApi */
+            /* @var $advertApi PartsApi */
             $advertApi = Yii::$app->getModule('advert')->parts;
 
             // прикрепить к пользователю все его неавторизованные объявления
@@ -142,7 +143,7 @@ class UserApi extends \yii\base\Component
 
                 // создать модель партнера, если регистрируемся как партнер
                 if ($form->type == User::TYPE_LEGAL_PERSON) {
-                    /* @var $partnersApi \partner\components\PartnersApi */
+                    /* @var $partnersApi PartnersApi */
                     $partnersApi = Yii::$app->getModule('partner')->api;
                     $partner = $partnersApi->registerPartner($form, $user);
                     if (!$partner) {

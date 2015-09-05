@@ -8,8 +8,10 @@ use advert\assets\AdvertList;
 use advert\components\PartsSearchApi;
 use advert\forms\AnswerForm;
 use advert\forms\QuestionForm;
+use advert\models\AdvertContact;
+use advert\models\AdvertImage;
+use advert\models\AdvertPartParam;
 use advert\models\PartAdvert;
-use advert\models\PartAdvertImage;
 use app\helpers\Date;
 use app\widgets\JS;
 use app\widgets\Modal;
@@ -32,6 +34,12 @@ $related = $searchApi->getRelated($model);
 // ссылки на автомобили
 $automobiles = $searchApi->getAutomobilesLink(['search'], $model);
 
+/* @var $partParam AdvertPartParam */
+$partParam = $model->partParam;
+
+/* @var $contact AdvertContact */
+$contact = $model->contact;
+
 AdvertDetail::register($this, $questionForm instanceof QuestionForm, $answerForm instanceof AnswerForm);
 ?>
 
@@ -50,16 +58,18 @@ AdvertDetail::register($this, $questionForm instanceof QuestionForm, $answerForm
         <?=$model->getPriceFormated()?>
     </span>
 </div>
-<?php if ($model->catalogue_number):?>
-    <div class="item-details-row item-details-catalogue-number col-xs-12">
-        <i class="icon-barcode"></i>
-        <?=Html::encode($model->catalogue_number)?>
+<?php if ($partParam instanceof AdvertPartParam):?>
+    <?php if ($partParam->catalogue_number):?>
+        <div class="item-details-row item-details-catalogue-number col-xs-12">
+            <i class="icon-barcode"></i>
+            <?=Html::encode($partParam->catalogue_number)?>
+        </div>
+    <?php endif;?>
+    <div class="item-details-row item-details-condition col-xs-12">
+        <i class="icon-wrench"></i>
+        <?=$partParam->getConditionName()?>, <?=implode(', ', $partParam->getCategoriesTree())?>
     </div>
 <?php endif;?>
-<div class="item-details-row item-details-condition col-xs-12">
-    <i class="icon-wrench"></i>
-    <?=$model->getConditionName()?>, <?=implode(', ', $model->getCategoriesTree())?>
-</div>
 <?php if (!empty($automobiles)):?>
     <div class="item-details-row item-details-automobiles col-xs-12">
         <i class="icon-cab"></i>
@@ -80,7 +90,7 @@ AdvertDetail::register($this, $questionForm instanceof QuestionForm, $answerForm
             <div class="item-details-images-list js-item-image-list">
                 <?php foreach ($images as $k => $image):?>
                     <?php
-                    /* @var $image PartAdvertImage */
+                    /* @var $image AdvertImage */
                     ?>
                     <div>
                         <a href="<?=$image->getUrl('image')?>" class="thumbnail<?php if ($k == 0):?> active<?php endif;?>">
@@ -94,7 +104,7 @@ AdvertDetail::register($this, $questionForm instanceof QuestionForm, $answerForm
 <?php endif;?>
 
 
-<?php if ($tradePoint = $model->tradePoint):?>
+<?php if ($contact instanceof AdvertContact && $tradePoint = $contact->tradePoint):?>
     <?php
     /* @var $tradePoint TradePoint */
     /* @var $partner Partner */
@@ -122,7 +132,7 @@ AdvertDetail::register($this, $questionForm instanceof QuestionForm, $answerForm
         <i class="icon-phone"></i>
         <?=Html::encode($model->getUserPhone())?>
     </div>
-    <?php if ($region = $model->region):?>
+    <?php if ($contact instanceof AdvertContact && $region = $contact->region):?>
         <?php
         /* @var $region Region */
         ?>

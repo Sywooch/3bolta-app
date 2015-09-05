@@ -1,18 +1,18 @@
 <?php
 namespace app\components;
 
-use Yii;
-
+use advert\models\AdvertContact;
 use app\components\PhoneValidator;
-
-use advert\models\PartAdvert;
 use user\models\User;
+use Yii;
+use yii\helpers\Url;
+use yii\validators\Validator;
 
 /**
  * Объявление нельзя публиковать на телефон, на который уже зарегистрирован пользователь,
  * либо на которое уже существует другое объявление незарегистрированного пользователя.
  */
-class AdvertPhoneValidator extends \yii\validators\Validator
+class AdvertPhoneValidator extends Validator
 {
     /**
      * Валидация
@@ -31,7 +31,7 @@ class AdvertPhoneValidator extends \yii\validators\Validator
                 $hasError = true;
             }
 
-            if (!$hasError && PartAdvert::find()->where(['user_phone_canonical' => $value])->exists()) {
+            if (!$hasError && AdvertContact::find()->where(['user_phone_canonical' => $value])->exists()) {
                 $hasError = true;
             }
 
@@ -41,7 +41,7 @@ class AdvertPhoneValidator extends \yii\validators\Validator
                         'main',
                         'Can\'t create advert to this phone. <a href="{url}">Details...</a>',
                         [
-                            'url' => \yii\helpers\Url::toRoute(Yii::$app->params['rulesRoute'])
+                            'url' => Url::toRoute(Yii::$app->params['rulesRoute'])
                         ]
                     )
                 );

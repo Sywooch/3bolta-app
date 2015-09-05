@@ -1,10 +1,10 @@
 <?php
+
 namespace app\controllers;
 
-use yii\web\Controller;
-
 use Yii;
-use advert\models\PartAdvert;
+use advert\components\PartsSearchApi;
+use yii\web\Controller;
 
 /**
  * Основной контроллер сайта
@@ -16,7 +16,7 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        /* @var $advertApi \advert\components\PartsSearchApi */
+        /* @var $advertApi PartsSearchApi */
         $advertApi = Yii::$app->getModule('advert')->partsSearch;
 
         // получить марки

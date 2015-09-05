@@ -2,8 +2,8 @@
 namespace advert\widgets;
 
 use advert\assets\AdvertImageInput as AdvertImageInputAssets;
-use advert\models\PartAdvert;
-use advert\models\PartAdvertImage;
+use advert\models\Advert;
+use advert\models\AdvertImage;
 use kartik\widgets\FileInput;
 use storage\models\File;
 use Yii;
@@ -18,7 +18,7 @@ use yii\helpers\Url;
 class AdvertImageInput extends FileInput
 {
     /**
-     * @var PartAdvertImage[]
+     * @var AdvertImage[]
      */
     public $existsImages = [];
 
@@ -43,7 +43,7 @@ class AdvertImageInput extends FileInput
         $this->pluginOptions['initialPreview'] = [];
         $this->pluginOptions['initialPreviewConfig'] = [];
         foreach ($this->existsImages as $image) {
-            if ($image instanceof PartAdvertImage && $preview = $image->preview) {
+            if ($image instanceof AdvertImage && $preview = $image->preview) {
                 /* @var $preview File */
                 $this->pluginOptions['initialPreviewConfig'][] = [
                     'catpion' => basename($preview->real_name),
@@ -56,8 +56,8 @@ class AdvertImageInput extends FileInput
         }
         $this->pluginOptions = ArrayHelper::merge([
             'multiple' => 'multiple',
-            'maxFileCount' => PartAdvert::UPLOAD_MAX_FILES,
-            'allowedFileExtensions' => PartAdvert::$_imageFileExtensions,
+            'maxFileCount' => Advert::UPLOAD_MAX_FILES,
+            'allowedFileExtensions' => Advert::$_imageFileExtensions,
             'layoutTemplates' => [
                 'actions' => '{delete}',
                 'footer' => '<div class="file-thumbnail-footer">'
@@ -66,7 +66,7 @@ class AdvertImageInput extends FileInput
             ],
             'previewTemplates' => [
                 'image' => '<div class="file-preview-frame{frameClass}" id="{previewId}" data-fileindex="{fileindex}">'
-                                . '<div class="file-preview-frame-img" style="width: ' . PartAdvertImage::PREVIEW_WIDTH . 'px;">'
+                                . '<div class="file-preview-frame-img" style="width: ' . AdvertImage::PREVIEW_WIDTH . 'px;">'
                                 . '<img src="{data}" class="file-preview-image" title="{caption}" alt="{caption}" style="width:{width};height:{height}">'
                                 . '</div>'
                                 . '{footer}'
@@ -76,7 +76,7 @@ class AdvertImageInput extends FileInput
             'previewSettings' => [
                 'image' => [
                     'width' => 'auto',
-                    'height' => PartAdvertImage::PREVIEW_HEIGHT . 'px'
+                    'height' => AdvertImage::PREVIEW_HEIGHT . 'px'
                 ]
             ],
             'fileActionSettings' => [

@@ -3,14 +3,15 @@
  * Поиск в верхней части
  */
 
-use yii\helpers\Url;
-use yii\bootstrap\ActiveForm;
-use advert\models\PartAdvert;
-use yii\helpers\Html;
 use advert\forms\PartSearch;
+use advert\models\AdvertPartParam;
+use yii\base\View;
+use yii\bootstrap\ActiveForm;
+use yii\helpers\Html;
+use yii\helpers\Url;
 
-/* @var $model advert\forms\PartSearch */
-/* @var $this yii\base\View */
+/* @var $model PartSearch */
+/* @var $this View */
 ?>
 
 <div class="top-search">
@@ -43,7 +44,7 @@ use advert\forms\PartSearch;
                     'class' => 'form-control form-control-with-icon',
                     'placeholder' => Yii::t('frontend/advert', 'Condition'),
                 ],
-            ])->dropDownList(PartAdvert::getConditionDropDownList(true))?>
+            ])->dropDownList(AdvertPartParam::getConditionDropDownList(true))?>
         </div>
         <div class="col-md-4 col-xs-12">
             <?=$form->field($model, 'cat', [
@@ -52,7 +53,7 @@ use advert\forms\PartSearch;
                     'class' => 'form-control form-control-with-icon',
                     'placeholder' => Yii::t('frontend/advert', 'Category'),
                 ],
-            ])->dropDownList(PartAdvert::getCategoryDropDownList(true))?>
+            ])->dropDownList(AdvertPartParam::getCategoryDropDownList(true))?>
         </div>
         <div class="col-md-4 col-xs-12">
             <?=$form->field($model, 'q', [

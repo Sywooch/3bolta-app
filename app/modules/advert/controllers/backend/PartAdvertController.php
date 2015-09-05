@@ -3,7 +3,7 @@ namespace advert\controllers\backend;
 
 use Yii;
 use advert\forms\PartAdvertSearch;
-use advert\models\PartAdvert;
+use advert\models\Advert;
 use yii\web\Response;
 use yii\widgets\ActiveForm;
 use Exception;
@@ -59,7 +59,7 @@ class PartAdvertController extends \app\components\BackendController
      */
     public function actionCreate()
     {
-        $model = new PartAdvert();
+        $model = new Advert();
 
         if (Yii::$app->request->isAjax && $model->load($_POST)) {
             Yii::$app->response->format = Response::FORMAT_JSON;
@@ -180,7 +180,7 @@ class PartAdvertController extends \app\components\BackendController
      */
     protected function findModel($id)
     {
-        $model = PartAdvert::find()->where(['id' => $id])->one();
+        $model = Advert::find()->where(['id' => $id])->one();
 
         if (empty($model)) {
             throw new NotFoundHttpException();

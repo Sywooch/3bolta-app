@@ -1,6 +1,9 @@
 <?php
 namespace advert\forms;
 
+use advert\models\Advert;
+use advert\models\AdvertContact;
+use advert\models\AdvertPartParam;
 use advert\models\PartAdvert;
 use advert\models\PartCategory;
 use app\components\AdvertEmailValidator;
@@ -10,6 +13,7 @@ use auto\models\Mark;
 use auto\models\Model;
 use auto\models\Modification;
 use auto\models\Serie;
+use geo\components\GeoApi;
 use geo\models\Region;
 use handbook\models\HandbookValue;
 use partner\models\Partner;
@@ -110,10 +114,11 @@ class PartForm extends BaseModel
             [['name', 'category_id', 'condition_id', 'price'], 'required', 'message' => Yii::t('frontend/advert', 'Required field')],
             [['mark'], 'required', 'message' => Yii::t('frontend/advert', 'Choose one or more automobiles')],
             [['category_id', 'condition_id'], 'integer'],
-            ['catalogue_number', 'string', 'max' => PartAdvert::CATALOGUE_NUMBER_MAX_LENGTH],
+            ['catalogue_number', 'string', 'max' => AdvertPartParam::CATALOGUE_NUMBER_MAX_LENGTH],
             ['name', 'string', 'max' => PartAdvert::NAME_MAX_LENGTH],
             ['description', 'string', 'max' => PartAdvert::DESCRIPTION_MAX_LENGTH],
             [['user_name', 'user_phone', 'user_email'], 'required', 'when' => function($model) {
+                /* @var $model PartForm */
                 return !$model->getUserId();
             }],
             ['trade_point_id', 'required', 'when' => function($data) {
@@ -127,22 +132,23 @@ class PartForm extends BaseModel
             [['price'], 'number', 'min' => 1, 'max' => 9999999,
                 'numberPattern' => '#^[-]?[0-9]{1,7}[\.|\,]?[0-9]{0,2}$#',
             ],
-            [['user_name', 'name'], 'string', 'max' => 50],
-            ['user_email', 'string', 'max' => 100],
-            ['user_phone_canonical', 'string', 'max' => 11],
-            ['user_phone', 'string', 'max' => 19],
-            [['user_phone'], AdvertPhoneValidator::className()],
-            [['user_phone'], PhoneValidator::className(),
+            ['user_name', 'string', 'max' => AdvertContact::MAX_USER_NAME_LENGTH],
+            ['name', 'string', 'max' => Advert::NAME_MAX_LENGTH],
+            ['user_email', 'string', 'max' => AdvertContact::MAX_EMAIL_LENGTH],
+            ['user_phone_canonical', 'string', 'max' => AdvertContact::MAX_PHONE_CANONICAL_LENGTH],
+            ['user_phone', 'string', 'max' => AdvertContact::MAX_PHONE_LENGTH],
+            ['user_phone', AdvertPhoneValidator::className()],
+            ['user_phone', PhoneValidator::className(),
                 'canonicalAttribute' => 'user_phone_canonical',
-                'targetClass' => PartAdvert::className(), 'targetAttribute' => 'user_phone_canonical', 'when' => function($model) {
+                'targetClass' => AdvertContact::className(), 'targetAttribute' => 'user_phone_canonical', 'when' => function($model) {
                     return !$model->getUserId();
                 }
             ],
-            [['user_email'], 'filter', 'filter' => 'strtolower'],
-            [['user_email'], AdvertEmailValidator::className(), 'when' => function($model) {
+            ['user_email', 'filter', 'filter' => 'strtolower'],
+            ['user_email', AdvertEmailValidator::className(), 'when' => function($model) {
                 return !$model->getUserId();
             }],
-            [['user_email'], 'email', 'when' => function($model) {
+            ['user_email', 'email', 'when' => function($model) {
                 return !$model->getUserId();
             }],
             ['region_id', 'in', 'range' => array_keys(self::getRegionsDropDownList())],
@@ -150,9 +156,9 @@ class PartForm extends BaseModel
             ['uploadImage', 'validateImagesCount', 'skipOnEmpty' => false],
             ['uploadImage', 'file',
                 'skipOnEmpty' => true,
-                'extensions' => PartAdvert::$_imageFileExtensions,
-                'maxFiles' => PartAdvert::UPLOAD_MAX_FILES,
-                'maxSize' => PartAdvert::UPLOAD_MAX_FILE_SIZE,
+                'extensions' => Advert::$_imageFileExtensions,
+                'maxFiles' => Advert::UPLOAD_MAX_FILES,
+                'maxSize' => Advert::UPLOAD_MAX_FILE_SIZE,
             ],
             ['allow_questions', 'boolean'],
         ];
@@ -382,19 +388,33 @@ class PartForm extends BaseModel
         $ret->_exists = $advert;
 
         $ret->_user_id = $advert->user_id;
-        $ret->_trade_point_id = $advert->trade_point_id;
+
+        /* @var $contact AdvertContact */
+        $contact = $advert->contact;
+        if ($contact instanceof AdvertContact) {
+            $ret->_trade_point_id = $contact->trade_point_id;
+            $ret->setAttributes([
+                'user_name' => $contact->user_name,
+                'user_email' => $contact->user_email,
+                'user_phone' => $contact->user_phone,
+                'region_id' => $contact->region_id,
+            ]);
+        }
+
+        /* @var $partParam AdvertPartParam */
+        $partParam = $advert->partParam;
+        if ($partParam instanceof AdvertPartParam) {
+            $ret->setAttributes([
+                'catalogue_number' => $partParam->catalogue_number,
+                'category_id' => $partParam->category_id,
+                'condition_id' => $partParam->condition_id,
+            ]);
+        }
 
         $ret->setAttributes([
-            'user_name' => $advert->user_name,
-            'user_email' => $advert->user_email,
-            'user_phone' => $advert->user_phone,
             'name' => $advert->advert_name,
-            'catalogue_number' => $advert->catalogue_number,
             'price' => $advert->price,
             'description' => $advert->description,
-            'category_id' => $advert->category_id,
-            'condition_id' => $advert->condition_id,
-            'region_id' => $advert->region_id,
             'allow_questions' => (boolean) $advert->allow_questions,
         ]);
 

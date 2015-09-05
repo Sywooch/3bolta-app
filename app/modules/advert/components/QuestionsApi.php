@@ -4,7 +4,7 @@ namespace advert\components;
 use advert\forms\AnswerForm;
 use advert\forms\QuestionForm;
 use advert\models\AdvertQuestion;
-use advert\models\PartAdvert;
+use advert\models\Advert;
 use Yii;
 use yii\base\Component;
 use yii\base\Exception;
@@ -59,9 +59,9 @@ class QuestionsApi extends Component
             throw new QuestionsApiException('', QuestionsApiException::QUESTION_NOT_FOUND);
         }
 
-        /* @var $advert PartAdvert */
+        /* @var $advert Advert */
         $advert = $question->advert;
-        if (!($advert instanceof PartAdvert)) {
+        if (!($advert instanceof Advert)) {
             throw new QuestionsApiException('', QuestionsApiException::QUESTION_NOT_FOUND);
         }
 
@@ -120,7 +120,7 @@ class QuestionsApi extends Component
         $ret = false;
 
         $advert = $form->getAdvert();
-        if (!($advert instanceof PartAdvert) || $advert->isNewRecord) {
+        if (!($advert instanceof Advert) || $advert->isNewRecord) {
             throw new QuestionsApiException('', QuestionsApiException::ADVERT_NOT_FOUND);
         }
 

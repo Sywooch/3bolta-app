@@ -1,17 +1,19 @@
 <?php
+
 namespace advert\controllers\frontend;
 
+use Yii;
 use advert\components\PartsSearchApi;
 use advert\components\QuestionsApi;
 use advert\components\QuestionsApiException;
 use advert\forms\AnswerForm;
 use advert\forms\QuestionForm;
-use advert\models\PartAdvert;
-use app\components\Controller;
-use Yii;
+use advert\models\Advert;
+use advert\models\AdvertQuestion;
 use yii\data\ActiveDataProvider;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
+use app\components\Controller;
 use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
@@ -53,10 +55,10 @@ class PartCatalogController extends Controller
         Yii::$app->response->format = Response::FORMAT_JSON;
 
         /* @var $questionsApi QuestionsApi */
-        $questionsApi = \Yii::$app->getModule('advert')->questions;
+        $questionsApi = Yii::$app->getModule('advert')->questions;
         // поиск вопроса
         $question = $questionsApi->getQuestionByAnswerId($id, $hash);
-        if (!($question instanceof \advert\models\AdvertQuestion)) {
+        if (!($question instanceof AdvertQuestion)) {
             throw new NotFoundHttpException();
         }
 
@@ -99,7 +101,7 @@ class PartCatalogController extends Controller
      */
     public function actionQuestion($id)
     {
-        if (!\Yii::$app->request->isAjax) {
+        if (!Yii::$app->request->isAjax) {
             throw new ForbiddenHttpException();
         }
         Yii::$app->response->format = Response::FORMAT_JSON;
@@ -113,15 +115,15 @@ class PartCatalogController extends Controller
         $searchApi = Yii::$app->getModule('advert')->partsSearch;
         // поиск объявления
         $model = $searchApi->getDetails($id);
-        if (!($model instanceof PartAdvert)) {
+        if (!($model instanceof Advert)) {
             throw new NotFoundHttpException();
         }
 
         // создать форму
         $form = new QuestionForm();
         $form->setAdvert($model);
-        if (!\Yii::$app->user->isGuest) {
-            $form->setUser_id(\Yii::$app->user->getId());
+        if (!Yii::$app->user->isGuest) {
+            $form->setUser_id(Yii::$app->user->getId());
         }
 
         $form->load($_POST);
@@ -133,7 +135,7 @@ class PartCatalogController extends Controller
 
         if ($form->validate()) {
             /* @var $questionsApi QuestionsApi */
-            $questionsApi = \Yii::$app->getModule('advert')->questions;
+            $questionsApi = Yii::$app->getModule('advert')->questions;
             try {
                 if ($questionsApi->createQuestion($form)) {
                     $result['success'] = true;
@@ -174,12 +176,12 @@ class PartCatalogController extends Controller
         $searchApi = Yii::$app->getModule('advert')->partsSearch;
 
         $model = $searchApi->getDetails($id);
-        if (!($model instanceof PartAdvert)) {
+        if (!($model instanceof Advert)) {
             throw new NotFoundHttpException();
         }
 
         /* @var $questionsApi QuestionsApi */
-        $questionsApi = \Yii::$app->getModule('advert')->questions;
+        $questionsApi = Yii::$app->getModule('advert')->questions;
         // сформировать форму ответа на вопрос об, если есть хеш ответа
         $answerForm = null;
         if ($answer) {
@@ -197,8 +199,8 @@ class PartCatalogController extends Controller
         if ($model->allowQuestions() && !($answerForm instanceof AnswerForm)) {
             $questionForm = new QuestionForm();
             $questionForm->setAdvert($model);
-            if (!\Yii::$app->user->isGuest) {
-                $questionForm->setUser_id(\Yii::$app->user->getId());
+            if (!Yii::$app->user->isGuest) {
+                $questionForm->setUser_id(Yii::$app->user->getId());
             }
         }
 

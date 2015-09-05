@@ -1,6 +1,6 @@
 <?php
 
-use advert\models\PartAdvert;
+use advert\models\Advert;
 use yii\base\View;
 use yii\helpers\Html;
 
@@ -18,7 +18,7 @@ use yii\helpers\Html;
 /* @var $advertLink string */
 /* @var $answerLink string */
 /* @var $question string */
-/* @var $advert PartAdvert */
+/* @var $advert Advert */
 ?>
 
 Здравствуйте, <?=Html::encode($toUserName)?>!<br />

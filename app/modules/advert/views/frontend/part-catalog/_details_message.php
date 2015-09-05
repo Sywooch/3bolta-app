@@ -4,14 +4,14 @@
  */
 
 use advert\forms\QuestionForm;
-use advert\models\PartAdvert;
+use advert\models\Advert;
 use app\widgets\Modal;
 use yii\helpers\Html;
 use yii\web\View;
 use yii\widgets\ActiveForm;
 
 /* @var $this View */
-/* @var $model PartAdvert */
+/* @var $model Advert */
 /* @var $questionForm QuestionForm */
 ?>
 

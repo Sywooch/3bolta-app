@@ -5,6 +5,7 @@
  */
 
 use advert\components\PartsSearchApi;
+use advert\models\AdvertContact;
 use advert\models\PartAdvert;
 use geo\models\Region;
 use storage\models\File;
@@ -62,7 +63,7 @@ $preview = $model->getPreview();
                 </div>
             <?php endif;?>
 
-            <?php if ($region = $model->region):?>
+            <?php if ($model->contact instanceof AdvertContact && ($region = $model->contact->region)):?>
                 <?php
                 /* @var $region Region */
                 ?>
