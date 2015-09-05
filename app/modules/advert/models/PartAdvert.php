@@ -407,4 +407,98 @@ class PartAdvert extends Advert
             $this->_modifications = [];
         }
     }
+
+    /**
+     * Получить название состояния
+     * @return string
+     */
+    public function getConditionName()
+    {
+        if ($this->partParam instanceof AdvertPartParam) {
+            /* @var $partParam AdvertPartParam */
+            $partParam = $this->partParam;
+            if ($partParam->condition instanceof \handbook\models\HandbookValue) {
+                return $partParam->condition->name;
+            }
+        }
+
+        return '';
+    }
+
+    /**
+     * Выпадающий список категорий
+     * @param boolean $getFirstEmpty получать первый пустой элемент
+     * @return array
+     */
+    public static function getCategoryDropDownList($getFirstEmpty = false)
+    {
+        $ret = [];
+
+        if ($getFirstEmpty) {
+            $ret[''] = '';
+        }
+
+        $categories = PartCategory::find()->all();
+        foreach ($categories as $category) {
+            $ret[$category->id] = $category->getFormatName();
+        }
+
+        return $ret;
+    }
+
+    /**
+     * Выпадающий список состояния запчасти
+     * @param boolean $getFirstEmpty получать первый пустой элемент
+     * @return array
+     */
+    public static function getConditionDropDownList($getFirstEmpty = false)
+    {
+        $ret = [];
+
+        if ($getFirstEmpty) {
+            $ret[''] = '';
+        }
+
+        $values = \handbook\models\HandbookValue::find()->andWhere(['handbook_code' => 'part_condition'])->all();
+        foreach ($values as $value) {
+            $ret[$value->id] = $value->name;
+        }
+
+        return $ret;
+    }
+
+
+    /**
+     * Получить массив дерева категорий
+     * @return array
+     */
+    public function getCategoriesTree()
+    {
+        $ret = [];
+
+        /* @var $partParam AdvertPartParam */
+        $partParam = $this->partParam;
+        if ($partParam->category_id && $category = $partParam->category) {
+            $ret[$category->id] = $category->name;
+            $previewDepth = $category->depth;
+            if ($previewDepth > 1) {
+                $list = PartCategory::find()
+                    ->andWhere(['<', 'lft', $category->lft])
+                    ->orderBy('lft DESC')
+                    ->all();
+                foreach ($list as $i) {
+                    if ($i->depth == $previewDepth) {
+                        continue;
+                    }
+                    $previewDepth = $i->depth;
+                    $ret[$i->id] = $i->name;
+                    if ($previewDepth == 1) {
+                        break;
+                    }
+                }
+            }
+        }
+
+        return array_reverse($ret, true);
+    }
 }

@@ -3,6 +3,8 @@
 use advert\assets\AdvertForm;
 use advert\forms\PartForm;
 use advert\models\Advert;
+use advert\models\AdvertPartParam;
+use advert\models\PartAdvert;
 use advert\widgets\AdvertImageInput;
 use app\assets\FrontendAssets;
 use app\components\PhoneValidator;
@@ -67,7 +69,7 @@ $form = ActiveForm::begin([
                     'inputOptions' => [
                         'class' => 'form-control form-control-with-icon',
                         'placeholder' => Yii::t('frontend/advert', 'Catalogue number'),
-                        'maxlength' => \advert\models\AdvertPartParam::CATALOGUE_NUMBER_MAX_LENGTH,
+                        'maxlength' => AdvertPartParam::CATALOGUE_NUMBER_MAX_LENGTH,
                     ],
                 ])->textInput()?>
             </div>
@@ -78,7 +80,7 @@ $form = ActiveForm::begin([
                         'class' => 'form-control form-control-with-icon',
                         'placeholder' => Yii::t('frontend/advert', 'Part category'),
                     ],
-                ])->dropDownList(\advert\models\AdvertPartParam::getCategoryDropDownList(true))?>
+                ])->dropDownList(PartAdvert::getCategoryDropDownList(true))?>
             </div>
             <div class="col-sm-12 col-md-6">
                 <?=$form->field($model, 'condition_id', [
@@ -87,7 +89,7 @@ $form = ActiveForm::begin([
                         'class' => 'form-control form-control-with-icon',
                         'placeholder' => Yii::t('frontend/advert', 'Part condition'),
                     ],
-                ])->dropDownList(\advert\models\AdvertPartParam::getConditionDropDownList(true))?>
+                ])->dropDownList(PartAdvert::getConditionDropDownList(true))?>
             </div>
             <div class="clearfix"></div>
             <div class="col-sm-12 col-md-6">

@@ -398,7 +398,8 @@ class PartsSearchApi extends Component
      */
     public function getRelated(PartAdvert $advert, $limit = 4)
     {
-        $query = $this->getSearchQuery(true, false);;
+        $partParam = $advert->partParam;
+        $query = $this->getSearchQuery($partParam instanceof AdvertPartParam, false);;
 
         $query->andWhere(['<>', Advert::tableName() . '.id', $advert->id]);
 
@@ -411,7 +412,9 @@ class PartsSearchApi extends Component
         );
 
         // сформировать запрос по категории
-        $this->makeCategoryQuery($query, $advert->category_id);
+        if ($partParam instanceof AdvertPartParam) {
+            $this->makeCategoryQuery($query, $partParam->category_id);
+        }
 
         $query->groupBy(Advert::tableName() . '.id');
         $query->orderBy(Advert::tableName() . '.published DESC');

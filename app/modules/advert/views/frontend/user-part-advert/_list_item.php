@@ -19,9 +19,6 @@ $searchApi = Yii::$app->getModule('advert')->partsSearch;
 // ссылки на автомобили
 $automobiles = $searchApi->getAutomobilesLink(['search'], $model);
 
-/* @var $partParam AdvertPartParam */
-$partParam = $model->partParam;
-
 // получить превью
 /* @var $preivew File */
 $preview = $model->getPreview();
@@ -88,16 +85,14 @@ $preview = $model->getPreview();
                     <?=$model->getPublishedFormatted()?>
                 </div>
             <?php endif;?>
-            <?php if ($partParam instanceof AdvertPartParam):?>
-                <div class="list-item-row list-item-category">
-                    <strong><?=Yii::t('frontend/advert', 'Condition')?>:</strong>
-                    <?=$partParam->getConditionName()?>
-                </div>
-                <div class="list-item-row list-item-category">
-                    <strong><?=Yii::t('frontend/advert', 'Category')?>:</strong>
-                    <?=implode(', ', $partParam->getCategoriesTree())?>
-                </div>
-            <?php endif;?>
+            <div class="list-item-row list-item-category">
+                <strong><?=Yii::t('frontend/advert', 'Condition')?>:</strong>
+                <?=$model->getConditionName()?>
+            </div>
+            <div class="list-item-row list-item-category">
+                <strong><?=Yii::t('frontend/advert', 'Category')?>:</strong>
+                <?=implode(', ', $model->getCategoriesTree())?>
+            </div>
             <?php if (!empty($automobiles)):?>
                 <div class="list-item-row list-item-automobiles">
                     <strong><?=Yii::t('frontend/advert', 'Apply to')?>:</strong>

@@ -58,18 +58,16 @@ AdvertDetail::register($this, $questionForm instanceof QuestionForm, $answerForm
         <?=$model->getPriceFormated()?>
     </span>
 </div>
-<?php if ($partParam instanceof AdvertPartParam):?>
-    <?php if ($partParam->catalogue_number):?>
-        <div class="item-details-row item-details-catalogue-number col-xs-12">
-            <i class="icon-barcode"></i>
-            <?=Html::encode($partParam->catalogue_number)?>
-        </div>
-    <?php endif;?>
-    <div class="item-details-row item-details-condition col-xs-12">
-        <i class="icon-wrench"></i>
-        <?=$partParam->getConditionName()?>, <?=implode(', ', $partParam->getCategoriesTree())?>
+<?php if ($partParam instanceof AdvertPartParam && $partParam->catalogue_number):?>
+    <div class="item-details-row item-details-catalogue-number col-xs-12">
+        <i class="icon-barcode"></i>
+        <?=Html::encode($partParam->catalogue_number)?>
     </div>
 <?php endif;?>
+<div class="item-details-row item-details-condition col-xs-12">
+    <i class="icon-wrench"></i>
+    <?=$model->getConditionName()?>, <?=implode(', ', $model->getCategoriesTree())?>
+</div>
 <?php if (!empty($automobiles)):?>
     <div class="item-details-row item-details-automobiles col-xs-12">
         <i class="icon-cab"></i>
