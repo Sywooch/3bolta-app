@@ -10,13 +10,13 @@ use Yii;
 use yii\base\Exception;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
-use yii\imagine\Image;
+use yii\imagine\Image as BaseImage;
 use yii\web\UploadedFile;
 
 /**
  * Модель изображения объявления
  */
-class AdvertImage extends ActiveRecord
+class Image extends ActiveRecord
 {
     const PREVIEW_WIDTH = 123;
     const PREVIEW_HEIGHT = 123;
@@ -90,8 +90,8 @@ class AdvertImage extends ActiveRecord
 
             if ($file->width <= $width && $file->height <= $height) {
                 // создать рамку вокруг
-                $origImage = Image::getImagine()->open($file->getPath());
-                $newImage = Image::getImagine()->create(new Box($width, $height))
+                $origImage = BaseImage::getImagine()->open($file->getPath());
+                $newImage = BaseImage::getImagine()->create(new Box($width, $height))
                     //->fill(new \Imagine\Image\Color('#FFF'))
                     ->paste($origImage, new Point(
                         ($width - $file->width) / 2,
@@ -100,7 +100,7 @@ class AdvertImage extends ActiveRecord
                     ->save($path, ['quality' => 100]);
             }
             else {
-                Image::getImagine()->open($file->getPath())
+                BaseImage::getImagine()->open($file->getPath())
                     ->thumbnail(new Box($width, $height), ManipulatorInterface::THUMBNAIL_OUTBOUND)
                     ->save($path, ['quality' => 80]);
             }

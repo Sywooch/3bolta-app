@@ -45,7 +45,7 @@ $modal = Modal::begin([
         'enableClientValidation' => true,
         'enableAjaxValidation' => true,
     ]);
-    if ($question instanceof \advert\models\AdvertQuestion) {
+    if ($question instanceof \advert\models\Question) {
         print '<strong>' . Yii::t('frontend/advert', 'User name') . ':</strong> ' . Html::encode($question->from_user_name) . '<br />';
         print '<strong>' . Yii::t('frontend/advert', 'Question') . ':</strong> <br />';
         print Html::tag('div', Html::encode($question->question), [

@@ -1,7 +1,7 @@
 <?php
 namespace app\components;
 
-use advert\models\AdvertContact;
+use advert\models\Contact;
 use app\components\PhoneValidator;
 use user\models\User;
 use Yii;
@@ -31,7 +31,7 @@ class AdvertPhoneValidator extends Validator
                 $hasError = true;
             }
 
-            if (!$hasError && AdvertContact::find()->where(['user_phone_canonical' => $value])->exists()) {
+            if (!$hasError && Contact::find()->where(['user_phone_canonical' => $value])->exists()) {
                 $hasError = true;
             }
 

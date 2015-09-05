@@ -9,7 +9,7 @@ use advert\components\QuestionsApiException;
 use advert\forms\AnswerForm;
 use advert\forms\QuestionForm;
 use advert\models\Advert;
-use advert\models\AdvertQuestion;
+use advert\models\Question;
 use yii\data\ActiveDataProvider;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
@@ -58,7 +58,7 @@ class PartCatalogController extends Controller
         $questionsApi = Yii::$app->getModule('advert')->questions;
         // поиск вопроса
         $question = $questionsApi->getQuestionByAnswerId($id, $hash);
-        if (!($question instanceof AdvertQuestion)) {
+        if (!($question instanceof Question)) {
             throw new NotFoundHttpException();
         }
 

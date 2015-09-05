@@ -12,7 +12,7 @@ use yii\db\ActiveQuery;
  * - состояние;
  * - категория.
  */
-class AdvertPartParam extends ActiveRecord
+class PartParam extends ActiveRecord
 {
     /**
      * Максимальное количество символов в каталожном номере
@@ -81,6 +81,6 @@ class AdvertPartParam extends ActiveRecord
      */
     public function getAdvert()
     {
-        return $this->hasOne(PartAdvert::className(), ['id' => 'advert_id']);
+        return $this->hasOne(Part::className(), ['id' => 'advert_id']);
     }
 }

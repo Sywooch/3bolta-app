@@ -4,8 +4,8 @@
  */
 
 use advert\components\PartsSearchApi;
-use advert\models\AdvertPartParam;
-use advert\models\PartAdvert;
+use advert\models\PartParam;
+use advert\models\Part;
 use app\helpers\Date;
 use storage\models\File;
 use yii\base\View;
@@ -25,7 +25,7 @@ $preview = $model->getPreview();
 
 /* @var $this View */
 /* @var $dataProvider ActiveDataProvider */
-/* @var $model PartAdvert */
+/* @var $model Part */
 ?>
 <div class="panel panel-default">
     <div class="panel-body">
@@ -60,7 +60,7 @@ $preview = $model->getPreview();
                     <br />
                     <?php
                     $date = new DateTime();
-                    $date->add(new DateInterval('P' . PartAdvert::DEFAULT_PUBLISH_DAYS . 'D'));
+                    $date->add(new DateInterval('P' . Part::DEFAULT_PUBLISH_DAYS . 'D'));
                     $date = Date::formatDate($date);
                     ?>
                     <a href="<?=Url::toRoute(['update-publication', 'id' => $model->id])?>"><?=Yii::t('frontend/advert', 'Publish to {date}', ['date' => $date])?></a>

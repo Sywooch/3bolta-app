@@ -12,7 +12,7 @@ use yii\db\ActiveQuery;
 /**
  * Модель контактов объявления
  */
-class AdvertContact extends ActiveRecord
+class Contact extends ActiveRecord
 {
     /**
      * Максимальная длина строки с именем пользователя
@@ -54,7 +54,7 @@ class AdvertContact extends ActiveRecord
             ['advert_id', 'integer'],
             [['user_name', 'user_phone', 'user_email'], 'required', 'when' => function($model) {
                 // обязательна либо привязка к пользователю, либо координаты пользователя
-                /* @var $model AdvertContact */
+                /* @var $model Contact */
                 /* @var $advert Advert */
                 $advert = $model->advert;
                 if ($advert instanceof Advert) {
@@ -64,7 +64,7 @@ class AdvertContact extends ActiveRecord
             }],
             ['trade_point_id', 'integer', 'skipOnEmpty' => false, 'when' => function($model) {
                 // обязательна привязка к ТТ, если пользователь - партнер
-                /* @var $model AdvertContact */
+                /* @var $model Contact */
                 /* @var $advert Advert */
                 $advert = $model->advert;
                 if ($advert instanceof Advert) {
@@ -84,7 +84,7 @@ class AdvertContact extends ActiveRecord
             [['user_email'], 'filter', 'filter' => 'strtolower'],
             [['user_email'], 'email', 'when' => function($model) {
                 // e-mail обязателен, если у родителя нет привязки к пользователю
-                /* @var $model AdvertContact */
+                /* @var $model Contact */
                 /* @var $advert Advert */
                 $advert = $model->advert;
                 return !($advert instanceof Advert) || empty($advert->user_id);

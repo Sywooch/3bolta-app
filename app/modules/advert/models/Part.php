@@ -16,7 +16,7 @@ use yii\helpers\ArrayHelper;
  * - привязка объявления к модели AdvertPartParam;
  * - остальные действия, которых недостаточно в основной модели Advert.
  */
-class PartAdvert extends Advert
+class Part extends Advert
 {
     /**
      * Связующая таблица марок
@@ -121,7 +121,7 @@ class PartAdvert extends Advert
      */
     public function getPartParam()
     {
-        return $this->hasOne(AdvertPartParam::className(), ['advert_id' => 'id']);
+        return $this->hasOne(PartParam::className(), ['advert_id' => 'id']);
     }
 
     /**
@@ -414,8 +414,8 @@ class PartAdvert extends Advert
      */
     public function getConditionName()
     {
-        if ($this->partParam instanceof AdvertPartParam) {
-            /* @var $partParam AdvertPartParam */
+        if ($this->partParam instanceof PartParam) {
+            /* @var $partParam PartParam */
             $partParam = $this->partParam;
             if ($partParam->condition instanceof \handbook\models\HandbookValue) {
                 return $partParam->condition->name;
@@ -476,7 +476,7 @@ class PartAdvert extends Advert
     {
         $ret = [];
 
-        /* @var $partParam AdvertPartParam */
+        /* @var $partParam PartParam */
         $partParam = $this->partParam;
         if ($partParam->category_id && $category = $partParam->category) {
             $ret[$category->id] = $category->name;

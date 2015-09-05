@@ -3,7 +3,7 @@ namespace advert\components;
 
 use advert\forms\AnswerForm;
 use advert\forms\QuestionForm;
-use advert\models\AdvertQuestion;
+use advert\models\Question;
 use advert\models\Advert;
 use Yii;
 use yii\base\Component;
@@ -23,12 +23,12 @@ class QuestionsApi extends Component
      *
      * @param integer $advertId идентификатор объвления
      * @param string $answerHash хеш вопроса
-     * @return AdvertQuestion|null
+     * @return Question|null
      */
     public function getQuestionByAnswerId($advertId, $answerHash)
     {
         try {
-            return AdvertQuestion::find()->andWhere([
+            return Question::find()->andWhere([
                 'advert_id' => (int) $advertId,
                 'hash' => (string) $answerHash,
             ])->one();
@@ -53,9 +53,9 @@ class QuestionsApi extends Component
             throw new QuestionsApiException('', QuestionsApiException::VALIDATION_ERROR);
         }
 
-        /* @var $question AdvertQuestion */
+        /* @var $question Question */
         $question = $form->getQuestion();
-        if (!($question instanceof AdvertQuestion)) {
+        if (!($question instanceof Question)) {
             throw new QuestionsApiException('', QuestionsApiException::QUESTION_NOT_FOUND);
         }
 
@@ -128,7 +128,7 @@ class QuestionsApi extends Component
             throw new QuestionsApiException('', QuestionsApiException::VALIDATION_ERROR);
         }
 
-        $model = new AdvertQuestion();
+        $model = new Question();
 
         // установить данные из формы
         $model->setAttributes([

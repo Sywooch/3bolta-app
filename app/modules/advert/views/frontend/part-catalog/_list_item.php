@@ -5,8 +5,8 @@
  */
 
 use advert\components\PartsSearchApi;
-use advert\models\AdvertContact;
-use advert\models\PartAdvert;
+use advert\models\Contact;
+use advert\models\Part;
 use geo\models\Region;
 use storage\models\File;
 use yii\base\View;
@@ -28,7 +28,7 @@ $preview = $model->getPreview();
 
 /* @var $this View */
 /* @var $dataProvider ActiveDataProvider */
-/* @var $model PartAdvert */
+/* @var $model Part */
 ?>
 <?php if (!$hideDropDown):?>
     <div class="list-item-hover">
@@ -63,7 +63,7 @@ $preview = $model->getPreview();
                 </div>
             <?php endif;?>
 
-            <?php if ($model->contact instanceof AdvertContact && ($region = $model->contact->region)):?>
+            <?php if ($model->contact instanceof Contact && ($region = $model->contact->region)):?>
                 <?php
                 /* @var $region Region */
                 ?>

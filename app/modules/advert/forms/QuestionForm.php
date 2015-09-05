@@ -1,7 +1,7 @@
 <?php
 namespace advert\forms;
 
-use advert\models\AdvertQuestion;
+use advert\models\Question;
 use advert\models\Advert;
 use user\models\User;
 use Yii;
@@ -125,8 +125,8 @@ class QuestionForm extends Model
                     $this->addError($attribute, 'Error');
                 }
             }],
-            ['user_name', 'string', 'max' => AdvertQuestion::MAX_NAME_LENGTH],
-            ['user_email', 'string', 'max' => AdvertQuestion::MAX_EMAIL_LENGTH],
+            ['user_name', 'string', 'max' => Question::MAX_NAME_LENGTH],
+            ['user_email', 'string', 'max' => Question::MAX_EMAIL_LENGTH],
             ['user_email', 'email', 'skipOnEmpty' => true],
             ['question', 'string'],
         ];

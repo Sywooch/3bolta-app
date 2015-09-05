@@ -3,8 +3,8 @@ namespace advert\controllers\frontend;
 
 use advert\components\PartsApi;
 use advert\forms\PartForm;
-use advert\models\AdvertImage;
-use advert\models\PartAdvert;
+use advert\models\Image;
+use advert\models\Part;
 use app\components\Controller;
 use user\models\User;
 use Yii;
@@ -53,7 +53,7 @@ class UserPartAdvertController extends Controller
     public function actionList()
     {
         $dataProvider = new ActiveDataProvider([
-            'query' => PartAdvert::findUserList(),
+            'query' => Part::findUserList(),
         ]);
 
         return $this->render('list', [
@@ -69,8 +69,8 @@ class UserPartAdvertController extends Controller
      */
     public function actionStopPublication($id)
     {
-        $advert = PartAdvert::findUserList()->andWhere(['id' => (int) $id])->one();
-        if (!($advert instanceof PartAdvert)) {
+        $advert = Part::findUserList()->andWhere(['id' => (int) $id])->one();
+        if (!($advert instanceof Part)) {
             throw new NotFoundHttpException();
         }
 
@@ -90,8 +90,8 @@ class UserPartAdvertController extends Controller
      */
     public function actionUpdatePublication($id)
     {
-        $advert = PartAdvert::findUserList()->andWhere(['id' => (int) $id])->one();
-        if (!($advert instanceof PartAdvert)) {
+        $advert = Part::findUserList()->andWhere(['id' => (int) $id])->one();
+        if (!($advert instanceof Part)) {
             throw new NotFoundHttpException();
         }
 
@@ -165,16 +165,16 @@ class UserPartAdvertController extends Controller
         $id = (int) $id;
         $imageId = (int) Yii::$app->request->post('key');
         // проверить, что объявление принадлежит авторизованному пользователю
-        /* @var $advert PartAdvert */
-        $advert = PartAdvert::findUserList()->andWhere(['id' => $id])->one();
-        if (!($advert instanceof PartAdvert)) {
+        /* @var $advert Part */
+        $advert = Part::findUserList()->andWhere(['id' => $id])->one();
+        if (!($advert instanceof Part)) {
             throw new NotFoundHttpException();
         }
 
         // получить изображение
-        /* @var $image AdvertImage */
+        /* @var $image Image */
         $image = $advert->getImages()->andWhere(['id' => $imageId])->one();
-        if (!($image instanceof AdvertImage)) {
+        if (!($image instanceof Image)) {
             throw new NotFoundHttpException();
         }
 
@@ -202,8 +202,8 @@ class UserPartAdvertController extends Controller
         /* @var $user User */
         $user = Yii::$app->user->getIdentity();
 
-        $advert = PartAdvert::findUserList()->andWhere(['id' => $id])->one();
-        if (!($advert instanceof PartAdvert)) {
+        $advert = Part::findUserList()->andWhere(['id' => $id])->one();
+        if (!($advert instanceof Part)) {
             throw new NotFoundHttpException();
         }
 

@@ -6,7 +6,7 @@ use Yii;
 use yii\helpers\FileHelper;
 use yii\web\UploadedFile;
 use yii\console\Controller;
-use advert\models\PartAdvert;
+use advert\models\Part;
 use advert\models\PartCategory;
 use handbook\models\HandbookValue;
 use auto\models\Mark;
@@ -217,12 +217,12 @@ class PartAdvertsGeneratorController extends Controller
             $condition = $conditions[array_rand($conditions)];
             $region = $regions[array_rand($regions)];
 
-            $transaction = PartAdvert::getDb()->beginTransaction();
+            $transaction = Part::getDb()->beginTransaction();
 
             try {
                 $this->stdout('Create advert ' . $x . ': ');
 
-                $advert = new PartAdvert();
+                $advert = new Part();
 
                 $advert->setAttributes([
                     'active' => true,
@@ -260,7 +260,7 @@ class PartAdvertsGeneratorController extends Controller
 
                 $advert->updateAutomobiles();
 
-                $contacts = new \advert\models\AdvertContact();
+                $contacts = new \advert\models\Contact();
                 $contacts->setAttributes([
                     'user_name' => $userName,
                     'user_phone' => $userPhone,
@@ -272,7 +272,7 @@ class PartAdvertsGeneratorController extends Controller
                     throw new \yii\base\Exception();
                 }
 
-                $params = new \advert\models\AdvertPartParam();
+                $params = new \advert\models\PartParam();
                 $params->setAttributes([
                     'category_id' => $category,
                     'condition_id' => $condition,

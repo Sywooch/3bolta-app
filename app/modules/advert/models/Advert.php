@@ -159,17 +159,17 @@ class Advert extends ActiveRecord
     {
         $firstImage = null;
         foreach ($this->getImages()->all() as $image) {
-            /* @var $image AdvertImage */
+            /* @var $image Image */
             if ($image->is_preview) {
                 return true;
             }
             if (!$firstImage) {
-                /* @var $firstImage AdvertImage */
+                /* @var $firstImage Image */
                 $firstImage = $image;
             }
         }
 
-        if (!($firstImage instanceof AdvertImage)) {
+        if (!($firstImage instanceof Image)) {
             return true;
         }
 
@@ -200,7 +200,7 @@ class Advert extends ActiveRecord
         try {
             $isFirst = true;
             foreach ($uploadedFiles as $file) {
-                AdvertImage::attachToAdvert($this, $file, $isFirst && !$hasPreview);
+                Image::attachToAdvert($this, $file, $isFirst && !$hasPreview);
                 $isFirst = false;
             }
 
@@ -255,7 +255,7 @@ class Advert extends ActiveRecord
         if ($this->user_id && $user = $this->getUser()) {
             return $user->email;
         }
-        else if ($this->contact instanceof AdvertContact) {
+        else if ($this->contact instanceof Contact) {
             return $this->contact->user_email;
         }
         return '';
@@ -270,7 +270,7 @@ class Advert extends ActiveRecord
         if ($this->user_id && $user = $this->getUser()) {
             return $user->phone;
         }
-        else if ($this->contact instanceof AdvertContact) {
+        else if ($this->contact instanceof Contact) {
             return $this->contact->user_phone;
         }
         return '';
@@ -285,7 +285,7 @@ class Advert extends ActiveRecord
         if ($this->user_id && $user = $this->getUser()) {
             return $user->name;
         }
-        else if ($this->contact instanceof AdvertContact) {
+        else if ($this->contact instanceof Contact) {
             return $this->contact->user_name;
         }
         return '';
@@ -309,7 +309,7 @@ class Advert extends ActiveRecord
         $ret = null;
         foreach ($this->images as $image) {
             if ($image->is_preview) {
-                /* @var $image AdvertImage */
+                /* @var $image Image */
                 $ret = $image->preview;
             }
         }
@@ -324,7 +324,7 @@ class Advert extends ActiveRecord
     public function getPreviewUrl()
     {
         $image = $this->getPreview();
-        return $image instanceof AdvertImage ? $image->getUrl() : null;
+        return $image instanceof Image ? $image->getUrl() : null;
     }
 
     /**
@@ -333,7 +333,7 @@ class Advert extends ActiveRecord
      */
     public function getImages()
     {
-        return $this->hasMany(AdvertImage::className(), ['advert_id' => 'id']);
+        return $this->hasMany(Image::className(), ['advert_id' => 'id']);
     }
 
     /**
@@ -421,10 +421,10 @@ class Advert extends ActiveRecord
      */
     public function getSeller($hidePrivatePerson = true)
     {
-        /* @var $contact AdvertContact */
+        /* @var $contact Contact */
         $contact = $this->contact;
 
-        if (!($contact instanceof AdvertContact)) {
+        if (!($contact instanceof Contact)) {
             return Yii::t('frontend/advert', 'private person');
         }
 
@@ -471,6 +471,6 @@ class Advert extends ActiveRecord
      */
     public function getContact()
     {
-        return $this->hasOne(AdvertContact::className(), ['advert_id' => 'id']);
+        return $this->hasOne(Contact::className(), ['advert_id' => 'id']);
     }
 }

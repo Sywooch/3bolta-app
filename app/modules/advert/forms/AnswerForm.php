@@ -1,7 +1,7 @@
 <?php
 namespace advert\forms;
 
-use advert\models\AdvertQuestion;
+use advert\models\Question;
 use Yii;
 use yii\base\Model;
 
@@ -16,7 +16,7 @@ class AnswerForm extends Model
     protected $_question_uuid;
 
     /**
-     * @var AdvertQuestion модель вопроса
+     * @var Question модель вопроса
      */
     protected $_question;
 
@@ -37,7 +37,7 @@ class AnswerForm extends Model
     /**
      * Получить модель вопроса
      *
-     * @return AdvertQuestion
+     * @return Question
      */
     public function getQuestion()
     {
@@ -47,9 +47,9 @@ class AnswerForm extends Model
     /**
      * Установить вопрос. Помимо всего прочего еще устанавливает и question_uuid.
      *
-     * @param AdvertQuestion модель вопроса
+     * @param Question модель вопроса
      */
-    public function setQuestion(AdvertQuestion $question)
+    public function setQuestion(Question $question)
     {
         $this->_question = $question;
         $this->_question_uuid = $question->hash;

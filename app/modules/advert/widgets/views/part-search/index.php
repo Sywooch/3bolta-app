@@ -4,8 +4,8 @@
  */
 
 use advert\forms\PartSearch;
-use advert\models\AdvertPartParam;
-use advert\models\PartAdvert;
+use advert\models\PartParam;
+use advert\models\Part;
 use yii\base\View;
 use yii\bootstrap\ActiveForm;
 use yii\helpers\Html;
@@ -45,7 +45,7 @@ use yii\helpers\Url;
                     'class' => 'form-control form-control-with-icon',
                     'placeholder' => Yii::t('frontend/advert', 'Condition'),
                 ],
-            ])->dropDownList(PartAdvert::getConditionDropDownList(true))?>
+            ])->dropDownList(Part::getConditionDropDownList(true))?>
         </div>
         <div class="col-md-4 col-xs-12">
             <?=$form->field($model, 'cat', [
@@ -54,7 +54,7 @@ use yii\helpers\Url;
                     'class' => 'form-control form-control-with-icon',
                     'placeholder' => Yii::t('frontend/advert', 'Category'),
                 ],
-            ])->dropDownList(PartAdvert::getCategoryDropDownList(true))?>
+            ])->dropDownList(Part::getCategoryDropDownList(true))?>
         </div>
         <div class="col-md-4 col-xs-12">
             <?=$form->field($model, 'q', [

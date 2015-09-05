@@ -3,14 +3,14 @@
  * Вывод виджета последних объявлений
  */
 
-use advert\models\PartAdvert;
+use advert\models\Part;
 use storage\models\File;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\web\View;
 
 /* @var $this View */
-/* @var $list PartAdvert[] */
+/* @var $list Part[] */
 ?>
 <div class="index-last-adverts">
     <div class="col-lg-12"><h3><?=Yii::t('main', 'Last adverts')?></h3></div>

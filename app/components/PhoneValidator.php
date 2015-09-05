@@ -1,7 +1,7 @@
 <?php
 namespace app\components;
 
-use advert\models\AdvertContact;
+use advert\models\Contact;
 use partner\models\TradePoint;
 use user\models\User;
 use Yii;

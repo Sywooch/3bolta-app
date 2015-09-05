@@ -9,7 +9,7 @@ use yii\db\ActiveQuery;
 /**
  * Модель вопроса к объявлению
  */
-class AdvertQuestion extends ActiveRecord
+class Question extends ActiveRecord
 {
     /**
      * Максимальная длина e-mail

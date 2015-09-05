@@ -3,9 +3,9 @@ namespace advert\components;
 
 use advert\forms\PartForm;
 use advert\models\Advert;
-use advert\models\AdvertContact;
-use advert\models\AdvertPartParam;
-use advert\models\PartAdvert;
+use advert\models\Contact;
+use advert\models\PartParam;
+use advert\models\Part;
 use DateInterval;
 use DateTime;
 use user\models\User;
@@ -38,12 +38,12 @@ class PartsApi extends Component
     {
         $cnt = 0;
 
-        $res = AdvertContact::find()->andWhere([
+        $res = Contact::find()->andWhere([
             'user_email' => $user->email
         ]);
         foreach ($res->each() as $contact) {
-            /* @var $contact AdvertContact */
-            $transaction = AdvertContact::getDb()->beginTransaction();
+            /* @var $contact Contact */
+            $transaction = Contact::getDb()->beginTransaction();
             try {
                 // привязать объявление к пользователю
                 Advert::getDb()->createCommand()->update(Advert::tableName(), [
@@ -219,13 +219,13 @@ class PartsApi extends Component
      *
      * @param PartForm $form
      * @param Advert $advert
-     * @return AdvertContact
+     * @return Contact
      */
     protected function getContactsFromForm(PartForm $form, Advert $advert)
     {
         // получить модель контактов из объявления или создать новую
-        /* @var $contacts AdvertContact */
-        $contacts = $advert->contact instanceof AdvertContact ? $advert->contact : new AdvertContact();
+        /* @var $contacts Contact */
+        $contacts = $advert->contact instanceof Contact ? $advert->contact : new Contact();
         if ($contacts->isNewRecord && !$advert->isNewRecord) {
             // новую модель прикрепляем к объявлению сразу же
             $contacts->advert_id = $advert->id;
@@ -260,13 +260,13 @@ class PartsApi extends Component
      * Создать или получить модель параметров запчасти из формы редактирования
      *
      * @param PartForm $form
-     * @param PartAdvert $advert
+     * @param Part $advert
      * @return AdvertPartParams
      */
-    protected function getPartParamsFromForm(PartForm $form, PartAdvert $advert)
+    protected function getPartParamsFromForm(PartForm $form, Part $advert)
     {
-        /* @var $params AdvertPartParam */
-        $params = $advert->partParam instanceof AdvertPartParam ? $advert->partParam : new AdvertPartParam();
+        /* @var $params PartParam */
+        $params = $advert->partParam instanceof PartParam ? $advert->partParam : new PartParam();
         if ($params->isNewRecord && !$advert->isNewRecord) {
             // новую модель прикрепляем к объявлению
             $params->advert_id = $advert->id;
@@ -336,10 +336,10 @@ class PartsApi extends Component
         $ret = null;
 
         if ($form->validate()) {
-            $transaction = PartAdvert::getDb()->beginTransaction();
+            $transaction = Part::getDb()->beginTransaction();
 
             try {
-                $advert = new PartAdvert();
+                $advert = new Part();
 
                 $advert->user_id = $form->getUserId();
                 $advert->active = true;
@@ -352,14 +352,14 @@ class PartsApi extends Component
                 }
 
                 // привязать контакты
-                /* @var $contacts AdvertContact */
+                /* @var $contacts Contact */
                 $contacts = $this->getContactsFromForm($form, $advert);
                 if (!$contacts->save()) {
                     throw new Exception();
                 }
 
                 // привязать параметры
-                /* @var $params AdvertPartParam */
+                /* @var $params PartParam */
                 $params = $this->getPartParamsFromForm($form, $advert);
                 if (!$params->save()) {
                     throw new Exception();
@@ -403,10 +403,10 @@ class PartsApi extends Component
         $ret = null;
 
         if ($form->validate()) {
-            $transaction = PartAdvert::getDb()->beginTransaction();
+            $transaction = Part::getDb()->beginTransaction();
 
             try {
-                $advert = new PartAdvert();
+                $advert = new Part();
 
                 // неавторизованные объявления первым делом создаются неактивными
                 $advert->active = false;
@@ -425,7 +425,7 @@ class PartsApi extends Component
                 }
 
                 // привязать параметры
-                /* @var $params AdvertPartParam */
+                /* @var $params PartParam */
                 $params = $this->getPartParamsFromForm($form, $advert);
                 if (!$params->save()) {
                     throw new Exception();
@@ -461,13 +461,13 @@ class PartsApi extends Component
     {
         $ret = false;
 
-        /* @var $advert PartAdvert */
+        /* @var $advert Part */
         $advert = $form->getExists();
-        if (!($advert instanceof PartAdvert) || !$form->validate()) {
+        if (!($advert instanceof Part) || !$form->validate()) {
             return $ret;
         }
 
-        $transaction = PartAdvert::getDb()->beginTransaction();
+        $transaction = Part::getDb()->beginTransaction();
 
         try {
             // установить данные из формы
@@ -483,7 +483,7 @@ class PartsApi extends Component
             }
 
             // обновить параметры
-            /* @var $params AdvertPartParam */
+            /* @var $params PartParam */
             $params = $this->getPartParamsFromForm($form, $advert);
             if (!$params->save()) {
                 throw new Exception();

@@ -3,9 +3,9 @@ namespace advert\components;
 
 use advert\forms\PartSearch;
 use advert\models\Advert;
-use advert\models\AdvertContact;
-use advert\models\AdvertPartParam;
-use advert\models\PartAdvert;
+use advert\models\Contact;
+use advert\models\PartParam;
+use advert\models\Part;
 use auto\models\Mark;
 use geo\components\GeoApi;
 use geo\models\Region;
@@ -38,7 +38,7 @@ class PartsSearchApi extends Component
      */
     protected function getSearchQuery($joinParams = false, $joinContacts = false, $joinPartners = false)
     {
-        $query = PartAdvert::findActiveAndPublished();
+        $query = Part::findActiveAndPublished();
 
         if ($joinParams) {
             $query->joinWith('partParam');
@@ -64,7 +64,7 @@ class PartsSearchApi extends Component
         if ($q) {
             $query->andFilterWhere(['or',
                 ['like', Advert::tableName() . '.advert_name', $q],
-                ['like', AdvertPartParam::tableName() . '.catalogue_number', $q],
+                ['like', PartParam::tableName() . '.catalogue_number', $q],
             ]);
         }
     }
@@ -111,7 +111,7 @@ class PartsSearchApi extends Component
     protected function makeCategoryQuery(ActiveQuery $query, $category)
     {
         if ($category) {
-            $query->andWhere([AdvertPartParam::tableName() . '.category_id' => (int) $category]);
+            $query->andWhere([PartParam::tableName() . '.category_id' => (int) $category]);
         }
     }
 
@@ -123,7 +123,7 @@ class PartsSearchApi extends Component
     protected function makeConditionQuery(ActiveQuery $query, $condition)
     {
         if ($condition) {
-            $query->andWhere([AdvertPartParam::tableName() . '.condition_id' => (int) $condition]);
+            $query->andWhere([PartParam::tableName() . '.condition_id' => (int) $condition]);
         }
     }
 
@@ -137,7 +137,7 @@ class PartsSearchApi extends Component
     protected function makeRegionQuery(ActiveQuery $query, $region, $searchOtherRegion)
     {
         if (!$searchOtherRegion && $region instanceof Region) {
-            $query->andWhere([AdvertContact::tableName() . '.region_id' => $region->id]);
+            $query->andWhere([Contact::tableName() . '.region_id' => $region->id]);
         }
     }
 
@@ -181,11 +181,11 @@ class PartsSearchApi extends Component
 
         if ($sellerType == 0) {
             // частное лицо, не должно быть привязки к торговой точке
-            $query->andWhere([AdvertContact::tableName() . '.trade_point_id' => null]);
+            $query->andWhere([Contact::tableName() . '.trade_point_id' => null]);
         }
         else {
             // в остальном - это тип продавца
-            $query->andWhere(['not', [AdvertContact::tableName() . '.trade_point_id' => null]]);
+            $query->andWhere(['not', [Contact::tableName() . '.trade_point_id' => null]]);
             $query->andWhere([
                 Partner::tableName() . '.company_type' => $sellerType
             ]);
@@ -212,7 +212,7 @@ class PartsSearchApi extends Component
             // сортировка по регионам
             $regionIds = $geoApi->getNearestRegionsIds($region);
             if (!empty($regionIds)) {
-                $s = 'CASE ' . AdvertContact::tableName() . '.region_id ' . " \n";
+                $s = 'CASE ' . Contact::tableName() . '.region_id ' . " \n";
                 $x = 0;
                 foreach ($regionIds as $regionId) {
                     $s .= 'WHEN ' . $regionId . ' THEN ' . ++$x . " \n";
@@ -220,7 +220,7 @@ class PartsSearchApi extends Component
                 $s .= 'END ' . "\n";
                 $sort[] = new Expression($s);
             }
-            $group[] = AdvertContact::tableName() . '.region_id';
+            $group[] = Contact::tableName() . '.region_id';
         }
 
         // сортировка по дате
@@ -289,10 +289,10 @@ class PartsSearchApi extends Component
      * ['mark' => [1 => ['name' => ..., 'parent' => null, 'parent_id' => null, 'query' => ['mark' => 1]], ..],
      * ['model' => [33 => ['name' => ..., 'parent' => 'mark', 'parent_id' => 1, 'query' => ['mark' => 1, 'model' => 33], ...]],
      * [...]
-     * @param PartAdvert $advert
+     * @param Part $advert
      * @return array
      */
-    protected function getAdvertAutomobileTree(PartAdvert $advert)
+    protected function getAdvertAutomobileTree(Part $advert)
     {
         $r = ArrayHelper::map(array_merge(
             $advert->mark, $advert->model,
@@ -352,10 +352,10 @@ class PartsSearchApi extends Component
      * Возвращает массив ссылок на поиск по автомобилям, привязанным к объявлению.
      *
      * @param array путь к поиску
-     * @param PartAdvert $advert
+     * @param Part $advert
      * @return array
      */
-    public function getAutomobilesLink($route, PartAdvert $advert)
+    public function getAutomobilesLink($route, Part $advert)
     {
         $result = [];
 
@@ -383,7 +383,7 @@ class PartsSearchApi extends Component
      */
     public function getDetails($id)
     {
-        return PartAdvert::findActiveAndPublished()->andWhere(['id' => (int) $id])->one();
+        return Part::findActiveAndPublished()->andWhere(['id' => (int) $id])->one();
     }
 
     /**
@@ -392,14 +392,14 @@ class PartsSearchApi extends Component
      * - по автомобилям;
      * - по категории.
      *
-     * @param PartAdvert $advert объявление, для которого требуется получить похожие
+     * @param Part $advert объявление, для которого требуется получить похожие
      * @param int $limit ограничение на вывод
      * @return ActiveDataProvider
      */
-    public function getRelated(PartAdvert $advert, $limit = 4)
+    public function getRelated(Part $advert, $limit = 4)
     {
         $partParam = $advert->partParam;
-        $query = $this->getSearchQuery($partParam instanceof AdvertPartParam, false);;
+        $query = $this->getSearchQuery($partParam instanceof PartParam, false);;
 
         $query->andWhere(['<>', Advert::tableName() . '.id', $advert->id]);
 
@@ -412,7 +412,7 @@ class PartsSearchApi extends Component
         );
 
         // сформировать запрос по категории
-        if ($partParam instanceof AdvertPartParam) {
+        if ($partParam instanceof PartParam) {
             $this->makeCategoryQuery($query, $partParam->category_id);
         }
 
@@ -437,7 +437,7 @@ class PartsSearchApi extends Component
     {
         return Mark::find()
             ->select('mark.*')
-            ->leftJoin(PartAdvert::TABLE_MARK . ' advert_mark', 'mark.id = advert_mark.mark_id')
+            ->leftJoin(Part::TABLE_MARK . ' advert_mark', 'mark.id = advert_mark.mark_id')
             ->groupBy('mark.id')
             ->orderBy('mark.name ASC')
             ->all();

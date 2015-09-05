@@ -1,7 +1,7 @@
 <?php
 namespace app\components;
 
-use advert\models\AdvertContact;
+use advert\models\Contact;
 use user\models\User;
 use Yii;
 use yii\helpers\Url;
@@ -30,7 +30,7 @@ class AdvertEmailValidator extends Validator
                 $hasError = true;
             }
 
-            if (!$hasError && AdvertContact::find()->where(['user_email' => $value])->exists()) {
+            if (!$hasError && Contact::find()->where(['user_email' => $value])->exists()) {
                 $hasError = true;
             }
 

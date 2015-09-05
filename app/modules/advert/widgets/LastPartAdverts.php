@@ -1,7 +1,7 @@
 <?php
 namespace advert\widgets;
 
-use advert\models\PartAdvert;
+use advert\models\Part;
 
 use advert\assets\AdvertList;
 
@@ -18,7 +18,7 @@ class LastPartAdverts extends \yii\bootstrap\Widget
     public function run()
     {
         // получить последние опубликованные объявления
-        $lastAdverts = PartAdvert::findActiveAndPublished()->orderBy('published DESC')->limit($this->limit)->all();
+        $lastAdverts = Part::findActiveAndPublished()->orderBy('published DESC')->limit($this->limit)->all();
 
         if (!empty($lastAdverts)) {
             AdvertList::register($this->view);

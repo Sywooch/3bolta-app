@@ -2,9 +2,9 @@
 namespace advert\forms;
 
 use advert\models\Advert;
-use advert\models\AdvertContact;
-use advert\models\AdvertPartParam;
-use advert\models\PartAdvert;
+use advert\models\Contact;
+use advert\models\PartParam;
+use advert\models\Part;
 use advert\models\PartCategory;
 use app\components\AdvertEmailValidator;
 use app\components\AdvertPhoneValidator;
@@ -47,7 +47,7 @@ class PartForm extends BaseModel
     protected $_uploadImage;
 
     /**
-     * @var PartAdvert
+     * @var Part
      */
     protected $_exists;
 
@@ -114,9 +114,9 @@ class PartForm extends BaseModel
             [['name', 'category_id', 'condition_id', 'price'], 'required', 'message' => Yii::t('frontend/advert', 'Required field')],
             [['mark'], 'required', 'message' => Yii::t('frontend/advert', 'Choose one or more automobiles')],
             [['category_id', 'condition_id'], 'integer'],
-            ['catalogue_number', 'string', 'max' => AdvertPartParam::CATALOGUE_NUMBER_MAX_LENGTH],
-            ['name', 'string', 'max' => PartAdvert::NAME_MAX_LENGTH],
-            ['description', 'string', 'max' => PartAdvert::DESCRIPTION_MAX_LENGTH],
+            ['catalogue_number', 'string', 'max' => PartParam::CATALOGUE_NUMBER_MAX_LENGTH],
+            ['name', 'string', 'max' => Part::NAME_MAX_LENGTH],
+            ['description', 'string', 'max' => Part::DESCRIPTION_MAX_LENGTH],
             [['user_name', 'user_phone', 'user_email'], 'required', 'when' => function($model) {
                 /* @var $model PartForm */
                 return !$model->getUserId();
@@ -132,15 +132,15 @@ class PartForm extends BaseModel
             [['price'], 'number', 'min' => 1, 'max' => 9999999,
                 'numberPattern' => '#^[-]?[0-9]{1,7}[\.|\,]?[0-9]{0,2}$#',
             ],
-            ['user_name', 'string', 'max' => AdvertContact::MAX_USER_NAME_LENGTH],
+            ['user_name', 'string', 'max' => Contact::MAX_USER_NAME_LENGTH],
             ['name', 'string', 'max' => Advert::NAME_MAX_LENGTH],
-            ['user_email', 'string', 'max' => AdvertContact::MAX_EMAIL_LENGTH],
-            ['user_phone_canonical', 'string', 'max' => AdvertContact::MAX_PHONE_CANONICAL_LENGTH],
-            ['user_phone', 'string', 'max' => AdvertContact::MAX_PHONE_LENGTH],
+            ['user_email', 'string', 'max' => Contact::MAX_EMAIL_LENGTH],
+            ['user_phone_canonical', 'string', 'max' => Contact::MAX_PHONE_CANONICAL_LENGTH],
+            ['user_phone', 'string', 'max' => Contact::MAX_PHONE_LENGTH],
             ['user_phone', AdvertPhoneValidator::className()],
             ['user_phone', PhoneValidator::className(),
                 'canonicalAttribute' => 'user_phone_canonical',
-                'targetClass' => AdvertContact::className(), 'targetAttribute' => 'user_phone_canonical', 'when' => function($model) {
+                'targetClass' => Contact::className(), 'targetAttribute' => 'user_phone_canonical', 'when' => function($model) {
                     return !$model->getUserId();
                 }
             ],
@@ -180,9 +180,9 @@ class PartForm extends BaseModel
         if (!empty($this->_uploadImage)) {
             $count += count($this->_uploadImage);
         }
-        if ($count > PartAdvert::UPLOAD_MAX_FILES) {
+        if ($count > Part::UPLOAD_MAX_FILES) {
             $this->addError($attribute, \Yii::t('frontend/advert', 'Max files is: {n}', [
-                'n' => PartAdvert::UPLOAD_MAX_FILES,
+                'n' => Part::UPLOAD_MAX_FILES,
             ]));
         }
     }
@@ -369,7 +369,7 @@ class PartForm extends BaseModel
 
     /**
      * Получить модель существующего объявления (по умолчанию-null)
-     * @return PartAdvert|null
+     * @return Part|null
      */
     public function getExists()
     {
@@ -378,10 +378,10 @@ class PartForm extends BaseModel
 
     /**
      * Создать форму на основе существующего объявления.
-     * @param PartAdvert $advert
+     * @param Part $advert
      * @return self
      */
-    public static function createFromExists(PartAdvert $advert)
+    public static function createFromExists(Part $advert)
     {
         $ret = new self();
 
@@ -389,9 +389,9 @@ class PartForm extends BaseModel
 
         $ret->_user_id = $advert->user_id;
 
-        /* @var $contact AdvertContact */
+        /* @var $contact Contact */
         $contact = $advert->contact;
-        if ($contact instanceof AdvertContact) {
+        if ($contact instanceof Contact) {
             $ret->_trade_point_id = $contact->trade_point_id;
             $ret->setAttributes([
                 'user_name' => $contact->user_name,
@@ -401,9 +401,9 @@ class PartForm extends BaseModel
             ]);
         }
 
-        /* @var $partParam AdvertPartParam */
+        /* @var $partParam PartParam */
         $partParam = $advert->partParam;
-        if ($partParam instanceof AdvertPartParam) {
+        if ($partParam instanceof PartParam) {
             $ret->setAttributes([
                 'catalogue_number' => $partParam->catalogue_number,
                 'category_id' => $partParam->category_id,
