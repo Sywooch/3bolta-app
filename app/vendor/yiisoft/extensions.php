@@ -291,4 +291,13 @@ return array (
       '@kartik/typeahead' => $vendorDir . '/kartik-v/yii2-widget-typeahead',
     ),
   ),
+  'sammaye/yii2-solr' => 
+  array (
+    'name' => 'sammaye/yii2-solr',
+    'version' => '9999999-dev',
+    'alias' => 
+    array (
+      '@sammaye/solr' => $vendorDir . '/sammaye/yii2-solr',
+    ),
+  ),
 );
