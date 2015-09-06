@@ -126,13 +126,12 @@
    <field name="active" type="boolean" indexed="true" stored="false" required="true" omitNorms="true"/>
    <field name="published_from" type="date" indexed="true" stored="true" required="true" omitNorms="true"/>
    <field name="published_to" type="date" indexed="true" stored="true" required="true" omitNorms="true"/>
-   <field name="requion_name" type="text_general" indexed="false" stored="true" required="false" omitNorms="true"/>
+   <field name="region_name" type="string" indexed="false" stored="true" required="false" omitNorms="true"/>
    <field name="region_id" type="int" indexed="true" stored="false" required="false" omitNorms="true"/>
    <field name="price" type="float" indexed="true" stored="true" required="true" omitNorms="true"/>
-   <field name="seller_type" type="tint" indexed="true" required="true" stored="true"/>
-   <field name="company_name" type="text_general" indexed="false" stored="true"/>
-   <field name="trade_point_name" type="text_general" indexed="false" stored="true"/>
-   <field name="preview_url" type="text_general" indexed="false" stored="true"/>
+   <field name="seller_type" type="tint" indexed="true" required="true" stored="true" omitNorms="true"/>
+   <field name="company_name" type="string" indexed="false" stored="true" omitNorms="true"/>
+   <field name="preview_url" type="string" indexed="false" stored="true" omitNorms="true"/>
    <field name="mark_id" type="int" indexed="true" stored="true" multiValued="true" omitNorms="true"/>
    <field name="model_id" type="int" indexed="true" stored="true" multiValued="true" omitNorms="true"/>
    <field name="serie_id" type="int" indexed="true" stored="true" multiValued="true" omitNorms="true"/>

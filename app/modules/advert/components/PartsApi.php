@@ -11,7 +11,7 @@ use DateTime;
 use user\models\User;
 use Yii;
 use yii\base\Component;
-use yii\base\Exception;
+use \Exception;
 use yii\helpers\Url;
 use yii\web\UploadedFile;
 
@@ -79,10 +79,10 @@ class PartsApi extends Component
     /**
      * Остановить публикацию объявления текущей датой
      *
-     * @param Advert $advert
+     * @param Part $advert
      * @return boolean true, в случае успеха
      */
-    public function stopPublication(Advert $advert)
+    public function stopPublication(Part $advert)
     {
         $ret = false;
 
@@ -90,6 +90,8 @@ class PartsApi extends Component
             try {
                 $advert->published_to = date('Y-m-d H:i:s');
                 $ret = $advert->save();
+
+                $advert->deleteIndex();
             }
             catch (Exception $ex) {
                 $ret = false;
@@ -102,10 +104,10 @@ class PartsApi extends Component
     /**
      * Обновить дату публикации объявления на DEFAULT_PUBLISH_DAYS дней.
      *
-     * @param Advert $advert
+     * @param Part $advert
      * @return boolean true в случае успеха
      */
-    public function updatePublication(Advert $advert)
+    public function updatePublication(Part $advert)
     {
         $ret = false;
 
@@ -116,6 +118,8 @@ class PartsApi extends Component
                 $advert->published = date('Y-m-d H:i:s');
                 $advert->published_to = $date->format('Y-m-d H:i:s');
                 if ($advert->save(true, ['published', 'published_to'])) {
+                    // обновить поисковый индекс
+                    $advert->updateIndex();
                     $ret = true;
                 }
             }
@@ -130,7 +134,7 @@ class PartsApi extends Component
      * Подтвердить публикацию объявления с кодом подтверждения $code.
      * Возвращает идентификатор объявления в случае успеха или null.
      *
-     * @param type $code
+     * @param string $code
      * @return int|null
      */
     public function confirmAdvert($code)
@@ -141,12 +145,13 @@ class PartsApi extends Component
 
         $ret = null;
 
-        $advert = Advert::find()->where(['confirmation' => $code])->one();
+        /* @var $advert Part */
+        $advert = Part::find()->where(['confirmation' => $code])->one();
 
-        if ($advert instanceof Advert && !$advert->active && !$advert->published) {
+        if ($advert instanceof Part && !$advert->active && !$advert->published) {
             $dateFrom = new DateTime();
             $dateTo = new DateTime();
-            $dateTo->add(new DateInterval('P' . Advert::DEFAULT_PUBLISH_DAYS . 'D'));
+            $dateTo->add(new DateInterval('P' . Part::DEFAULT_PUBLISH_DAYS . 'D'));
             $advert->setAttributes([
                 'active' => true,
                 'published' => $dateFrom->format('Y-m-d H:i:s'),
@@ -157,6 +162,8 @@ class PartsApi extends Component
                 if ($advert->save(true, [
                     'active', 'published', 'confirmation', 'published_to'
                 ])) {
+                    // обновить поисковый индекс
+                    $advert->updateIndex();
                     $ret = $advert->id;
                 }
             } catch (Exception $ex) {
@@ -373,6 +380,9 @@ class PartsApi extends Component
                 $ret = $advert;
 
                 $transaction->commit();
+
+                // обновить поисковый индекс
+                $advert->updateIndex();
             } catch (Exception $ex) {
                 $transaction->rollback();
                 $ret = null;
@@ -495,6 +505,9 @@ class PartsApi extends Component
             $transaction->commit();
 
             $ret = true;
+
+            // обновить поисковый индекс
+            $advert->updateIndex();
         }
         catch (Exception $ex) {
             $transaction->rollBack();

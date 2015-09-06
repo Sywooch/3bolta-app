@@ -69,6 +69,12 @@ $config = ArrayHelper::merge([
         ],
         'advert' => [
             'class' => 'advert\Module',
+            'solrParams' => [
+                'parts' => [
+                    'key' => 'parts',
+                    'path' => '/solr/advert-parts',
+                ],
+            ],
         ],
         'handbook' => [
             'class' => 'handbook\Module',

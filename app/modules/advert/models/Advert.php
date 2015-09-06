@@ -333,7 +333,8 @@ class Advert extends ActiveRecord
      */
     public function getImages()
     {
-        return $this->hasMany(Image::className(), ['advert_id' => 'id']);
+        return $this->hasMany(Image::className(), ['advert_id' => 'id'])
+            ->groupBy(Image::tableName() . '.id');
     }
 
     /**

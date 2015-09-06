@@ -2,7 +2,9 @@
 namespace app\commands;
 
 use advert\components\PartsApi;
+use advert\components\PartsIndex;
 use advert\models\Advert;
+use advert\models\Part;
 use Yii;
 use yii\console\Controller;
 
@@ -26,5 +28,30 @@ class PartAdvertsController extends Controller
         foreach ($res->each() as $advert) {
             $advertApi->sendExpiredConfirmation($advert);
         }
+    }
+
+    /**
+     * Удалить просроченные объявления из индекса
+     */
+    public function actionRemoveExpired()
+    {
+        /* @var $partsIndex PartsIndex */
+        $partsIndex = Yii::$app->getModule('advert')->partsIndex;
+        $partsIndex->deleteExpired();
+    }
+
+    /**
+     * Переиндексировать все опубликованные объявления
+     */
+    public function actionReindex()
+    {
+        $query = Part::findActiveAndPublished();
+
+        /* @var $partsIndex PartsIndex */
+        $partsIndex = Yii::$app->getModule('advert')->partsIndex;
+
+        $partsIndex->debugMode = true;
+        $updated = $partsIndex->reindexByActiveQuery($query);
+        $this->stdout("Updated complete: $updated\n");
     }
 }

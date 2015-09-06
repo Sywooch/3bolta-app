@@ -1,10 +1,12 @@
 <?php
 namespace advert\models;
 
+use advert\components\PartsIndex;
 use auto\models\Mark;
 use auto\models\Model;
 use auto\models\Modification;
 use auto\models\Serie;
+use handbook\models\HandbookValue;
 use Yii;
 use yii\base\Exception;
 use yii\db\ActiveQuery;
@@ -417,7 +419,7 @@ class Part extends Advert
         if ($this->partParam instanceof PartParam) {
             /* @var $partParam PartParam */
             $partParam = $this->partParam;
-            if ($partParam->condition instanceof \handbook\models\HandbookValue) {
+            if ($partParam->condition instanceof HandbookValue) {
                 return $partParam->condition->name;
             }
         }
@@ -459,7 +461,7 @@ class Part extends Advert
             $ret[''] = '';
         }
 
-        $values = \handbook\models\HandbookValue::find()->andWhere(['handbook_code' => 'part_condition'])->all();
+        $values = HandbookValue::find()->andWhere(['handbook_code' => 'part_condition'])->all();
         foreach ($values as $value) {
             $ret[$value->id] = $value->name;
         }
@@ -500,5 +502,50 @@ class Part extends Advert
         }
 
         return array_reverse($ret, true);
+    }
+
+
+    /**
+     * Удалить объявление из индекса
+     *
+     * @throws Exception
+     */
+    public function deleteIndex()
+    {
+        /* @var $partsIndex PartsIndex */
+        $partsIndex = \Yii::$app->getModule('advert')->partsIndex;
+
+        try {
+            $result = $partsIndex->deleteOne($this);
+        }
+        catch (\Exception $ex) {
+            throw new Exception();
+        }
+    }
+
+    /**
+     * Обновить поисковый индекс объявления.
+     * В случае ошибки генерирует исключение.
+     *
+     * @throws Exception
+     */
+    public function updateIndex()
+    {
+        if (strtotime($this->published_to) <= time() || !$this->active) {
+            return;
+        }
+
+        /* @var $partsIndex PartsIndex */
+        $partsIndex = \Yii::$app->getModule('advert')->partsIndex;
+
+        try {
+            $result = $partsIndex->reindexOne($this);
+            if ($result->getStatus() != 0) {
+                throw new \Exception();
+            }
+        }
+        catch (\Exception $ex) {
+            throw new Exception();
+        }
     }
 }
