@@ -26,6 +26,12 @@ return ArrayHelper::merge(include __DIR__ . '/common.php', [
         'cron-jobs' => [
             // демон по ресайзу картинок
             'adverts-images/resize' => '* * * * *',
+            // проверка завершающих публикаций
+            'part-adverts/check-expiration' => '0 5 * * *',
+            // очистка завершенных публикаций из индекса
+            'part-adverts/remove-expired' => '0 * * * *',
+            // переиндексация поиска
+            'part-adverts/reindex' => '0 0 * * *',
         ]
     ]
 ], include __DIR__ . '/console.local.php');
