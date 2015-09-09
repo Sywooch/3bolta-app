@@ -70,7 +70,7 @@ class PartsSearchApi extends Component
             $phrase = '*' . $term . '*';
             $pieces = [];
             $pieces[] = 'name:' . $select->getHelper()->escapePhrase($phrase);
-            $pieces[] = 'catalogue_number:' . $select->getHelper()->escapeTerm($term);
+            $pieces[] = 'catalogue_number:"' . $select->getHelper()->escapeTerm($term) . '"';
             $this->appendQuery($select, $pieces, 'OR');
         }
     }
