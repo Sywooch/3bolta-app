@@ -4,9 +4,10 @@
  */
 
 use advert\assets\AdvertList;
+use advert\models\PartIndex;
 use advert\widgets\PartSearch;
+use sammaye\solr\SolrDataProvider;
 use yii\base\View;
-use yii\data\ActiveDataProvider;
 use yii\helpers\Html;
 use yii\widgets\LinkPager;
 
@@ -15,9 +16,10 @@ AdvertList::register($this);
 print PartSearch::widget();
 
 /* @var $this View */
-/* @var $dataProvider ActiveDataProvider */
+/* @var $dataProvider SolrDataProvider */
 $models = $dataProvider->getModels();
 foreach ($models as $model) {
+    /* @var $model PartIndex */
     print Html::beginTag('div', [
         'class' => 'col-lg-6 col-sm-12 col-md-6 list-item'
     ]);

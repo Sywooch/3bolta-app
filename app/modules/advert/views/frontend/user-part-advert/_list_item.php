@@ -17,7 +17,7 @@ use yii\helpers\Url;
 $searchApi = Yii::$app->getModule('advert')->partsSearch;
 
 // ссылки на автомобили
-$automobiles = $searchApi->getAutomobilesLink(['search'], $model);
+$automobiles = $searchApi->getAutomobilesLink(['search'], $searchApi->getAdvertAutomobileTree($model));
 
 // получить превью
 /* @var $preivew File */

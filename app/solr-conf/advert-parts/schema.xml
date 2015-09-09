@@ -136,6 +136,10 @@
    <field name="model_id" type="int" indexed="true" stored="true" multiValued="true" omitNorms="true"/>
    <field name="serie_id" type="int" indexed="true" stored="true" multiValued="true" omitNorms="true"/>
    <field name="modification_id" type="int" indexed="true" stored="true" multiValued="true" omitNorms="true"/>
+   <field name="catalogue_number" type="text_general" indexed="true" stored="false" multiValued="false" omitNorms="true"/>
+   <field name="category_id" type="int" indexed="true" stored="false" multiValued="false" omitNorms="true"/>
+   <field name="condition_id" type="int" indexed="true" stored="false" multiValued="false" omitNorms="true"/>
+   <field name="automobiles_tree" type="string" indexed="false" stored="true" multiValued="false" omitNorms="true"/>
 
    <!--
      Some fields such as popularity and manu_exact could be modified to

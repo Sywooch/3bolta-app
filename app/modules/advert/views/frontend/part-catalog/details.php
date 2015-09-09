@@ -10,15 +10,15 @@ use advert\forms\AnswerForm;
 use advert\forms\QuestionForm;
 use advert\models\Contact;
 use advert\models\Image;
-use advert\models\PartParam;
 use advert\models\Part;
+use advert\models\PartParam;
 use app\helpers\Date;
 use app\widgets\JS;
 use app\widgets\Modal;
 use geo\models\Region;
 use partner\models\Partner;
 use partner\models\TradePoint;
-use yii\data\ActiveDataProvider;
+use sammaye\solr\SolrDataProvider;
 use yii\helpers\Html;
 use yii\helpers\Url;
 
@@ -28,11 +28,11 @@ use yii\helpers\Url;
 /* @var $searchApi PartsSearchApi */
 $searchApi = Yii::$app->getModule('advert')->partsSearch;
 
-/* @var $related ActiveDataProvider */
+/* @var $related SolrDataProvider */
 $related = $searchApi->getRelated($model);
 
 // ссылки на автомобили
-$automobiles = $searchApi->getAutomobilesLink(['search'], $model);
+$automobiles = $searchApi->getAutomobilesLink(['search'], $searchApi->getAdvertAutomobileTree($model));
 
 /* @var $partParam PartParam */
 $partParam = $model->partParam;

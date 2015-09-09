@@ -108,8 +108,8 @@ class PartsIndex extends Client
         $indexer = $this;
 
         $batchProcessor = new BatchProcessor([
-            // коммитим документы пачкой по 1000 штук
-            'maxCommitCnt' => 1000,
+            // коммитим документы пачкой по 100 штук
+            'maxCommitCnt' => 100,
             'onAdd' => function(Part $row) use (&$indexer, &$update) {
                 if (is_null($update)) {
                     $update = $indexer->createUpdate();

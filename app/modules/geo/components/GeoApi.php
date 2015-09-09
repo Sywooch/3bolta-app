@@ -81,7 +81,7 @@ class GeoApi extends Component
 
     /**
      * Получить идентификаторы регионов, ближайшие к указанному (включая сам регион).
-     * Максимум - 10 регионов.
+     * Возвращает все регионы по сортировке отдаленности искомого.
      *
      * @param float $lat широта
      * @param float $lng долгота
@@ -99,7 +99,7 @@ class GeoApi extends Component
         $sql .= "* 60 * 1.1515) as distance";
 
         $sql .= " FROM " . Region::tableName();
-        $sql .= " ORDER BY distance ASC LIMIT 10";
+        $sql .= " ORDER BY distance ASC";
 
         /* @var $db \yii\db\Connection */
         $db = Region::getDb();

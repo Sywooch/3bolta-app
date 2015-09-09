@@ -1,14 +1,17 @@
 <?php
 namespace advert\widgets;
 
-use advert\models\Part;
-
 use advert\assets\AdvertList;
+use advert\components\PartsSearchApi;
+use advert\models\PartIndex;
+use sammaye\solr\SolrDataProvider;
+use Yii;
+use yii\bootstrap\Widget;
 
 /**
  * Виджет последних объявлений (выводится на главной странице)
  */
-class LastPartAdverts extends \yii\bootstrap\Widget
+class LastPartAdverts extends Widget
 {
     /**
      * @var int количество выводимых объявлений
@@ -18,7 +21,12 @@ class LastPartAdverts extends \yii\bootstrap\Widget
     public function run()
     {
         // получить последние опубликованные объявления
-        $lastAdverts = Part::findActiveAndPublished()->orderBy('published DESC')->limit($this->limit)->all();
+        /* @var $searchApi PartsSearchApi */
+        $searchApi = Yii::$app->getModule('advert')->partsSearch;
+        /* @var $dataProvider SolrDataProvider */
+        $dataProvider = $searchApi->getLastAdverts($this->limit);
+        /* @var $lastAdverts PartIndex[] */
+        $lastAdverts = $dataProvider->getModels();
 
         if (!empty($lastAdverts)) {
             AdvertList::register($this->view);

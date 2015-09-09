@@ -324,7 +324,7 @@ class Advert extends ActiveRecord
     public function getPreviewUrl()
     {
         $image = $this->getPreview();
-        return $image instanceof Image ? $image->getUrl() : null;
+        return $image instanceof File ? $image->getUrl() : null;
     }
 
     /**
@@ -418,7 +418,8 @@ class Advert extends ActiveRecord
      * 2) если частное лицо и нет признака $hidePrivatePerson - возаращет имя контактного лица;
      * 3) иначе - "Частное лицо".
      *
-     * @return type
+     * @param boolean $hidePrivatePerson
+     * @return string
      */
     public function getSeller($hidePrivatePerson = true)
     {

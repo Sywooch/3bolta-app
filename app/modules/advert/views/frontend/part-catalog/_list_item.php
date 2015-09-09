@@ -6,11 +6,11 @@
 
 use advert\components\PartsSearchApi;
 use advert\models\Contact;
-use advert\models\Part;
+use advert\models\PartIndex;
 use geo\models\Region;
+use sammaye\solr\SolrDataProvider;
 use storage\models\File;
 use yii\base\View;
-use yii\data\ActiveDataProvider;
 use yii\helpers\Html;
 use yii\helpers\Url;
 
@@ -20,23 +20,19 @@ $hideDropDown = isset($hideDropDown) && $hideDropDown;
 $searchApi = Yii::$app->getModule('advert')->partsSearch;
 
 // ссылки на автомобили
-$automobiles = $searchApi->getAutomobilesLink(['search'], $model);
-
-// получить превью
-/* @var $preivew File */
-$preview = $model->getPreview();
+$automobiles = $searchApi->getAutomobilesLink(['search'], $model->getAutomobilesTree());
 
 /* @var $this View */
-/* @var $dataProvider ActiveDataProvider */
-/* @var $model Part */
+/* @var $dataProvider SolrDataProvider */
+/* @var $model PartIndex */
 ?>
 <?php if (!$hideDropDown):?>
     <div class="list-item-hover">
         <div class="panel panel-default panel-body">
-            <div class="list-item-internal-desc<?php if ($preview):?> col-lg-8<?php endif;?>">
+            <div class="list-item-internal-desc<?php if (!empty($model->preview_url)):?> col-lg-8<?php endif;?>">
                 <div class="list-item-title">
                     <h3><?=Html::a(
-                        Html::encode($model->advert_name),
+                        Html::encode($model->name),
                         Url::toRoute(['details', 'id' => $model->id])
                     )?></h3>
                 </div>
@@ -54,22 +50,19 @@ $preview = $model->getPreview();
                 </div>
                 <div class="list-item-row list-item-seller-type">
                     <i class="icon icon-user"></i>
-                    <?=$model->getSeller(true)?>
+                    <?=$model->getSeller()?>
                 </div>
             </div>
-            <?php if ($preview):?>
+            <?php if (!empty($model->preview_url)):?>
                 <div class="list-item-internal-preview col-lg-4">
-                    <?=Html::img($preview->getUrl())?>
+                    <?=Html::img($model->preview_url)?>
                 </div>
             <?php endif;?>
 
-            <?php if ($model->contact instanceof Contact && ($region = $model->contact->region)):?>
-                <?php
-                /* @var $region Region */
-                ?>
+            <?php if (!empty($model->region_name)):?>
                 <div class="col-lg-12 list-item-row list-item-region">
                     <i class="icon icon-location"></i>
-                    <?=Html::encode($region->site_name)?>
+                    <?=Html::encode($model->region_name)?>
                 </div>
             <?php endif;?>
 
@@ -94,10 +87,10 @@ $preview = $model->getPreview();
 <?php endif;?>
 <div class="panel panel-default list-item-internal">
     <div class="panel-body">
-        <div class="list-item-internal-desc <?php if ($preview):?>col-xs-8<?php else:?>col-xs-12<?php endif;?>">
+        <div class="list-item-internal-desc <?php if (!empty($model->preview_url)):?>col-xs-8<?php else:?>col-xs-12<?php endif;?>">
             <div class="list-item-title list-item-title-internal">
                 <h3><?=Html::a(
-                    Html::encode($model->advert_name),
+                    Html::encode($model->name),
                     Url::toRoute(['details', 'id' => $model->id])
                 )?></h3>
             </div>
@@ -115,12 +108,12 @@ $preview = $model->getPreview();
             </div>
             <div class="list-item-row list-item-seller-type">
                 <i class="icon icon-user"></i>
-                <?=$model->getSeller(true)?>
+                <?=$model->getSeller()?>
             </div>
         </div>
-        <?php if ($preview):?>
+        <?php if (!empty($model->preview_url)):?>
             <div class="list-item-internal-preview col-xs-4">
-                <?=Html::img($preview->getUrl())?>
+                <?=Html::img($model->preview_url)?>
             </div>
         <?php endif;?>
     </div>

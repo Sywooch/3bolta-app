@@ -2,7 +2,6 @@
 
 namespace advert\controllers\frontend;
 
-use Yii;
 use advert\components\PartsSearchApi;
 use advert\components\QuestionsApi;
 use advert\components\QuestionsApiException;
@@ -10,10 +9,11 @@ use advert\forms\AnswerForm;
 use advert\forms\QuestionForm;
 use advert\models\Advert;
 use advert\models\Question;
-use yii\data\ActiveDataProvider;
+use app\components\Controller;
+use sammaye\solr\SolrDataProvider;
+use Yii;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
-use app\components\Controller;
 use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
@@ -157,7 +157,7 @@ class PartCatalogController extends Controller
         /* @var $searchApi PartsSearchApi */
         $searchApi = Yii::$app->getModule('advert')->partsSearch;
 
-        /* @var $dataProvider ActiveDataProvider */
+        /* @var $dataProvider SolrDataProvider */
         $dataProvider = $searchApi->searchItems(Yii::$app->request->getQueryParams());
 
         return $this->render('list', [

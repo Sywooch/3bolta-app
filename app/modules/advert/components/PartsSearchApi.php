@@ -3,19 +3,18 @@ namespace advert\components;
 
 use advert\forms\PartSearch;
 use advert\models\Advert;
-use advert\models\Contact;
-use advert\models\PartParam;
 use advert\models\Part;
+use advert\models\PartIndex;
+use advert\models\PartParam;
 use auto\models\Mark;
 use geo\components\GeoApi;
 use geo\models\Region;
-use partner\models\Partner;
+use sammaye\solr\SolrDataProvider;
+use Solarium\QueryType\Select\Query\Query as SelectQuery;
 use Yii;
 use yii\base\Component;
 use yii\data\ActiveDataProvider;
-use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
-use yii\db\Expression;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\helpers\StringHelper;
@@ -27,138 +26,149 @@ use yii\helpers\Url;
 class PartsSearchApi extends Component
 {
     /**
-     * Получить запрос ActiveQuery.
-     * Если передать $joinParams, то к запросу будет присоединена модель AdvertPartParam.
-     * Если передать $joinContacts, то к запросу будет присоединена модель AdvertContact.
-     * Если передать $joinPartners, то к запросу будет присоединена модель TradePoint и Partner.
+     * Добавить к существующему запросу новое условие.
+     * Новое условие формируется из частей $pieces, склеиваемых оператором $piecesOperator (OR или AND).
+     * Добавляется условие к существующему по логике $operator (OR или AND)
      *
-     * @param boolean $joinParams
-     * @param boolean $joinContacts
-     * @return ActiveQuery
+     * @param SelectQuery $select
+     * @param array $pieces
+     * @param string $piecesOperator
+     * @param string $operator
      */
-    protected function getSearchQuery($joinParams = false, $joinContacts = false, $joinPartners = false)
+    protected function appendQuery(SelectQuery $select, $pieces, $piecesOperator = 'OR', $operator = 'AND')
     {
-        $query = Part::findActiveAndPublished();
+        $operator = strtoupper($operator);
+        $piecesOperator = strtoupper($piecesOperator);
 
-        if ($joinParams) {
-            $query->joinWith('partParam');
+        $pieces = (array) $pieces;
+
+        if ($operator != 'AND') {
+            $operator = 'OR';
         }
 
-        if ($joinContacts && !$joinPartners) {
-            $query->joinWith('contact');
+        $query = $select->getQuery();
+        if ($query == '*:*') {
+            $query = '';
         }
-        else if ($joinContacts && $joinPartners) {
-            $query->joinWith('contact.tradePoint.partner', true, 'INNER JOIN');
+        if (!empty($query)) {
+            $query .= " $operator ";
         }
-
-        return $query;
+        $query .= '(' . implode(" $piecesOperator ", $pieces) . ')';
+        $select->setQuery($query);
     }
 
     /**
      * Сформировать запрос по ключевому слову
      *
-     * @param ActiveQuery $query
+     * @param SelectQuery $select
+     * @param string $q
      */
-    protected function makeKeywordQuery(ActiveQuery $query, $q)
+    protected function makeKeywordQuery(SelectQuery $select, $q)
     {
         if ($q) {
-            $query->andFilterWhere(['or',
-                ['like', Advert::tableName() . '.advert_name', $q],
-                ['like', PartParam::tableName() . '.catalogue_number', $q],
-            ]);
+            $term = str_replace('*', '', $q);
+            $phrase = '*' . $term . '*';
+            $pieces = [];
+            $pieces[] = 'name:' . $select->getHelper()->escapePhrase($phrase);
+            $pieces[] = 'catalogue_number:' . $select->getHelper()->escapeTerm($term);
+            $this->appendQuery($select, $pieces, 'OR');
         }
     }
 
     /**
      * Cформировать запрос по автомобилям
      *
-     * @param ActiveQuery $query
+     * @param SelectQuery $select
      * @param mixed $mark массив идентификаторов или идентификатор
      * @param mixed $model массив идентификаторов или идентификатор
      * @param mixed $serie массив идентификаторов или идентификатор
      * @param mixed $modification массив идентификаторов или идентификатор
      * @param boolean $any искать совпадение по любому автомобилю
      */
-    protected function makeAutoQuery(ActiveQuery $query, $mark, $model, $serie, $modification, $any = false)
+    protected function makeAutoQuery(SelectQuery $select, $mark, $model, $serie, $modification, $any = false)
     {
+        $pieces = [];
         $or = [$any ? 'or' : 'and'];
         if ($mark) {
-            $query->joinWith('mark');
-            $or[] = ['mark.id' => $mark];
+            $mark = (array) $mark;
+            $pieces[] = 'mark_id:(' . implode(' OR ', $mark) . ')';
         }
         if ($model) {
-            $query->joinWith('model');
-            $or[] = ['model.id' => $model];
+            $model = (array) $model;
+            $pieces[] = 'model_id:(' . implode(' OR ', $model) . ')';
         }
         if ($serie) {
-            $query->joinWith('serie');
-            $or[] = ['serie.id' => $serie];
+            $serie = (array) $serie;
+            $pieces[] = 'serie_id:(' . implode(' OR ', $serie) . ')';
         }
         if ($modification) {
-            $query->joinWith('modification');
-            $or[] = ['modification.id' => $modification];
+            $modification = (array) $modification;
+            $pieces[] = 'modification_id:(' . implode(' OR ', $modification) . ')';
         }
-        if (count($or) != 1) {
-            $query->andWhere($or);
+        if (!empty($pieces)) {
+            $this->appendQuery($select, $pieces, $any ? 'OR' : 'AND', 'AND');
         }
     }
 
     /**
      * Сформировать запрос по категории
-     * @param ActiveQuery $query
+     * @param SelectQuery $select
      * @param int $category
      */
-    protected function makeCategoryQuery(ActiveQuery $query, $category)
+    protected function makeCategoryQuery(SelectQuery $select, $category)
     {
         if ($category) {
-            $query->andWhere([PartParam::tableName() . '.category_id' => (int) $category]);
+            $this->appendQuery($select, 'category_id:' . (int) $category);
         }
     }
 
     /**
      * Сформировать запрос по состоянию
-     * @param ActiveQuery $query
+     * @param SelectQuery $select
      * @param int $condition
      */
-    protected function makeConditionQuery(ActiveQuery $query, $condition)
+    protected function makeConditionQuery(SelectQuery $select, $condition)
     {
         if ($condition) {
-            $query->andWhere([PartParam::tableName() . '.condition_id' => (int) $condition]);
+            $this->appendQuery($select, 'condition_id:' . (int) $condition);
         }
     }
 
     /**
      * Установить запрос по региону (только если не установлен параметр "Искать в других регионах")
      *
-     * @param ActiveQuery $query
+     * @param SelectQuery $select
      * @param Region|null $region модель региона или null
      * @param boolean $searchOtherRegion
      */
-    protected function makeRegionQuery(ActiveQuery $query, $region, $searchOtherRegion)
+    protected function makeRegionQuery(SelectQuery $select, $region, $searchOtherRegion)
     {
         if (!$searchOtherRegion && $region instanceof Region) {
-            $query->andWhere([Contact::tableName() . '.region_id' => $region->id]);
+            $this->appendQuery($select, 'region_id:' . (int) $region->id);
         }
     }
 
     /**
      * Установить запрос по цене (от и до)
      *
-     * @param ActiveQuery $query
+     * @param SelectQuery $select
      * @param float $priceFrom
      * @param float $priceTo
      */
-    protected function makePriceQuery(ActiveQuery $query, $priceFrom, $priceTo)
+    protected function makePriceQuery(SelectQuery $select, $priceFrom, $priceTo)
     {
-        $priceFrom = (float) $priceFrom;
-        $priceTo = (float) $priceTo;
+        $priceFromQuery = '*';
+        $priceToQuery = '*';
 
-        if ($priceFrom > 0) {
-            $query->andWhere(['>=', Advert::tableName() . '.price', $priceFrom]);
+        if ((float) $priceFrom) {
+            $priceFromQuery = (float) $priceFrom;
+        }
+        if ((float) $priceTo > 0 && (float) $priceTo > (float) $priceFrom) {
+            $priceToQuery = (float) $priceTo;
         }
 
-        if ($priceTo > 0 && $priceTo >= $priceFrom) {
-            $query->andWhere(['<=', Advert::tableName() . '.price', $priceTo]);
+        if ($priceFromQuery != '*' || $priceToQuery != '*') {
+            $this->appendQuery($select, 'price:[' . $priceFromQuery . ' TO ' . $priceToQuery . ']');
         }
     }
 
@@ -168,42 +178,30 @@ class PartsSearchApi extends Component
      * - 0 - всегда частное лицо;
      * - остальные цифры - это всегда тип юр. лица.
      *
-     * @param ActiveQuery $query
+     * @param SelectQuery $select
      * @param mixed $sellerType
      */
-    protected function makeSellerQuery(ActiveQuery $query, $sellerType)
+    protected function makeSellerQuery(SelectQuery $select, $sellerType)
     {
         if ($sellerType == '' || is_null($sellerType)) {
+            // отсутствует запрос по типу продавца
             return;
         }
 
-        $sellerType = (int) $sellerType;
-
-        if ($sellerType == 0) {
-            // частное лицо, не должно быть привязки к торговой точке
-            $query->andWhere([Contact::tableName() . '.trade_point_id' => null]);
-        }
-        else {
-            // в остальном - это тип продавца
-            $query->andWhere(['not', [Contact::tableName() . '.trade_point_id' => null]]);
-            $query->andWhere([
-                Partner::tableName() . '.company_type' => $sellerType
-            ]);
-        }
+        $this->appendQuery($select, 'seller_type:' . (int) $sellerType);
     }
 
     /**
-     * Установить сортировку
+     * Установить сортировку.
+     * Если выбран регион и поиск в других регионах, значит сортирует результат по ближайшим регионам.
      *
-     * @param ActiveQuery $query
+     * @param SelectQuery $select
      * @param Region|null $region модель региона или null
      * @param boolean $searchOtherRegion
      */
-    public function makeSort(ActiveQuery $query, $region, $searchOtherRegion)
+    public function makeSort(SelectQuery $select, $region, $searchOtherRegion)
     {
         $sort = [];
-        $group = [Advert::tableName() . '.id'];
-
         if ($searchOtherRegion && $region instanceof Region) {
             // искать в других регионах, значит сортируем по ближайшим регионам
             /* @var $region Region */
@@ -212,74 +210,81 @@ class PartsSearchApi extends Component
             // сортировка по регионам
             $regionIds = $geoApi->getNearestRegionsIds($region);
             if (!empty($regionIds)) {
-                $s = 'CASE ' . Contact::tableName() . '.region_id ' . " \n";
-                $x = 0;
                 foreach ($regionIds as $regionId) {
-                    $s .= 'WHEN ' . $regionId . ' THEN ' . ++$x . " \n";
+                    $sort["map(region_id,$regionId,$regionId,1,0)"] = 'desc';
                 }
-                $s .= 'END ' . "\n";
-                $sort[] = new Expression($s);
             }
-            $group[] = Contact::tableName() . '.region_id';
         }
-
         // сортировка по дате
-        $sort[] = new Expression(Advert::tableName() . '.published DESC');
+        $sort['published_from'] = 'desc';
+        $select->setSorts($sort);
+    }
 
-        $query->orderBy($sort);
-
-        $query->groupBy(implode(', ', $group));
+    /**
+     * Создать базовый запрос в Solr по активным на данный момент объявлениям
+     *
+     * @return SelectQuery
+     */
+    public function createSelectQuery()
+    {
+        /* @var $partsIndex PartsIndex */
+        $partsIndex = \Yii::$app->getModule('advert')->partsIndex;
+        /* @var $select SelectQuery */
+        $select = $partsIndex->createSelect();
+        $select->setQuery('active:1 AND published_to:[' . date('Y-m-d') . 'T' . date('H:i:s') . 'Z TO *]');
+        return $select;
     }
 
     /**
      * Получить результат поиска
      * @param array $queryParams массив из $_REQUEST
-     * @return ActiveDataProvider
+     * @return SolrDataProvider
      */
     public function searchItems($queryParams = [])
     {
         $form = new PartSearch();
 
-        $region = null;
+        /* @var $geoApi GeoApi */
+        $geoApi = \Yii::$app->getModule('geo')->api;
 
-        $form->load($queryParams);
-        $form->validate();
+        $region = $geoApi->getUserRegion(true);
 
-        if ($form->r && $form->validate()) {
-            // получить модель региона, в котором ищем
-            $region = Region::find()->andWhere(['id' => (int) $form->r])->one();
-        }
+        /* @var $partsIndex PartsIndex */
+        $partsIndex = \Yii::$app->getModule('advert')->partsIndex;
+        /* @var $select SelectQuery */
+        $select = $this->createSelectQuery();
 
-        $joinParams = !empty($form->q) || !empty($form->cat) || !empty($form->con);
-        $joinContacts = ($form->st != '' && !is_null($form->st)) || $region instanceof Region;
-        $joinPartners = (int) $form->st > 0;
-
-        $query = $this->getSearchQuery($joinParams, $joinContacts, $joinPartners);
-
-        if ($form->validate()) {
+        if ($form->load($queryParams) && $form->validate()) {
+            if ($form->r) {
+                // указан регион
+                $region = Region::find()->andWhere(['id' => (int) $form->r])->one();
+            }
             // сформировать запрос по ключевому слову
-            $this->makeKeywordQuery($query, $form->q);
+            $this->makeKeywordQuery($select, $form->q);
             // сформировать запрос по автомобилям
-            $this->makeAutoQuery($query, $form->a1, $form->a2, $form->a3, $form->a4);
+            $this->makeAutoQuery($select, $form->a1, $form->a2, $form->a3, $form->a4);
             // сформировать запрос по категории
-            $this->makeCategoryQuery($query, $form->cat);
+            $this->makeCategoryQuery($select, $form->cat);
             // сформировать запрос по состоянию
-            $this->makeConditionQuery($query, $form->con);
+            $this->makeConditionQuery($select, $form->con);
             // запрос по региону
-            $this->makeRegionQuery($query, $region, (boolean) $form->sor);
+            $this->makeRegionQuery($select, $region, (boolean) $form->sor);
             // запрос по типу продавца
-            $this->makeSellerQuery($query, $form->st);
+            $this->makeSellerQuery($select, $form->st);
             // запрос по цене
-            $this->makePriceQuery($query, $form->p1, $form->p2);
+            $this->makePriceQuery($select, $form->p1, $form->p2);
+            // сортировка
+            $this->makeSort($select, $region, (boolean) $form->sor);
+        }
+        else {
+            // обычная сортировка по дате и по региону по умолчанию
+            $this->makeSort($select, $region, true);
         }
 
-        // своя сортировка
-        $this->makeSort($query, $region, (boolean) $form->sor);
-
-//        echo $query->prepare(Yii::$app->db->queryBuilder)->createCommand()->rawSql;
-//        exit();
-        return new ActiveDataProvider([
-            'query' => $query,
+        return new SolrDataProvider([
+            'query' => $select,
+            'solr' => $partsIndex->solr,
+            'modelClass' => PartIndex::className(),
         ]);
     }
 
@@ -292,7 +297,7 @@ class PartsSearchApi extends Component
      * @param Part $advert
      * @return array
      */
-    protected function getAdvertAutomobileTree(Part $advert)
+    public function getAdvertAutomobileTree(Part $advert)
     {
         $r = ArrayHelper::map(array_merge(
             $advert->mark, $advert->model,
@@ -352,14 +357,12 @@ class PartsSearchApi extends Component
      * Возвращает массив ссылок на поиск по автомобилям, привязанным к объявлению.
      *
      * @param array путь к поиску
-     * @param Part $advert
+     * @param array $data дерево автомобилей, результат работы метода getAdvertAutomobileTree
      * @return array
      */
-    public function getAutomobilesLink($route, Part $advert)
+    public function getAutomobilesLink($route, $data)
     {
         $result = [];
-
-        $data = $this->getAdvertAutomobileTree($advert);
 
         $searchModel = new PartSearch();
         foreach ($data as $k1 => $items) {
@@ -387,24 +390,26 @@ class PartsSearchApi extends Component
     }
 
     /**
-     * Для объявления $advert возвращает похожие объявления.
+     * Для объявления $advert возвращает похожие объявления из индекса Solr.
      * Сравнение объявлений:
      * - по автомобилям;
      * - по категории.
      *
      * @param Part $advert объявление, для которого требуется получить похожие
      * @param int $limit ограничение на вывод
-     * @return ActiveDataProvider
+     * @return SolrDataProvider
      */
     public function getRelated(Part $advert, $limit = 4)
     {
-        $partParam = $advert->partParam;
-        $query = $this->getSearchQuery($partParam instanceof PartParam, false);;
+        /* @var $partsIndex PartsIndex */
+        $partsIndex = \Yii::$app->getModule('advert')->partsIndex;
+        /* @var $select SelectQuery */
+        $select = $this->createSelectQuery();
 
-        $query->andWhere(['<>', Advert::tableName() . '.id', $advert->id]);
+        $partParam = $advert->partParam;
 
         // сформировать запрос по автомобилям
-        $this->makeAutoQuery($query,
+        $this->makeAutoQuery($select,
             $advert->getMarks(),
             $advert->getModels(),
             $advert->getSeries(),
@@ -413,19 +418,43 @@ class PartsSearchApi extends Component
 
         // сформировать запрос по категории
         if ($partParam instanceof PartParam) {
-            $this->makeCategoryQuery($query, $partParam->category_id);
+            $this->makeCategoryQuery($select, $partParam->category_id);
         }
 
-        $query->groupBy(Advert::tableName() . '.id');
-        $query->orderBy(Advert::tableName() . '.published DESC');
-
         // установить лимиты
-        $query->limit($limit)->offset(0);
+        $select->setStart(0)->setRows($limit);
 
-        return new ActiveDataProvider([
-            'query' => $query,
+        return new SolrDataProvider([
+            'modelClass' => PartIndex::className(),
+            'query' => $select,
             'pagination' => false,
             'sort' => false,
+            'solr' => $partsIndex->solr,
+        ]);
+    }
+
+    /**
+     * Получить последние добавленные объявления
+     *
+     * @param integer $limit ограничение на выдаваемое количество объявлений
+     * @return SolrDataProvider
+     */
+    public function getLastAdverts($limit)
+    {
+        /* @var $partsIndex PartsIndex */
+        $partsIndex = \Yii::$app->getModule('advert')->partsIndex;
+        /* @var $select SelectQuery */
+        $select = $this->createSelectQuery();
+
+        $select->setSorts(['published_from' => 'desc']);
+        $select->setStart(0)->setRows($limit);
+
+        return new SolrDataProvider([
+            'modelClass' => PartIndex::className(),
+            'query' => $select,
+            'pagination' => false,
+            'sort' => false,
+            'solr' => $partsIndex->solr,
         ]);
     }
 
