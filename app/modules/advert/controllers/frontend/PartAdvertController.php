@@ -1,13 +1,15 @@
 <?php
+namespace advert\controllers\frontend;
+
+use Yii;
 
 use advert\components\PartsApi;
 use advert\exception\PartsApiException;
 use advert\forms\PartForm;
-use yii\web\Controller;
+use app\components\Controller;
 use yii\web\Response;
 use yii\web\UploadedFile;
 use yii\widgets\ActiveForm;
-namespace advert\controllers\frontend;
 
 /**
  * Работа с объявлениями

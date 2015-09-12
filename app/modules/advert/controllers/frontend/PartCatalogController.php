@@ -1,5 +1,7 @@
 <?php
+namespace advert\controllers\frontend;
 
+use Yii;
 use advert\components\PartsSearchApi;
 use advert\components\QuestionsApi;
 use advert\exception\QuestionsApiException;
@@ -10,13 +12,11 @@ use advert\models\Question;
 use sammaye\solr\SolrDataProvider;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
-use yii\web\Controller;
+use app\components\Controller;
 use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 use yii\widgets\ActiveForm;
-
-namespace advert\controllers\frontend;
 
 /**
  * Контроллер для вывода объявлений запчастей

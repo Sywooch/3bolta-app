@@ -7,7 +7,6 @@ use user\exception\UserApiException;
 use user\forms\ChangePassword;
 use user\forms\Profile;
 use Yii;
-use yii\base\Exception;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
