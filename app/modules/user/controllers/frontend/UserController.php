@@ -3,6 +3,7 @@ namespace user\controllers\frontend;
 
 use app\components\Controller;
 use user\components\UserApi;
+use user\exception\UserApiException;
 use user\forms\ChangePassword as ChangePasswordForm;
 use user\forms\Login as LoginForm;
 use user\forms\LostPassword as LostPasswordForm;
@@ -12,8 +13,8 @@ use Yii;
 use yii\base\Action;
 use yii\filters\AccessControl;
 use yii\helpers\ArrayHelper;
-use yii\helpers\Url;
 use yii\web\ForbiddenHttpException;
+use yii\web\NotFoundHttpException;
 use yii\web\Response;
 use yii\widgets\ActiveForm;
 
@@ -61,10 +62,15 @@ class UserController extends Controller
         $api = Yii::$app->getModule('user')->api;
 
         // активировать пользователя и авторизовать его в случае успеха
-        if (($userId = $api->confirmUserRegistration($code)) &&
-            ($user = User::find()->where(['id' => $userId])->one())) {
-            // авторизовать пользователя в случае успеха
-            Yii::$app->user->login($user);
+        try {
+            if (($userId = $api->confirmUserRegistration($code)) &&
+                ($user = User::find()->where(['id' => $userId])->one())) {
+                // авторизовать пользователя в случае успеха
+                Yii::$app->user->login($user);
+            }
+        }
+        catch (UserApiException $ex) {
+            throw NotFoundHttpException();
         }
 
         return $this->goHome();
@@ -85,10 +91,18 @@ class UserController extends Controller
         if ($model->load($_POST) && $model->validate()) {
             /* @var $api UserApi */
             $api = Yii::$app->getModule('user')->api;
-            $user = $api->registerUser($model);
-            if ($user instanceof User) {
+            try {
+                $user = $api->registerUser($model);
                 Yii::$app->session->setFlash('user_success_registered', $user->id);
                 return $this->refresh();
+            }
+            catch (UserApiException $ex) {
+                Yii::$app->serviceMessage->setMessage(
+                    'danger',
+                    'При регистрации произошла ошибка (код ошибки: ' . $ex->getCode() . '<br />'
+                    . 'Пожалуйста, обратитесь в службу поддержки',
+                    Yii::t('frontend/user', 'Register')
+                );
             }
         }
 
@@ -156,14 +170,18 @@ class UserController extends Controller
         $result = [
             'success' => false,
             'email' => null,
+            'errorCode' => 0,
         ];
 
         if ((!empty($_POST) && $form->load($_POST)) && $form->validate()) {
             /* @var $api UserApi */
             $api = Yii::$app->getModule('user')->api;
-            if ($api->lostPassword($form)) {
-                $result['success'] = true;
+            try {
+                $result['success'] = $api->lostPassword($form);
                 $result['email'] = $form->getUser()->email;
+            } catch (UserApiException $ex) {
+                $result['success'] = false;
+                $result['errorCode'] = $ex->getCode();
             }
         }
 
@@ -196,8 +214,12 @@ class UserController extends Controller
             return ActiveForm::validate($form);
         }
 
-        if ($form->load($_POST) && $form->validate() && $api->changePassword($user, $form)) {
-            Yii::$app->session->setFlash('password_success_updated', true);
+        if ($form->load($_POST) && $form->validate()) {
+            try {
+                $api->changePassword($user, $form);
+                Yii::$app->session->setFlash('password_success_updated', true);
+            }
+            catch (UserApiException $ex) { }
             return $this->refresh();
         }
 

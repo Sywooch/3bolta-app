@@ -1,14 +1,13 @@
 <?php
-namespace advert\controllers\frontend;
 
 use advert\components\PartsApi;
+use advert\exception\PartsApiException;
 use advert\forms\PartForm;
-use advert\models\Advert;
-use app\components\Controller;
-use Yii;
+use yii\web\Controller;
 use yii\web\Response;
 use yii\web\UploadedFile;
 use yii\widgets\ActiveForm;
+namespace advert\controllers\frontend;
 
 /**
  * Работа с объявлениями
@@ -23,17 +22,24 @@ class PartAdvertController extends Controller
         /* @var $api PartsApi */
         $api = Yii::$app->getModule('advert')->parts;
 
-        $id = $api->confirmAdvert($code);
-
-        if (!$id) {
-            // ошибка, редирект на страницу добавления нового объявления
-            return $this->redirect(['append']);
+        try {
+            $id = $api->confirmAdvert($code);
+            if ($id) {
+                // успех
+                Yii::$app->session->setFlash('advert_published', $id);
+                return $this->redirect(['/advert/part-catalog/details', 'id' => $id]);
+            }
         }
-        else {
-            // успех
-            Yii::$app->session->setFlash('advert_published', $id);
-            return $this->redirect(['/advert/part-catalog/details', 'id' => $id]);
+        catch (PartsApiException $ex) {
+           // ошибка, редирект на страницу добавления нового объявления
+            Yii::$app->serviceMessage->setMessage(
+                'danger',
+                'При подтверждении объявления произошла ошибка (код ошибки: ' . $ex->getCode() . ')<br />'
+                . 'Пожалуйста, обратитесь в службу поддержки',
+                Yii::t('frontend/advert', 'Append advert')
+            );
         }
+        return $this->redirect(['append']);
     }
 
     /**
@@ -62,10 +68,18 @@ class PartAdvertController extends Controller
             $model->setScenario('submit');
 
             // сохраняем объявление
-            $advert = $api->appendNotRegisterAdvert($model);
-            if ($advert instanceof Advert) {
+            try {
+                $advert = $api->appendNotRegisterAdvert($model);
                 Yii::$app->session->setFlash('advert_success_created', $advert->id);
                 return $this->refresh();
+            }
+            catch (PartsApiException $ex) {
+                Yii::$app->serviceMessage->setMessage(
+                    'danger',
+                    'При создании объявления произошла ошибка (код ошибки: ' . $ex->getCode() . '<br />'
+                    . 'Пожалуйста, обратитесь в службу поддержки',
+                    Yii::t('frontend/advert', 'Append advert')
+                );
             }
         }
 

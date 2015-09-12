@@ -2,7 +2,9 @@
 namespace user\components;
 
 use advert\components\PartsApi;
+use Exception;
 use partner\components\PartnersApi;
+use user\exception\UserApiException;
 use user\forms\ChangePassword;
 use user\forms\LostPassword;
 use user\forms\Profile;
@@ -11,7 +13,6 @@ use user\models\User;
 use user\models\UserConfirmation;
 use Yii;
 use yii\base\Component;
-use yii\base\Exception;
 use yii\helpers\Url;
 use yii\web\NotFoundHttpException;
 
@@ -31,6 +32,7 @@ class UserApi extends Component
      * @param string $code
      * @return int|null идентификатор пользователя в случае успеха
      * @throws NotFoundHttpException
+     * @throws UserApiException
      */
     public function confirmUserRegistration($code)
     {
@@ -64,14 +66,14 @@ class UserApi extends Component
             $confirmation->email = null;
             if (!$confirmation->save(true, ['email', 'email_confirmation'])) {
                 // не удалось сохранить модель подтверждения
-                throw new Exception();
+                throw new UserApiException('', UserApiException::VALIDATION_ERROR);
             }
 
             // сохранить пользователя
             $user->status = User::STATUS_ACTIVE;
             if (!$user->save(true, ['status'])) {
                 // не удалось сохранить пользователя
-                throw new Exception();
+                throw new UserApiException('', UserApiException::VALIDATION_ERROR);
             }
 
             /* @var $advertApi PartsApi */
@@ -86,6 +88,7 @@ class UserApi extends Component
         } catch (Exception $ex) {
             $transaction->rollBack();
             $ret = null;
+            UserApiException::throwUp($ex);
         }
 
         return $ret;
@@ -118,6 +121,7 @@ class UserApi extends Component
      *
      * @param Register $form
      * @return User|null модель зарегистрированного пользователя в случае успеха
+     * @throws UserApiException
      */
     public function registerUser(Register $form)
     {
@@ -138,23 +142,20 @@ class UserApi extends Component
                     'type' => $form->type,
                 ]);
                 if (!$user->save()) {
-                    throw new Exception();
+                    throw new UserApiException('', UserApiException::VALIDATION_ERROR);
                 }
 
                 // создать модель партнера, если регистрируемся как партнер
                 if ($form->type == User::TYPE_LEGAL_PERSON) {
                     /* @var $partnersApi PartnersApi */
                     $partnersApi = Yii::$app->getModule('partner')->api;
-                    $partner = $partnersApi->registerPartner($form, $user);
-                    if (!$partner) {
-                        throw new Exception();
-                    }
+                    $partnersApi->registerPartner($form, $user);
                 }
 
                 // сгенерировать подтверждение
                 $confirmation = $user->getConfirmation();
                 if (!$confirmation) {
-                    throw new Exception();
+                    throw new UserApiException('', UserApiException::DATABASE_ERROR);
                 }
 
                 $confirmation->setAttributes([
@@ -162,9 +163,9 @@ class UserApi extends Component
                     'email_confirmation' => md5(uniqid() . $user->id . time()),
                 ]);
                 if (!$confirmation->save()) {
-                    throw new Exception();
+                    throw new UserApiException('', UserApiException::VALIDATION_ERROR);
                 }
-
+                // отправить e-mail уведомление
                 $this->sendEmailConfirmation($user);
 
                 $transaction->commit();
@@ -174,6 +175,7 @@ class UserApi extends Component
             catch (Exception $ex) {
                 $transaction->rollBack();
                 $ret = null;
+                UserApiException::throwUp($ex);
             }
         }
 
@@ -187,6 +189,7 @@ class UserApi extends Component
      *
      * @param LostPassword $form
      * @return boolean true в случае успеха
+     * @throws UserApiException
      */
     public function lostPassword(LostPassword $form)
     {
@@ -203,10 +206,11 @@ class UserApi extends Component
         try {
             $confirmation->restore_confirmation = md5(uniqid() . $user->email . $user->id . time());
             if (!$confirmation->save(true, ['restore_confirmation'])) {
-                throw new Exception();
+                throw new UserApiException('', UserApiException::VALIDATION_ERROR);
             }
 
             $confirmationLink = Url::toRoute(['/user/user/change-password', 'code' => $confirmation->restore_confirmation], true);
+            // отправить e-mail уведомление
             $ret = Yii::$app->mailer->compose('userLostPassword', [
                 'user' => $user,
                 'confirmationLink' => $confirmationLink,
@@ -220,6 +224,7 @@ class UserApi extends Component
         catch (Exception $ex) {
             $transaction->rollBack();
             $ret = false;
+            UserApiException::throwUp($ex);
         }
 
         return $ret;
@@ -257,36 +262,36 @@ class UserApi extends Component
      * @param User $user
      * @param ChangePassword $form
      * @return boolean
+     * @throws UserApiException
      */
     public function changePassword(User $user, ChangePassword $form)
     {
         $ret = false;
 
-        if ($form->validate()) {
-            $transaction = $user->getDb()->beginTransaction();
+        $transaction = $user->getDb()->beginTransaction();
 
-            try {
-                // очистить строку подтверждения
-                $confirmation = $user->getConfirmation();
-                $confirmation->restore_confirmation = null;
-                if (!$confirmation->save(true, ['restore_confirmation'])) {
-                    throw new Exception();
-                }
-
-                // изменить пароль
-                $user->new_password = $form->password;
-                if (!$user->save()) {
-                    throw new Exception();
-                }
-
-                $transaction->commit();
-
-                $ret = true;
+        try {
+            // очистить строку подтверждения
+            $confirmation = $user->getConfirmation();
+            $confirmation->restore_confirmation = null;
+            if (!$confirmation->save(true, ['restore_confirmation'])) {
+                throw new UserApiException('', UserApiException::VALIDATION_ERROR);
             }
-            catch (Exception $ex) {
-                $transaction->rollBack();
-                $ret = false;
+
+            // изменить пароль
+            $user->new_password = $form->password;
+            if (!$user->save()) {
+                throw new UserApiException('', UserApiException::VALIDATION_ERROR);
             }
+
+            $transaction->commit();
+
+            $ret = true;
+        }
+        catch (Exception $ex) {
+            $transaction->rollBack();
+            $ret = false;
+            UserApiException::throwUp($ex);
         }
 
         return $ret;
@@ -299,14 +304,11 @@ class UserApi extends Component
      * @param User $user
      * @param Profile $profile
      * @return boolean
+     * @throws UserApiException
      */
     public function setNewUserEmail(User $user, Profile $profile)
     {
         $ret = false;
-
-        if (!$profile->validate()) {
-            return $ret;
-        }
 
         $transaction = User::getDb()->beginTransaction();
 
@@ -316,7 +318,7 @@ class UserApi extends Component
             $confirmation->email = $profile->email;
             $confirmation->email_confirmation = md5($user->id . $user->email . $profile->email . uniqid());
             if (!$confirmation->save()) {
-                throw new Exception();
+                throw new UserApiException('', UserApiException::VALIDATION_ERROR);
             }
 
             // отправить уведомление
@@ -338,6 +340,7 @@ class UserApi extends Component
         catch (Exception $ex) {
             $transaction->rollBack();
             $ret = false;
+            UserApiException::throwUp($ex);
         }
 
         return $ret;
@@ -350,7 +353,7 @@ class UserApi extends Component
      *
      * @param User $user модель пользователя
      * @param string $code код подтверждения
-     * @throws Exception
+     * @throws UserApiException
      */
     public function changeUserEmail(User $user, $code)
     {
@@ -359,7 +362,7 @@ class UserApi extends Component
         $confirmation = $user->getConfirmation();
 
         if ($confirmation->email_confirmation != $code) {
-            throw new Exception(Yii::t('frontend/user', 'Wrong confirmation code'));
+            throw new UserApiException(Yii::t('frontend/user', 'Wrong confirmation code'), UserApiException::DATA_ERROR);
         }
 
         $transaction = User::getDb()->beginTransaction();
@@ -368,14 +371,14 @@ class UserApi extends Component
             // установить новый e-mail
             $user->email = $confirmation->email;
             if (!$user->save(true, ['email'])) {
-                throw new Exception();
+                throw new UserApiException('', UserApiException::VALIDATION_ERROR);
             }
 
             // очистить код подтверждения
             $confirmation->email_confirmation = null;
             $confirmation->email = null;
             if (!$confirmation->save(true, ['email', 'email_confirmation'])) {
-                throw new Exception();
+                throw new UserApiException('', UserApiException::VALIDATION_ERROR);
             }
 
             $transaction->commit();
@@ -385,7 +388,7 @@ class UserApi extends Component
         } catch (Exception $ex) {
             $transaction->rollBack();
             $ret = false;
-            throw new Exception(Yii::t('frontend/user', 'Error change e-mail'));
+            throw new UserApiException(Yii::t('frontend/user', 'Error change e-mail'), UserApiException::DATABASE_ERROR, $ex);
         }
     }
 
@@ -399,10 +402,6 @@ class UserApi extends Component
     public function updateUserProfile(User $user, Profile $profile)
     {
         $ret = false;
-
-        if (!$profile->validate()) {
-            return $ret;
-        }
 
         try {
             $user->setAttributes([

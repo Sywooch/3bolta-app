@@ -1,13 +1,15 @@
 <?php
 namespace storage\models;
 
-use Yii;
-use yii\base\Exception;
+use app\components\ActiveRecord;
+use Exception;
 use storage\components\Storage;
-use yii\web\UploadedFile;
+use storage\exception\FileException;
+use Yii;
 use yii\helpers\FileHelper;
+use yii\web\UploadedFile;
 
-class File extends \app\components\ActiveRecord
+class File extends ActiveRecord
 {
     /**
      * Название таблицы
@@ -20,7 +22,7 @@ class File extends \app\components\ActiveRecord
 
     /**
      * Правила валидации
-     * @return []
+     * @return array
      */
     public function rules()
     {
@@ -35,7 +37,7 @@ class File extends \app\components\ActiveRecord
 
     /**
      * Подписи
-     * @return []
+     * @return array
      */
     public function attributeLabels()
     {
@@ -55,7 +57,7 @@ class File extends \app\components\ActiveRecord
 
     /**
      * Определить и установить IP-адрес с которого загружаем
-     * @param \storage\models\File $file
+     * @param File $file
      */
     protected static function setUploadedAddr(File $file)
     {
@@ -70,8 +72,8 @@ class File extends \app\components\ActiveRecord
      * Получить размеры изображения, если файл является изображением.
      * Иначе - устанавливает только mime.
      *
-     * @param string $filePath абсолютный путь к файл
-     * @param \storage\models\File $file файл, в который сохраняем изображение
+     * @param string $existsFile абсолютный путь к файл
+     * @param File $file файл, в который сохраняем изображение
      */
     protected static function setImageSize($existsFile, File $file)
     {
@@ -93,10 +95,10 @@ class File extends \app\components\ActiveRecord
      * Скопировать файл $existsFile в $realPath и запомнить его в $file.
      * В случае ошибки генерирует Exception.
      *
-     * @param \storage\models\File $file
+     * @param File $file
      * @param string $existsFile путь к файлу, который необходимо скопировать
      * @param string $realPath путь к вновь создаваемому файлу
-     * @throws yii\base\Exception
+     * @throws FileException
      */
     protected static function createFile(File $file, $existsFile, $realPath)
     {
@@ -104,11 +106,11 @@ class File extends \app\components\ActiveRecord
 
         try {
             if (!$file->save()) {
-                throw new Exception();
+                throw new FileException('', FileException::VALIDATION_ERROR);
             }
 
             if (!@copy($existsFile, $realPath)) {
-                throw new Exception();
+                throw new FileException('', FileException::FILE_COPY_ERROR);
             }
 
             $transaction->commit();
@@ -120,7 +122,7 @@ class File extends \app\components\ActiveRecord
                 @unlink($realPath);
             }
 
-            throw $ex;
+            FileException::throwUp($ex);
         }
     }
 
@@ -138,6 +140,7 @@ class File extends \app\components\ActiveRecord
      * @param Storage $repository
      * @param UploadedFile $uploadedFile
      * @return File|null
+     * @throws FileException
      */
     public static function uploadFile(Storage $repository, UploadedFile $uploadedFile)
     {
@@ -171,6 +174,7 @@ class File extends \app\components\ActiveRecord
             }
         } catch (Exception $ex) {
             $ret = null;
+            FileException::throwUp($ex);
         }
 
         return $ret;
@@ -179,10 +183,12 @@ class File extends \app\components\ActiveRecord
     /**
      * Создать файл из существующего.
      *
-     * @param \storage\components\Storage $repository
+     * @param Storage $repository
      * @param string $existsFile
      * @param string $realName
      * @param string $path
+     * @throws FileException
+     * @return File|null
      */
     public static function createFromExists(Storage $repository, $existsFile, $realName, $path)
     {
@@ -216,6 +222,7 @@ class File extends \app\components\ActiveRecord
             }
         } catch (Exception $ex) {
             $ret = null;
+            FileException::throwUp($ex);
         }
 
         return $ret;
@@ -223,7 +230,7 @@ class File extends \app\components\ActiveRecord
 
     /**
      * Возвращает репозиторий
-     * @return \storage\components\Storage
+     * @return Storage
      */
     public function getStorage()
     {

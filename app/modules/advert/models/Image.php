@@ -7,7 +7,8 @@ use Imagine\Image\Point;
 use storage\components\Storage;
 use storage\models\File;
 use Yii;
-use yii\base\Exception;
+use Exception;
+use advert\exception\ImageException;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 use yii\imagine\Image as BaseImage;
@@ -74,7 +75,7 @@ class Image extends ActiveRecord
      * @param int $width
      * @param int $height
      * @return File|null
-     * @throws Exception
+     * @throws ImageException
      */
     protected static function createThumbCopy(File $file, $width, $height)
     {
@@ -106,11 +107,11 @@ class Image extends ActiveRecord
             }
 
             if (!is_file($path)) {
-                throw new Exception();
+                throw new ImageException('', ImageException::IMAGE_NOT_FOUND);
             }
             $ret = self::getStorage()->saveFile($path, $file->real_name, true);
             if (!($ret instanceof File)) {
-                throw Exception();
+                throw ImageException('', ImageException::IMAGE_NOT_FOUND);
             }
             $transaction->commit();
         } catch (Exception $ex) {
@@ -119,7 +120,7 @@ class Image extends ActiveRecord
                 // удалить промежуточный файл
                 unlink($path);
             }
-            throw $ex;
+            ImageException::throwUp($ex);
         }
 
         return $ret;
@@ -129,7 +130,7 @@ class Image extends ActiveRecord
      * Создать тултип, если его еще нет
      *
      * @return File
-     * @throws Exception
+     * @throws ImageException
      */
     public function createThumb()
     {
@@ -151,7 +152,7 @@ class Image extends ActiveRecord
 
             $this->thumb_id = $file->id;
             if (!$this->save(false, ['thumb_id'])) {
-                throw new Exception();
+                throw new ImageException('', ImageException::VALIDATION_ERROR);
             }
 
             $transaction->commit();
@@ -161,7 +162,7 @@ class Image extends ActiveRecord
             if ($file instanceof File) {
                 $file->getStorage()->delete($file->file_path);
             }
-            throw new Exception();
+            ImageException::throwUp($ex);
         }
 
         return $file;
@@ -171,7 +172,7 @@ class Image extends ActiveRecord
      * Создать превью, если его еще нет
      *
      * @return File
-     * @throws Exception
+     * @throws ImageException
      */
     public function createPreview()
     {
@@ -193,7 +194,7 @@ class Image extends ActiveRecord
 
             $this->preview_id = $file->id;
             if (!$this->save(false, ['preview_id'])) {
-                throw new Exception();
+                throw new ImageException('', ImageException::VALIDATION_ERROR);
             }
 
             $transaction->commit();
@@ -203,7 +204,7 @@ class Image extends ActiveRecord
             if ($file instanceof File) {
                 $file->getStorage()->delete($file->file_path);
             }
-            throw new Exception();
+            ImageException::throwUp($ex);
         }
 
         return $file;
@@ -213,7 +214,7 @@ class Image extends ActiveRecord
      * Создать сжатую копию, если его еще нет
      *
      * @return File
-     * @throws Exception
+     * @throws ImageException
      */
     public function createImage()
     {
@@ -235,7 +236,7 @@ class Image extends ActiveRecord
 
             $this->image_id = $file->id;
             if (!$this->save(false, ['image_id'])) {
-                throw new Exception();
+                throw new ImageException('', ImageException::VALIDATION_ERROR);
             }
 
             $transaction->commit();
@@ -245,7 +246,7 @@ class Image extends ActiveRecord
             if ($file instanceof File) {
                 $file->getStorage()->delete($file->file_path);
             }
-            throw $ex;
+            ImageException::throwUp($ex);
         }
 
         return $file;
@@ -258,7 +259,7 @@ class Image extends ActiveRecord
      * @param UploadedFile $uploadedFile
      * @param boolean $isPreview
      * @return self|null модель загруженной фотографии
-     * @throws Exception
+     * @throws ImageException
      */
     public static function attachToAdvert(Advert $advert, UploadedFile $uploadedFile, $isPreview = false)
     {
@@ -274,7 +275,7 @@ class Image extends ActiveRecord
             if (!($file instanceof File) || !$file->width || !$file->height) {
                 // без файла дальше не работаем,
                 // либо это не изображение
-                throw new Exception();
+                throw new ImageException('', ImageException::UNKNOWN_ERROR);
             }
 
             // создать привязку к объявлению
@@ -285,20 +286,18 @@ class Image extends ActiveRecord
                 'is_preview' => $isPreview,
             ]);
             if (!$ret->save()) {
-                throw new Exception();
+                throw new ImageException('', ImageException::VALIDATION_ERROR);
             }
 
             $transaction->commit();
         }
         catch (Exception $ex) {
             $transaction->rollBack();
-
             // удалить файлы, если они были созданы
             if ($file instanceof File) {
                 $file->getStorage()->delete($file->file_path);
             }
-
-            throw $ex;
+            ImageException::throwUp($ex);
         }
 
         return $ret;
@@ -343,6 +342,7 @@ class Image extends ActiveRecord
 
     /**
      * Удаление
+     * @throw ImageException
      */
     public function delete()
     {
@@ -370,9 +370,9 @@ class Image extends ActiveRecord
 
             $transaction->commit();
         }
-        catch (\Exception $ex) {
+        catch (Exception $ex) {
             $transaction->rollBack();
-            throw $ex;
+            ImageException::throwUp($ex);
         }
 
         return $ret;

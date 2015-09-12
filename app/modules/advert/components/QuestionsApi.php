@@ -7,8 +7,9 @@ use advert\models\Question;
 use advert\models\Advert;
 use Yii;
 use yii\base\Component;
-use yii\base\Exception;
+use Exception;
 use yii\helpers\Url;
+use advert\exception\QuestionsApiException;
 
 /**
  * API для работы с вопросами к объявлению
@@ -27,12 +28,12 @@ class QuestionsApi extends Component
      */
     public function getQuestionByAnswerId($advertId, $answerHash)
     {
-        try {
+        if (strlen($answerHash) == 32) {
             return Question::find()->andWhere([
                 'advert_id' => (int) $advertId,
                 'hash' => (string) $answerHash,
             ])->one();
-        } catch (Exception $ex) { }
+        }
 
         return null;
     }
@@ -73,9 +74,15 @@ class QuestionsApi extends Component
         try {
             if ($question->to_user_id && !$question->save()) {
                 // если получатель зарегистрирован - сохраняем ответ в БД
-                throw new Exception();
+                throw new QuestionsApiException('', QuestionsApiException::VALIDATION_ERROR);
             }
 
+            // удаляем вопрос из БД, если отправитель незарегистрированный пользователь
+            if (!$question->from_user_id) {
+                $question->delete();
+            }
+
+            // отправить e-mail уведомление
             Yii::$app->mailer->compose('advertReplyQuestion', [
                 'advert' => $advert,
                 'toUserName' => $question->from_user_name,
@@ -90,17 +97,13 @@ class QuestionsApi extends Component
             ->setSubject(Yii::t('mail_subjects', 'Reply a question'))
             ->send();
 
-            // удаляем вопрос из БД, если отправитель незарегистрированный пользователь
-            if (!$question->from_user_id) {
-                $question->delete();
-            }
-
             $transaction->commit();
 
             $ret = true;
         } catch (Exception $ex) {
             $transaction->rollBack();
-            throw new QuestionsApiException('', QuestionsApiException::DATABASE_ERROR);
+            $ret = false;
+            QuestionsApiException::throwUp($ex);
         }
 
         return $ret;
@@ -152,9 +155,10 @@ class QuestionsApi extends Component
         try {
             if (!$model->save()) {
                 // ошибка сохранения
-                throw new Exception();
+                throw new QuestionsApiException('', QuestionsApiException::VALIDATION_ERROR);
             }
 
+            // отправить e-mail уведомление
             Yii::$app->mailer->compose('advertQuestion', [
                 'advert' => $advert,
                 'toUserName' => $advert->getUserName(),
@@ -181,21 +185,11 @@ class QuestionsApi extends Component
             $ret = true;
         }
         catch (Exception $ex) {
+            $ret = false;
             $transaction->rollBack();
-            throw new QuestionsApiException('', QuestionsApiException::DATABASE_ERROR, $ex);
+            QuestionsApiException::throwUp($ex);
         }
 
         return $ret;
     }
-}
-
-/**
- * Класс исключений для API
- */
-class QuestionsApiException extends Exception
-{
-    const ADVERT_NOT_FOUND = 1; // не установлено или не найдено объявление
-    const VALIDATION_ERROR = 2; // ошибка валидации формы
-    const DATABASE_ERROR = 3; // ошибка БД
-    const QUESTION_NOT_FOUND = 4; // вопрос не найден
 }

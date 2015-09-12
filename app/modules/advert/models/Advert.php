@@ -7,7 +7,8 @@ use partner\models\TradePoint;
 use storage\models\File;
 use user\models\User;
 use Yii;
-use yii\base\Exception;
+use Exception;
+use advert\exception\AdvertException;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 use yii\db\Expression;
@@ -154,6 +155,8 @@ class Advert extends ActiveRecord
 
     /**
      * Если не установлено изображение с признаком "по умолчанию (is_preview)" - устанавливает его
+     * @return boolean true в случае успеха
+     * @throws AdvertException
      */
     public function updateDefaultImage()
     {
@@ -170,20 +173,27 @@ class Advert extends ActiveRecord
         }
 
         if (!($firstImage instanceof Image)) {
+            // нет изображений
             return true;
         }
 
         try {
             $firstImage->is_preview = true;
-            return $firstImage->save(false, ['is_preview']);
+            if (!$firstImage->save(false, ['is_preview'])) {
+                throw new AdvertException('', AdvertException::VALIDATION_ERROR);
+            }
         } catch (Exception $ex) {
-            throw $ex;
+            AdvertException::throwUp($ex);
         }
+
+        return true;
     }
 
     /**
      * прикрепить изображения к объявлению
      * @param array $uploadedFiles
+     * @return boolean true в случае успеха
+     * @throws AdvertException
      */
     protected function attachImages($uploadedFiles)
     {
@@ -207,7 +217,10 @@ class Advert extends ActiveRecord
             $transaction->commit();
         } catch (Exception $ex) {
             $transaction->rollback();
+            AdvertException::throwUp($ex);
         }
+
+        return true;
     }
 
     /**
@@ -341,13 +354,13 @@ class Advert extends ActiveRecord
      * Поиск объявлений авторизованного пользователя
      *
      * @return ActiveQuery
-     * @throws Exception в случае, если пользователь не авторизован
+     * @throws AdvertException в случае, если пользователь не авторизован
      */
     public static function findUserList()
     {
         if (Yii::$app->user->isGuest) {
             // если пользователь неавторизован - выполнять метод невозможно
-            throw new Exception();
+            throw new AdvertException('', AdvertException::UNKNOWN_ERROR);
         }
 
         return self::find()->andWhere([

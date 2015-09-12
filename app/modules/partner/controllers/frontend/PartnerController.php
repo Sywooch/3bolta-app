@@ -3,6 +3,7 @@ namespace partner\controllers\frontend;
 
 use app\components\Controller;
 use partner\components\PartnersApi;
+use partner\exception\PartnersApiException;
 use partner\filters\CheckPartnerAccessRule;
 use partner\forms\Partner as PartnerForm;
 use partner\forms\TradePoint as TradePointForm;
@@ -105,10 +106,14 @@ class PartnerController extends Controller
             $result = [
                 'id' => null,
                 'success' => false,
+                'errorCode' => 0,
             ];
-            if ($this->partnersApi->updateTradePoint($form, $tradePoint)) {
-                $result['success'] = true;
+            try {
+                $result['success'] = $this->partnersApi->updateTradePoint($form, $tradePoint);
                 $result['id'] = $tradePoint->id;
+            } catch (PartnersApiException $ex) {
+                $result['success'] = false;
+                $result['errorCode'] = $ex->getCode();
             }
             return $result;
         }
@@ -142,10 +147,16 @@ class PartnerController extends Controller
             $result = [
                 'id' => null,
                 'success' => false,
+                'errorCode' => 0,
             ];
-            if ($tradePoint = $this->partnersApi->createTradePoint($form, $this->partner)) {
+            try {
+                $tradePoint = $this->partnersApi->createTradePoint($form, $this->partner);
                 $result['success'] = true;
                 $result['id'] = $tradePoint->id;
+            }
+            catch (PartnersApiException $ex) {
+                $result['success'] = false;
+                $result['errorCode'] = $ex->getCode();
             }
             return $result;
         }
@@ -170,11 +181,11 @@ class PartnerController extends Controller
             return ActiveForm::validate($partnerForm);
         }
 
-        if ($partnerForm->load($_POST)) {
-            if ($partnerForm->validate() && $this->partnersApi->updatePartnerData($partnerForm, $this->partner->user)) {
+        if ($partnerForm->load($_POST) && $partnerForm->validate()) {
+            try {
+                $this->partnersApi->updatePartnerData($partnerForm, $this->partner->user);
                 Yii::$app->session->setFlash('partner_success_update', true);
-            }
-            else {
+            } catch (PartnersApiException $ex) {
                 Yii::$app->session->setFlash('partner_error_update', true);
             }
             return $this->refresh();

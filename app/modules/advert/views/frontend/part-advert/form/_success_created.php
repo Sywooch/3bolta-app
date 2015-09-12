@@ -16,8 +16,10 @@ if ($id = Yii::$app->session->getFlash('advert_success_created')) {
 
 if ($model instanceof Advert && !$model->user_id) {
     Modal::begin([
-        'id' => 'advertWasCreatedModal',
         'title' => Yii::t('frontend/advert', 'Advert was created'),
+        'clientOptions' => [
+            'show' => true,
+        ],
     ]);
     ?>
     Ваше объявление успешно добавлено!
@@ -28,13 +30,4 @@ if ($model instanceof Advert && !$model->user_id) {
     Пожалуйста, пройдите по этой ссылке и ваше объявление будет видно другим пользователям.
     <?php
     Modal::end();
-    JS::begin();
-    ?>
-    <script type="text/javascript">
-        $(document).ready(function() {
-            $('#advertWasCreatedModal').modal('toggle');
-        });
-    </script>
-    <?php
-    JS::end();
 }

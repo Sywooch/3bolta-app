@@ -3,6 +3,7 @@ namespace user\controllers\frontend;
 
 use app\components\Controller;
 use user\components\UserApi;
+use user\exception\UserApiException;
 use user\forms\ChangePassword;
 use user\forms\Profile;
 use Yii;
@@ -84,7 +85,7 @@ class ProfileController extends Controller
             $this->userApi->changeUserEmail($this->user, $code);
             Yii::$app->session->setFlash('email_change_success');
         }
-        catch (Exception $ex) {
+        catch (UserApiException $ex) {
             Yii::$app->session->setFlash('email_change_error', $ex->getMessage());
         }
 
@@ -106,11 +107,12 @@ class ProfileController extends Controller
             return ActiveForm::validate($changePassword);
         }
 
-        if ($changePassword->load($_POST)) {
-            if ($changePassword->validate() && ($this->userApi->changePassword($this->user, $changePassword))) {
+        if ($changePassword->load($_POST) && $changePassword->validate()) {
+            try {
+                $this->userApi->changePassword($this->user, $changePassword);
                 Yii::$app->session->setFlash('password_success_changed', true);
             }
-            else {
+            catch (UserApiException $ex) {
                 Yii::$app->session->setFlash('password_error_changed', true);
             }
         }
@@ -172,10 +174,11 @@ class ProfileController extends Controller
                 Yii::$app->session->setFlash('email_change_error', Yii::t('frontend/user', 'E-mail has no changes'));
             }
             elseif ($isValid) {
-                if ($this->userApi->setNewUserEmail($this->user, $profile)) {
+                try {
+                    $this->userApi->setNewUserEmail($this->user, $profile);
                     Yii::$app->session->setFlash('email_change_message', $profile->email);
                 }
-                else {
+                catch (UserApiException $ex) {
                     Yii::$app->session->setFlash('email_change_error', Yii::t('frontend/user', 'Change e-mail error'));
                 }
             }

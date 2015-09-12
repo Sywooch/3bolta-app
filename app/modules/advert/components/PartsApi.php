@@ -1,17 +1,18 @@
 <?php
 namespace advert\components;
 
+use advert\exception\PartsApiException;
 use advert\forms\PartForm;
 use advert\models\Advert;
 use advert\models\Contact;
-use advert\models\PartParam;
 use advert\models\Part;
+use advert\models\PartParam;
 use DateInterval;
 use DateTime;
+use Exception;
 use user\models\User;
 use Yii;
 use yii\base\Component;
-use \Exception;
 use yii\helpers\Url;
 use yii\web\UploadedFile;
 
@@ -32,7 +33,7 @@ class PartsApi extends Component
      *
      * @param User $user пользователь, к которому требуется прикрепить объявления
      * @return int количество привязанных объявлений
-     * @throws Exception
+     * @throws PartsApiException
      */
     public function attachNotAuthAdvertsToUser(User $user)
     {
@@ -60,7 +61,7 @@ class PartsApi extends Component
                     'user_email' => null,
                 ]);
                 if (!$contact->save()) {
-                    throw new Exception();
+                    throw new PartsApiException('', PartsApiException::DATABASE_ERROR);
                 }
 
                 $cnt++;
@@ -69,7 +70,7 @@ class PartsApi extends Component
             }
             catch (Exception $ex) {
                 $transaction->rollBack();
-                throw $ex;
+                PartsApiException::throwUp($ex);
             }
         }
 
@@ -136,6 +137,7 @@ class PartsApi extends Component
      *
      * @param string $code
      * @return int|null
+     * @throws PartsApiException
      */
     public function confirmAdvert($code)
     {
@@ -159,15 +161,17 @@ class PartsApi extends Component
                 'confirmation' => null,
             ]);
             try {
-                if ($advert->save(true, [
+                if (!$advert->save(true, [
                     'active', 'published', 'confirmation', 'published_to'
                 ])) {
-                    // обновить поисковый индекс
-                    $advert->updateIndex();
-                    $ret = $advert->id;
+                    throw new PartsApiException('', PartsApiException::VALIDATION_ERROR);
                 }
+                // обновить поисковый индекс
+                $advert->updateIndex();
+                $ret = $advert->id;
             } catch (Exception $ex) {
                 $ret = null;
+                PartsApiException::throwUp($ex);
             }
         }
 
@@ -268,7 +272,7 @@ class PartsApi extends Component
      *
      * @param PartForm $form
      * @param Part $advert
-     * @return AdvertPartParams
+     * @return PartParam
      */
     protected function getPartParamsFromForm(PartForm $form, Part $advert)
     {
@@ -337,6 +341,7 @@ class PartsApi extends Component
      * @param PartForm $form
      *
      * @return Advert|null
+     * @throws PartsApiException
      */
     public function appendRegisterAdvert(PartForm $form)
     {
@@ -355,21 +360,21 @@ class PartsApi extends Component
                 $this->setDataFromForm($form, $advert);
 
                 if (!$advert->save()) {
-                    throw new Exception();
+                    throw new PartsApiException('', PartsApiException::VALIDATION_ERROR);
                 }
 
                 // привязать контакты
                 /* @var $contacts Contact */
                 $contacts = $this->getContactsFromForm($form, $advert);
                 if (!$contacts->save()) {
-                    throw new Exception();
+                    throw new PartsApiException('', PartsApiException::VALIDATION_ERROR);
                 }
 
                 // привязать параметры
                 /* @var $params PartParam */
                 $params = $this->getPartParamsFromForm($form, $advert);
                 if (!$params->save()) {
-                    throw new Exception();
+                    throw new PartsApiException('', PartsApiException::VALIDATION_ERROR);
                 }
 
                 // обновить автомобили
@@ -386,8 +391,7 @@ class PartsApi extends Component
             } catch (Exception $ex) {
                 $transaction->rollback();
                 $ret = null;
-
-                throw $ex;
+                PartsApiException::throwUp($ex);
             }
         }
 
@@ -407,6 +411,7 @@ class PartsApi extends Component
      * @param PartForm $form
      *
      * @return Advert|null
+     * @throws PartsApiException
      */
     public function appendNotRegisterAdvert(PartForm $form)
     {
@@ -425,20 +430,20 @@ class PartsApi extends Component
                 $this->setDataFromForm($form, $advert);
 
                 if (!$advert->save()) {
-                    throw new Exception();
+                    throw new PartsApiException('', PartsApiException::VALIDATION_ERROR);
                 }
 
                 // привязать контакты
                 $contacts = $this->getContactsFromForm($form, $advert);
                 if (!$contacts->save()) {
-                    throw new Exception();
+                    throw new PartsApiException('', PartsApiException::VALIDATION_ERROR);
                 }
 
                 // привязать параметры
                 /* @var $params PartParam */
                 $params = $this->getPartParamsFromForm($form, $advert);
                 if (!$params->save()) {
-                    throw new Exception();
+                    throw new PartsApiException('', PartsApiException::VALIDATION_ERROR);
                 }
 
                 // обновить автомобили
@@ -454,6 +459,7 @@ class PartsApi extends Component
             } catch (Exception $ex) {
                 $transaction->rollback();
                 $ret = null;
+                PartsApiException::throwUp($ex);
             }
         }
 
@@ -466,6 +472,7 @@ class PartsApi extends Component
      *
      * @param PartForm $form
      * @return boolean true в случае успеха
+     * @throws PartsApiException
      */
     public function updateAdvert(PartForm $form)
     {
@@ -483,27 +490,25 @@ class PartsApi extends Component
             // установить данные из формы
             $this->setDataFromForm($form, $advert);
             if (!$advert->save()) {
-                throw new Exception();
+                throw new PartsApiException('', PartsApiException::VALIDATION_ERROR);
             }
 
             // обновить контакты
             $contacts = $this->getContactsFromForm($form, $advert);
             if (!$contacts->save()) {
-                throw new Exception();
+                throw new PartsApiException('', PartsApiException::VALIDATION_ERROR);
             }
 
             // обновить параметры
             /* @var $params PartParam */
             $params = $this->getPartParamsFromForm($form, $advert);
             if (!$params->save()) {
-                throw new Exception();
+                throw new PartsApiException('', PartsApiException::VALIDATION_ERROR);
             }
 
             // обновить автомобили
             $advert->updateAutomobiles();
-
             $transaction->commit();
-
             $ret = true;
 
             // обновить поисковый индекс
@@ -512,6 +517,7 @@ class PartsApi extends Component
         catch (Exception $ex) {
             $transaction->rollBack();
             $ret = false;
+            PartsApiException::throwUp($ex);
         }
 
         return $ret;

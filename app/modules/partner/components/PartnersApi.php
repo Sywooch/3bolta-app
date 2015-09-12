@@ -9,7 +9,8 @@ use partner\models\TradePoint;
 use user\forms\Register;
 use user\models\User;
 use yii\base\Component;
-use yii\base\Exception;
+use Exception;
+use partner\exception\PartnersApiException;
 
 /**
  * API для работы с партнерами
@@ -23,7 +24,7 @@ class PartnersApi extends Component
      * @param TradePointForm $form форма редактирования
      * @param TradePoint $tradePoint торговая точка
      * @return boolean
-     * @throws Exception
+     * @throws PartnersApiException
      */
     public function updateTradePoint(TradePointForm $form, TradePoint $tradePoint)
     {
@@ -42,7 +43,7 @@ class PartnersApi extends Component
 
         try {
             if (!$tradePoint->save()) {
-                throw new Exception();
+                throw new PartnersApiException('', PartnersApiException::VALIDATION_ERROR);
             }
 
             $transaction->commit();
@@ -51,6 +52,7 @@ class PartnersApi extends Component
         } catch (Exception $ex) {
             $transaction->rollBack();
             $ret = false;
+            PartnersApiException::throwUp($ex);
         }
 
         return $ret;
@@ -62,7 +64,7 @@ class PartnersApi extends Component
      * @param TradePointForm $form форма создания торговой точки
      * @param Partner $partner данные партнера
      * @return TradePoint|null
-     * @throws Exception
+     * @throws PartnersApiException
      */
     public function createTradePoint(TradePointForm $form, Partner $partner)
     {
@@ -83,7 +85,7 @@ class PartnersApi extends Component
 
         try {
             if (!$tradePoint->save()) {
-                throw new Exception();
+                throw new PartnersApiException('', PartnersApiException::VALIDATION_ERROR);
             }
 
             $transaction->commit();
@@ -92,6 +94,7 @@ class PartnersApi extends Component
         } catch (Exception $ex) {
             $transaction->rollBack();
             $ret = null;
+            PartnersApiException::throwUp($ex);
         }
 
         return $ret;
@@ -105,7 +108,7 @@ class PartnersApi extends Component
      * @param PartnerForm $form форма редактирования партнера
      * @param User $user модель пользователя, к которому необходимо привязать партнера
      * @return Partner|null
-     * @throws Exception
+     * @throws PartnersApiException
      */
     public function updatePartnerData(PartnerForm $form, User $user)
     {
@@ -113,7 +116,7 @@ class PartnersApi extends Component
 
         if ($user->type != User::TYPE_LEGAL_PERSON) {
             // редактировать может только пользователь с соотв. типом
-            return $ret;
+            throw new PartnersApiException('', PartnersApiException::USER_TYPE_ERROR);
         }
 
         $partner = null;
@@ -139,7 +142,7 @@ class PartnersApi extends Component
 
         try {
             if (!$partner->save()) {
-                throw new Exception();
+                throw new PartnersApiException('', PartnersApiException::VALIDATION_ERROR);
             }
 
             $transaction->commit();
@@ -148,7 +151,7 @@ class PartnersApi extends Component
         } catch (Exception $ex) {
             $transaction->rollBack();
             $ret = null;
-            throw $ex;
+            PartnersApiException::throwUp($ex);
         }
 
         return $ret;
@@ -162,7 +165,7 @@ class PartnersApi extends Component
      * @param Register $form
      * @param User $user
      * @return Partner|null
-     * @throws Exception
+     * @throws PartnersApiException
      */
     public function registerPartner(Register $form, User $user)
     {
@@ -182,7 +185,7 @@ class PartnersApi extends Component
             // создать привязки к специализациям
             $partner->setMark($form->getPartnerSpecializationArray());
             if (!$partner->save()) {
-                throw new Exception();
+                throw new PartnersApiException('', PartnersApiException::VALIDATION_ERROR);
             }
 
             $transaction->commit();
@@ -191,6 +194,7 @@ class PartnersApi extends Component
         } catch (Exception $ex) {
             $transaction->rollBack();
             $ret = null;
+            PartnersApiException::throwUp($ex);
         }
 
         return $ret;

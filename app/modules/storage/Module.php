@@ -2,15 +2,16 @@
 
 namespace storage;
 
+use app\components\Module;
 use Yii;
-use yii\base\Exception;
+use yii\base\InvalidParamException;
 
 /**
  * Модуль файлового хранилища.
  * В конфигурации приложения можно указать неограниченное количество файловых хранилищ.
  * Каждое файловое хранилище должно сопровождаться символьным кодом.
  */
-class Module extends \app\components\Module
+class Module extends Module
 {
     public $repository;
 
@@ -27,7 +28,7 @@ class Module extends \app\components\Module
                 $repo['class'] = 'storage\components\Storage';
             }
             if (empty($repo['basePath']) || empty($repo['baseUrl'])) {
-                throw new Exception();
+                throw new InvalidParamException();
             }
             $repo['code'] = $code;
             $config['components'][$code] = $repo;

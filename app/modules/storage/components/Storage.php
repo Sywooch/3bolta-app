@@ -1,9 +1,9 @@
 <?php
 namespace storage\components;
 
-use yii\base\Component;
+use storage\exception\FileException;
 use storage\models\File;
-use yii\web\UploadedFile;
+use yii\base\Component;
 
 /**
  * Компонент файлого хранилища.
@@ -34,7 +34,8 @@ class Storage extends Component
      * @param string $file абсолютный путь к файлу, который необходимо сохранить
      * @param string $name название сохраняемого файла
      * @param boolean $removeExists удалять существующий файл
-     * @return \storage\models\File|null
+     * @return File|null
+     * @throws FileException
      */
     public function saveFile($file, $name = '', $removeExists = false)
     {

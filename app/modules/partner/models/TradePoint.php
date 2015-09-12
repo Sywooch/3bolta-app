@@ -1,15 +1,18 @@
 <?php
 namespace partner\models;
 
-use Yii;
-
 use app\components\PhoneValidator;
+use partner\exception\TradePointException;
+use user\models\User;
+use Yii;
+use yii\db\ActiveQuery;
+use yii\db\ActiveRecord;
 use yii\db\Expression;
 
 /**
  * Модель торговой точки партнера. Привязывается к модели Partner
  */
-class TradePoint extends \yii\db\ActiveRecord
+class TradePoint extends ActiveRecord
 {
     /**
      * @var boolean активность на карте, используется только для поиска торговых точек по карте
@@ -41,13 +44,13 @@ class TradePoint extends \yii\db\ActiveRecord
             ['phone_from_profile', 'default', 'value' => true],
             ['phone_from_profile', 'boolean'],
             ['phone', 'required', 'when' => function($model) {
-                /* @var $model \partner\models\TradePoint */
+                /* @var $model TradePoint */
                 return !$model->phone_from_profile;
             }],
             ['phone', PhoneValidator::className(),
                 'canonicalAttribute' => 'phone_canonical',
                 'when' => function($model) {
-                    /* @var $model \partner\models\TradePoint */
+                    /* @var $model TradePoint */
                     return !$model->phone_from_profile;
                 }
             ],
@@ -59,7 +62,7 @@ class TradePoint extends \yii\db\ActiveRecord
 
     /**
      * Подписи атрибутов
-     * @return []
+     * @return array
      */
     public function attributeLabels()
     {
@@ -78,7 +81,7 @@ class TradePoint extends \yii\db\ActiveRecord
 
     /**
      * Получить партнера
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getPartner()
     {
@@ -88,7 +91,7 @@ class TradePoint extends \yii\db\ActiveRecord
     /**
      * Обертка для метода сохранения
      * @param boolean $runValidation
-     * @param [] $attributeNames
+     * @param array $attributeNames
      * @return boolean
      */
     public function save($runValidation = true, $attributeNames = null)
@@ -123,17 +126,17 @@ class TradePoint extends \yii\db\ActiveRecord
     /**
      * Поиск торговых точек пользователя
      *
-     * @return \yii\db\ActiveQuery
-     * @throws Exception в случае, если пользователь не авторизован или к нему не привязан партнер
+     * @return ActiveQuery
+     * @throws TradePointException в случае, если пользователь не авторизован или к нему не привязан партнер
      */
     public static function findUserList()
     {
         if (Yii::$app->user->isGuest) {
             // если пользователь неавторизован - выполнять метод невозможно
-            throw new Exception();
+            throw new TradePointException('', TradePointException::USER_ERROR);
         }
 
-        /* @var $user \user\models\User */
+        /* @var $user User */
         $user = Yii::$app->user->getIdentity();
         /* @var $partner Partner */
         $partner = $user->partner;

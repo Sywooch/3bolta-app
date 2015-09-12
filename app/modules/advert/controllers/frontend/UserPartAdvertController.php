@@ -2,6 +2,7 @@
 namespace advert\controllers\frontend;
 
 use advert\components\PartsApi;
+use advert\exception\PartsApiException;
 use advert\forms\PartForm;
 use advert\models\Image;
 use advert\models\Part;
@@ -125,7 +126,8 @@ class UserPartAdvertController extends Controller
 
             /* @var $advertApi PartsApi */
             $advertApi = Yii::$app->getModule('advert')->parts;
-            if ($advert = $advertApi->appendRegisterAdvert($model)) {
+            try {
+                $advert = $advertApi->appendRegisterAdvert($model);
                 $link = Url::toRoute(['/advert/part-catalog/details', 'id' => $advert->id], true);
                 Yii::$app->serviceMessage->setMessage(
                     'success',
@@ -135,10 +137,10 @@ class UserPartAdvertController extends Controller
                 );
                 return $this->redirect(['list']);
             }
-            else {
+            catch (PartsApiException $ex) {
                 Yii::$app->serviceMessage->setMessage(
                     'danger',
-                    'При создании объявления произошла ошибка<br />'
+                    'При создании объявления произошла ошибка (код ошибки: ' . $ex->getCode() . '<br />'
                     . 'Пожалуйста, обратитесь в службу поддержки',
                     Yii::t('frontend/advert', 'Append advert')
                 );
@@ -221,7 +223,8 @@ class UserPartAdvertController extends Controller
 
             /* @var $advertApi PartsApi */
             $advertApi = Yii::$app->getModule('advert')->parts;
-            if ($advertApi->updateAdvert($model)) {
+            try {
+                $advertApi->updateAdvert($model);
                 $link = Url::toRoute(['/advert/part-catalog/details', 'id' => $advert->id], true);
                 Yii::$app->serviceMessage->setMessage(
                     'success',
@@ -230,8 +233,7 @@ class UserPartAdvertController extends Controller
                     Yii::t('frontend/advert', 'Edit advert')
                 );
                 return $this->redirect(['list']);
-            }
-            else {
+            } catch (PartsApiException $ex) {
                 Yii::$app->serviceMessage->setMessage(
                     'danger',
                     'При редактировании объявления произошла ошибка<br />'

@@ -8,7 +8,8 @@ use auto\models\Modification;
 use auto\models\Serie;
 use handbook\models\HandbookValue;
 use Yii;
-use yii\base\Exception;
+use Exception;
+use advert\exception\PartException;
 use yii\db\ActiveQuery;
 use yii\helpers\ArrayHelper;
 
@@ -176,7 +177,7 @@ class Part extends Advert
      * В случае ошибки генерирует Exception
      *
      * @param string $tableName
-     * @throws Exception
+     * @throws PartException
      */
     protected function getAutoXrefColumn($tableName)
     {
@@ -196,7 +197,7 @@ class Part extends Advert
                 $xrefColumn = 'modification_id';
                 break;
             default:
-                throw new Exception();
+                throw new PartException('', PartException::DATA_ERROR);
         }
 
         return $xrefColumn;
@@ -215,12 +216,12 @@ class Part extends Advert
      *
      * @param string $tableName
      * @return string
-     * @throws Exception
+     * @throws PartException
      */
     protected function clearAutomobiles($tableName)
     {
         if ($this->isNewRecord) {
-            throw new Exception();
+            throw new PartException('', PartException::DATABASE_ERROR);
         }
 
         $this->getDb()->createCommand()
@@ -243,7 +244,7 @@ class Part extends Advert
      *
      * @param string $tableName название таблицы для привязки
      * @param array $ids массив идентификаторов автомобилей
-     * @throws Exception
+     * @throws PartException
      */
     protected function attachAutomobile($tableName, $ids)
     {
@@ -508,7 +509,7 @@ class Part extends Advert
     /**
      * Удалить объявление из индекса
      *
-     * @throws Exception
+     * @throws PartException
      */
     public function deleteIndex()
     {
@@ -518,8 +519,8 @@ class Part extends Advert
         try {
             $result = $partsIndex->deleteOne($this);
         }
-        catch (\Exception $ex) {
-            throw new Exception();
+        catch (Exception $ex) {
+            PartException::throwUp($ex);
         }
     }
 
@@ -527,7 +528,7 @@ class Part extends Advert
      * Обновить поисковый индекс объявления.
      * В случае ошибки генерирует исключение.
      *
-     * @throws Exception
+     * @throws PartException
      */
     public function updateIndex()
     {
@@ -541,11 +542,11 @@ class Part extends Advert
         try {
             $result = $partsIndex->reindexOne($this);
             if ($result->getStatus() != 0) {
-                throw new \Exception();
+                throw new PartException('', PartException::UNKNOWN_ERROR);
             }
         }
         catch (\Exception $ex) {
-            throw new Exception();
+            PartException::throwUp($ex);
         }
     }
 }
