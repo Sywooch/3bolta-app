@@ -2,7 +2,6 @@
 namespace advert\components;
 
 use advert\forms\PartSearch;
-use advert\models\Advert;
 use advert\models\Part;
 use advert\models\PartIndex;
 use advert\models\PartParam;
@@ -13,7 +12,6 @@ use sammaye\solr\SolrDataProvider;
 use Solarium\QueryType\Select\Query\Query as SelectQuery;
 use Yii;
 use yii\base\Component;
-use yii\data\ActiveDataProvider;
 use yii\db\ActiveRecord;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
@@ -37,14 +35,10 @@ class PartsSearchApi extends Component
      */
     protected function appendQuery(SelectQuery $select, $pieces, $piecesOperator = 'OR', $operator = 'AND')
     {
-        $operator = strtoupper($operator);
+        $operator = strtoupper($operator) == 'OR' ? 'OR' : 'AND';
         $piecesOperator = strtoupper($piecesOperator);
 
         $pieces = (array) $pieces;
-
-        if ($operator != 'AND') {
-            $operator = 'OR';
-        }
 
         $query = $select->getQuery();
         if ($query == '*:*') {
@@ -66,11 +60,20 @@ class PartsSearchApi extends Component
     protected function makeKeywordQuery(SelectQuery $select, $q)
     {
         if ($q) {
+            $pieces = [];
+
             $term = str_replace('*', '', $q);
             $phrase = '*' . $term . '*';
-            $pieces = [];
-            $pieces[] = 'name:' . $select->getHelper()->escapePhrase($phrase);
-            $pieces[] = 'catalogue_number:"' . $select->getHelper()->escapeTerm($term) . '"';
+
+            // искать по точному совпадению в номере по каталогу - приоритетный поиск
+            $pieces[] = 'catalogue_number:"' . $select->getHelper()->escapeTerm($term) . '"^3';
+            // искать по ключевым словам, совпадение по всем словам, если расстояние - не более 4х слов
+            $pieces[] = 'name:' . $select->getHelper()->escapePhrase($phrase) . '~4^1';
+            $words = explode(' ', str_replace('*', '', $q));
+            foreach ($words as $k => $word) {
+                $words[$k] = $select->getHelper()->escapePhrase($word);
+            }
+
             $this->appendQuery($select, $pieces, 'OR');
         }
     }
@@ -215,6 +218,8 @@ class PartsSearchApi extends Component
                 }
             }
         }
+        // сортировка по релевантности
+        $sort['score'] = 'desc';
         // сортировка по дате
         $sort['published_from'] = 'desc';
         $select->setSorts($sort);
