@@ -86,7 +86,6 @@ class PartForm extends BaseModel
     {
         return [
             // !!! ВНИМАНИЕ !!! Этот валидатор оставить, он необходим для отсечения несуществующих значений !!!
-            [['model', 'serie', 'modification'], 'safe'],
 
             [['category_id'], 'filter', 'filter' => function($value) {
                 // проверить существование категории
@@ -112,7 +111,20 @@ class PartForm extends BaseModel
             }, 'on' => 'submit'],
 
             [['name', 'category_id', 'condition_id', 'price'], 'required', 'message' => Yii::t('frontend/advert', 'Required field')],
-            [['mark'], 'required', 'message' => Yii::t('frontend/advert', 'Choose one or more automobiles')],
+            [['mark', 'model', 'serie', 'modification'], 'each', 'rule' => ['integer']],
+            ['mark', 'required', 'message' => Yii::t('frontend/advert', 'Choose one or more automobiles')],
+            ['mark', 'validateArrayCount', 'params' => [
+                'max' => Part::MAX_MARK,
+                'message' => Yii::t('frontend/advert', 'Maximum marks is {n}', [
+                    'n' => Part::MAX_MARK,
+                ])
+            ]],
+            ['model', 'validateArrayCount', 'params' => [
+                'max' => Part::MAX_MODEL,
+                'message' => Yii::t('frontend/advert', 'Maximum models is {n}', [
+                    'n' => Part::MAX_MODEL,
+                ])
+            ]],
             [['category_id', 'condition_id'], 'integer'],
             ['catalogue_number', 'string', 'max' => PartParam::CATALOGUE_NUMBER_MAX_LENGTH],
             ['name', 'string', 'max' => Part::NAME_MAX_LENGTH],
@@ -162,6 +174,19 @@ class PartForm extends BaseModel
             ],
             ['allow_questions', 'boolean'],
         ];
+    }
+
+    /**
+     * Валидация количества элементов в массиве
+     *
+     * @param string $attribute
+     * @param array $params
+     */
+    public function validateArrayCount($attribute, $params)
+    {
+        if (is_array($this->{$attribute}) && count($this->{$attribute}) > $params['max']) {
+            $this->addError($attribute, $params['message']);
+        }
     }
 
     /**

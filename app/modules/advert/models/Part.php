@@ -42,6 +42,16 @@ class Part extends Advert
     const TABLE_SERIE = '{{%advert_serie}}';
 
     /**
+     * Максимальное количество прикрепляемых марок
+     */
+    const MAX_MARK = 5;
+
+    /**
+     * Максимальное количество прикрепляемых моделей
+     */
+    const MAX_MODEL = 10;
+
+    /**
      * @var array массив привязки к маркам
      */
     protected $_marks;
