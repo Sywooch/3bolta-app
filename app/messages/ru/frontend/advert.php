@@ -17,8 +17,8 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'Maximum marks is {n}' => 'Марок может быть не более {n} штук',
-    'Maximum models is {n}' => 'Моделей может быть не более {n} штук',
+    'Maximum marks is {n}' => 'Марок может быть не более {n}',
+    'Maximum models is {n}' => 'Моделей может быть не более {n}',
     'Address' => 'Адрес',
     'Advert description' => 'Описание',
     'Advert was created' => 'Объявление создано',

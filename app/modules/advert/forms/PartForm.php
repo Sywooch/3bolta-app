@@ -3,9 +3,9 @@ namespace advert\forms;
 
 use advert\models\Advert;
 use advert\models\Contact;
-use advert\models\PartParam;
 use advert\models\Part;
 use advert\models\PartCategory;
+use advert\models\PartParam;
 use app\components\AdvertEmailValidator;
 use app\components\AdvertPhoneValidator;
 use app\components\PhoneValidator;
@@ -85,8 +85,6 @@ class PartForm extends BaseModel
     public function rules()
     {
         return [
-            // !!! ВНИМАНИЕ !!! Этот валидатор оставить, он необходим для отсечения несуществующих значений !!!
-
             [['category_id'], 'filter', 'filter' => function($value) {
                 // проверить существование категории
                 if (!$value || !(PartCategory::find()->where(['id' => $value])->exists())) {
@@ -185,7 +183,7 @@ class PartForm extends BaseModel
     public function validateArrayCount($attribute, $params)
     {
         if (is_array($this->{$attribute}) && count($this->{$attribute}) > $params['max']) {
-            $this->addError($attribute, $params['message']);
+            $this->addError('mark', $params['message']);
         }
     }
 
@@ -286,7 +284,7 @@ class PartForm extends BaseModel
 
     /**
      * Очистить массив от значений, отличных от integer.
-     * @params [] $availValues доступные значения для массива
+     * @params array $availValues доступные значения для массива
      * @return array
      */
     protected function clearIntArray($arr, $availValues = [])
