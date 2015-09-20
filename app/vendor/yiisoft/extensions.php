@@ -300,4 +300,13 @@ return array (
       '@sammaye/solr' => $vendorDir . '/sammaye/yii2-solr',
     ),
   ),
+  'yiisoft/yii2-authclient' => 
+  array (
+    'name' => 'yiisoft/yii2-authclient',
+    'version' => '2.0.4.0',
+    'alias' => 
+    array (
+      '@yii/authclient' => $vendorDir . '/yiisoft/yii2-authclient',
+    ),
+  ),
 );

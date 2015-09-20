@@ -76,7 +76,7 @@ class Contact extends ActiveRecord
                     }
                 }
             }],
-            [['user_phone'], PhoneValidator::className(), 'canonicalAttribute' => 'user_phone_canonical'],
+            ['user_phone', PhoneValidator::className(), 'canonicalAttribute' => 'user_phone_canonical'],
             ['user_name', 'string', 'max' => self::MAX_USER_NAME_LENGTH],
             ['user_email', 'string', 'max' => self::MAX_EMAIL_LENGTH],
             ['user_phone_canonical', 'string', 'max' => self::MAX_PHONE_CANONICAL_LENGTH],

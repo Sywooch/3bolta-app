@@ -33,8 +33,6 @@ use user\models\User;
             </ul>
         </div>
     <?php else:?>
-        <a href="<?=Url::toRoute(['/user/user/register'])?>"><?=Yii::t('frontend/user', 'Registration')?></a>
-        /
-        <a href="#" data-dismiss="modal" data-toggle="modal" data-target="#loginModal"><?=Yii::t('frontend/user', 'Enter')?></a>
+        <a href="#" data-dismiss="modal" data-toggle="modal" data-target="#loginModal"><?=Yii::t('frontend/user', 'Enter or Registration')?></a>
     <?php endif; ?>
 </div>

@@ -44,6 +44,29 @@ return ArrayHelper::merge(include __DIR__ . '/common.php', [
 
             ],
         ],
+        'socialAuthClientCollection' => [
+            // компонент для коллекций OAuth-авторизации через социальные сети
+            'class' => '\yii\authclient\Collection',
+            'clients' => [
+                // VKontakte
+                'vkontakte' => [
+                    'class' => 'yii\authclient\clients\VKontakte',
+                    'attributeNames' => [
+                        'uid', 'first_name', 'last_name', 'screen_name',
+                        'photo', 'email', 'domain',
+                    ],
+                    'scope' => 'email',
+                ],
+                // Facebook
+                'facebook' => [
+                    'class' => 'yii\authclient\clients\Facebook',
+                ],
+                // Google
+                'google' => [
+                    'class' => 'yii\authclient\clients\GoogleOAuth',
+                ],
+            ]
+        ],
         'serviceMessage' => [
             'class' => 'app\components\ServiceMessage',
         ]

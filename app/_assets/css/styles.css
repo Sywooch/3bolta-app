@@ -652,3 +652,39 @@ h2, h3, h4, h5, h6 {
 .has-success .help-block, .has-success .control-label, .has-success .radio, .has-success .checkbox, .has-success .radio-inline, .has-success .checkbox-inline, .has-success.radio label, .has-success.checkbox label, .has-success.radio-inline label, .has-success.checkbox-inline label {
     color: inherit;
 }
+
+.login-row {
+    margin-bottom: 30px;
+}
+.login-row h3 {
+    margin-top: -10px;
+}
+.login-row h3.inline {
+    display: inline;
+}
+.btn-social-login {
+    position: relative;
+    padding: 9px 20px 9px 20px;
+}
+.btn-google, .btn-google:hover, .btn-google:visited, .btn-google:active {
+    background: #e74b37;
+    color: #fff;
+}
+.btn-vk, .btn-vk:hover, .btn-vk:visited, .btn-vk:active {
+    background: #2d628e;
+    color: #fff;
+}
+.btn-facebook, .btn-facebook:hover, .btn-facebook:visited, .btn-facebook:active {
+    background: #2e5d94;
+    color: #fff;
+}
+.btn-yandex {
+    background: #dadada;
+    color: #fff;
+}
+.btn-mailru {
+    background: #2e5f90;
+}
+.btn-ok {
+    background: #ec7914;
+}

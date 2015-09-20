@@ -56,8 +56,6 @@ class PartsApi extends Component
 
                 // очистить контакты объявления
                 $contact->setAttributes([
-                    'user_name' => null,
-                    'user_phone' => null,
                     'user_email' => null,
                 ]);
                 if (!$contact->save()) {
@@ -245,8 +243,6 @@ class PartsApi extends Component
         if (!$form->getUserId()) {
             // если добавляется от неавторизованного пользователя
             $contacts->setAttributes([
-                'user_name' => $form->user_name,
-                'user_phone' => $form->user_phone,
                 'user_email' => $form->user_email,
             ]);
         }
@@ -254,6 +250,13 @@ class PartsApi extends Component
             // если от авторизованного пользователя - устанавливаем торговую точку
             $contacts->setAttributes([
                 'trade_point_id' => $form->trade_point_id,
+            ]);
+        }
+
+        if (!$form->trade_point_id) {
+            $contacts->setAttributes([
+                'user_name' => $form->user_name,
+                'user_phone' => $form->user_phone,
             ]);
         }
 

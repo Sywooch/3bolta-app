@@ -1,16 +1,19 @@
 <?php
+namespace user\models;
+
+use Exception;
+use partner\models\Partner;
+use Yii;
+use yii\db\ActiveQuery;
+use yii\db\ActiveRecord;
+use yii\db\Connection;
+use yii\rbac\DbManager;
+use yii\rbac\Role;
+use yii\web\IdentityInterface;
+
 /**
  * Модель пользователя
  */
-
-namespace user\models;
-
-use Yii;
-use app\components\ActiveRecord;
-use yii\web\IdentityInterface;
-use app\components\PhoneValidator;
-use partner\models\Partner;
-
 class User extends ActiveRecord implements IdentityInterface
 {
     /**
@@ -29,7 +32,7 @@ class User extends ActiveRecord implements IdentityInterface
     protected $_roles = [];
 
     /**
-     * @var \yii\rbac\Role[] роли пользователя
+     * @var Role[] роли пользователя
      */
     protected $_oldRoles;
 
@@ -57,7 +60,6 @@ class User extends ActiveRecord implements IdentityInterface
             [['last_login', 'roleCodes'], 'safe'],
             [['new_password'], 'required', 'on' => 'create'],
             [['new_password'], 'safe'],
-            [['phone'], PhoneValidator::className(), 'canonicalAttribute' => 'phone_canonical'],
 
             ['name', 'string', 'max' => 50],
             ['email', 'string', 'max' => 100],
@@ -77,26 +79,6 @@ class User extends ActiveRecord implements IdentityInterface
             'new_password' => Yii::t('user', 'New password'),
             'type' => Yii::t('user', 'Type'),
         ];
-    }
-
-    /**
-     * Обертка для метода сохранения
-     * @param boolean $runValidation
-     * @param [] $attributeNames
-     * @return boolean
-     */
-    public function save($runValidation = true, $attributeNames = null)
-    {
-        if (is_array($attributeNames) && in_array('phone', $attributeNames)) {
-            // телефон без валидации сохранить невозможно,
-            // т.к. необходимо записать его в канонической форме
-            // через валидатор PhoneValidator
-            $runValidation = true;
-            if (!in_array('phone_canonical', $attributeNames)) {
-                $attributeNames[] = 'phone_canonical';
-            }
-        }
-        return parent::save($runValidation, $attributeNames);
     }
 
     /**
@@ -197,7 +179,7 @@ class User extends ActiveRecord implements IdentityInterface
 
     /**
      * Returns user roles as string array
-     * @return []
+     * @return array
      */
     public function getRolesStr()
     {
@@ -214,16 +196,16 @@ class User extends ActiveRecord implements IdentityInterface
 
     /**
      * Returns user roles as object array
-     * @return \yii\rbac\Role[]
+     * @return Role[]
      */
     public function getRoles()
     {
         $ret = !empty($this->_oldRoles) ? $this->_oldRoles : [];
 
         if (empty($this->_oldRoles) && !$this->isNewRecord) {
-            /* @var $authManager \yii\rbac\DbManager */
+            /* @var $authManager DbManager */
             $authManager = Yii::$app->authManager;
-            /* @var $db \yii\db\Connection */
+            /* @var $db Connection */
             $db = Yii::$app->db;
 
             $sql = "SELECT item_name "
@@ -248,7 +230,7 @@ class User extends ActiveRecord implements IdentityInterface
 
     /**
      * Returns user roles as code array
-     * @return \yii\rbac\Role[]
+     * @return Role[]
      */
     public function getRoleCodes()
     {
@@ -283,9 +265,9 @@ class User extends ActiveRecord implements IdentityInterface
         $ret = true;
 
         if (is_array($this->_roles)) {
-            /* @var $db \yii\db\Connection */
+            /* @var $db Connection */
             $db = Yii::$app->db;
-            /* @var $authManager \yii\rbac\DbManager */
+            /* @var $authManager DbManager */
             $authManager = Yii::$app->authManager;
 
             $transaction = $db->beginTransaction();
@@ -303,7 +285,7 @@ class User extends ActiveRecord implements IdentityInterface
                             'created_at' => time()
                         ])
                         ->execute()) {
-                        throw new \Exception();
+                        throw new Exception();
                     }
                 }
 
@@ -316,6 +298,16 @@ class User extends ActiveRecord implements IdentityInterface
         }
 
         return $ret;
+    }
+
+    /**
+     * Получить социальные сети пользователя
+     *
+     * @return ActiveQuery
+     */
+    public function getSocialAccounts()
+    {
+        return $this->hasMany(SocialAccount::className(), ['user_id' => 'id']);
     }
 
     /**
@@ -339,7 +331,7 @@ class User extends ActiveRecord implements IdentityInterface
 
     /**
      * Получить привязку к партнеру
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getPartner()
     {
@@ -366,5 +358,25 @@ class User extends ActiveRecord implements IdentityInterface
     {
         $types = self::getTypesList();
         return isset($types[$this->type]) ? $types[$this->type] : null;
+    }
+
+    /**
+     * Требует активации пользователя
+     *
+     * @return boolean
+     */
+    public function needConfirmation()
+    {
+        return $this->status == User::STATUS_WAIT_CONFIRMATION;
+    }
+
+    /**
+     * Пользователь может авторизовываться
+     *
+     * @return boolean
+     */
+    public function canLogin()
+    {
+        return $this->status == User::STATUS_ACTIVE;
     }
 }

@@ -17,9 +17,10 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'Contacts' => 'Контакты',
+    'Enter or Registration' => 'Вход / Регистрация',
     'Account locked' => 'Аккаунт заблокирован',
     'Authorize' => 'Авторизация',
+    'Change contact name' => 'Изменить контактное имя',
     'Change e-mail' => 'Изменить e-mail',
     'Change e-mail error' => 'Ошибка изменения e-mail',
     'Change password' => 'Изменить пароль',
@@ -35,6 +36,9 @@ return [
     'Enter' => 'Войти',
     'Error change e-mail' => 'Ошибка изменения e-mail',
     'Exit' => 'Выход',
+    'Facebook' => 'Facebook',
+    'Google+' => 'Google+',
+    'Have not account?' => 'Нет аккаунта?',
     'I am a private person' => 'Я - частное лицо',
     'I am a representative a company' => 'Я - представитель компании',
     'Incorrect username or password.' => 'Неверный логин или пароль',
@@ -49,7 +53,6 @@ return [
     'Password confirmation' => 'Подтверждение пароля',
     'Password not equal' => 'Пароли не совпадают',
     'Password success changed' => 'Пароль успешно изменен',
-    'Phone' => 'Телефон',
     'Profile' => 'Профиль',
     'Profile success updated' => 'Профиль обновлен',
     'Profile update error' => 'Ошибка редактирования профиля',
@@ -62,10 +65,11 @@ return [
     'This e-mail already exists' => 'Данный e-mail уже занят',
     'This phone already exists' => 'Данный телефон уже занят',
     'Update data' => 'Редактировать',
+    'Use social accounts' => 'Войти как пользователь',
     'User not found' => 'Аккаунт не найден',
+    'VKontakte' => 'ВКонтакте',
     'Wrong confirmation code' => 'Ошибочный код подтверждения',
     'You enter as:' => 'Вы вошли как:',
     'Your email' => 'E-mail',
     'Your name' => 'Имя',
-    'Your phone' => 'Телефон',
 ];

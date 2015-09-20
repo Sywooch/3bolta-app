@@ -9,9 +9,11 @@ use user\forms\ChangePassword;
 use user\forms\LostPassword;
 use user\forms\Profile;
 use user\forms\Register;
+use user\models\SocialAccount;
 use user\models\User;
 use user\models\UserConfirmation;
 use Yii;
+use yii\authclient\clients\VKontakte;
 use yii\base\Component;
 use yii\helpers\Url;
 use yii\web\NotFoundHttpException;
@@ -21,6 +23,57 @@ use yii\web\NotFoundHttpException;
  */
 class UserApi extends Component
 {
+    /**
+     * Активировать пользователя, если его аккаунт требует подтверждения.
+     * Используется как доверительная активация через соц. сеть и как подметод метода confirmUserRegistration.
+     *
+     * @param User $user
+     * @param mixed $confirmation модель подтверждения, по умолчанию - null, будет взята из модели пользователя
+     * @return User|null
+     * @throws UserApiException
+     */
+    public function trustUserConfirmation(User $user, $confirmation = null)
+    {
+        $ret = null;
+
+        if (!($confirmation instanceof UserConfirmation) || $confirmation->user_id != $user->id) {
+            $confirmation = $user->getConfirmation();
+        }
+
+        $transaction = User::getDb()->beginTransaction();
+        try {
+            // очистить код подтверждения
+            $confirmation->email_confirmation = null;
+            $confirmation->email = null;
+            if (!$confirmation->save(true, ['email', 'email_confirmation'])) {
+                // не удалось сохранить модель подтверждения
+                throw new UserApiException('', UserApiException::VALIDATION_ERROR);
+            }
+
+            // сохранить пользователя
+            $user->status = User::STATUS_ACTIVE;
+            if (!$user->save(true, ['status'])) {
+                // не удалось сохранить пользователя
+                throw new UserApiException('', UserApiException::VALIDATION_ERROR);
+            }
+
+            /* @var $advertApi PartsApi */
+            $advertApi = Yii::$app->getModule('advert')->parts;
+            // прикрепить к пользователю все его неавторизованные объявления
+            $advertApi->attachNotAuthAdvertsToUser($user);
+
+            $transaction->commit();
+
+            $ret = $user->id;
+        } catch (Exception $ex) {
+            $transaction->rollBack();
+            $ret = null;
+            throw new UserApiException('', UserApiException::CONFIRMATION_ERROR, $ex);
+        }
+
+        return $ret;
+    }
+
     /**
      * Подтвердить регистрацию пользователя.
      * На вход передается код подтверждения.
@@ -51,47 +104,13 @@ class UserApi extends Component
 
         /* @var $user User */
         $user = $confirmation->user;
-        if (!$user || $user->status != User::STATUS_WAIT_CONFIRMATION) {
+        if (!$user || !$user->needConfirmation()) {
             // пользователь не найден
             throw new NotFoundHttpException();
         }
 
-        $ret = null;
-
         // подтверждение
-        $transaction = User::getDb()->beginTransaction();
-        try {
-            // очистить код подтверждения
-            $confirmation->email_confirmation = null;
-            $confirmation->email = null;
-            if (!$confirmation->save(true, ['email', 'email_confirmation'])) {
-                // не удалось сохранить модель подтверждения
-                throw new UserApiException('', UserApiException::VALIDATION_ERROR);
-            }
-
-            // сохранить пользователя
-            $user->status = User::STATUS_ACTIVE;
-            if (!$user->save(true, ['status'])) {
-                // не удалось сохранить пользователя
-                throw new UserApiException('', UserApiException::VALIDATION_ERROR);
-            }
-
-            /* @var $advertApi PartsApi */
-            $advertApi = Yii::$app->getModule('advert')->parts;
-
-            // прикрепить к пользователю все его неавторизованные объявления
-            $advertApi->attachNotAuthAdvertsToUser($user);
-
-            $transaction->commit();
-
-            $ret = $user->id;
-        } catch (Exception $ex) {
-            $transaction->rollBack();
-            $ret = null;
-            UserApiException::throwUp($ex);
-        }
-
-        return $ret;
+        return $this->trustUserConfirmation($user, $confirmation);
     }
 
     /**
@@ -117,6 +136,84 @@ class UserApi extends Component
     }
 
     /**
+     * Прикрпепить к пользователю соц. сеть, если ее еще нет
+     *
+     * @param User $user
+     * @param ExternalUser $externalUser
+     */
+    public function attachUserServiceAccount(User $user, ExternalUser $externalUser)
+    {
+        foreach ($user->socialAccounts as $account) {
+            /* @var $account SocialAccount */
+            if ($account->code == $externalUser->getCode()) {
+                // у пользователя уже есть такая соц. сеть
+                // выходим из метода
+                return;
+            }
+        }
+
+        // создать привязку к соц. сети
+        $socialAccount = new SocialAccount();
+        $socialAccount->setAttributes([
+            'user_id' => $user->id,
+            'code' => (string) $externalUser->getCode(),
+            'external_uid' => (string) $externalUser->id,
+            'external_name' => (string) $externalUser->external_name,
+            'external_page' => (string) $externalUser->external_page,
+        ]);
+
+        try {
+            $socialAccount->save();
+        } catch (Exception $ex) { }
+
+        unset ($user->socialAccounts);
+    }
+
+    /**
+     * Зарегистрировать пользователя из соц. сети.
+     * В случае успеха - возвращает модель пользователя, иначе - генерирует исключение.
+     *
+     * @param ExternalUser $externalUser
+     * @return User|null
+     * @throws UserApiException
+     */
+    public function registerSocialUser(ExternalUser $externalUser)
+    {
+        $ret = null;
+
+        $transaction = User::getDb()->beginTransaction();
+
+        try {
+            $user = new User();
+            $user->setAttributes([
+                'status' => User::STATUS_ACTIVE,
+                'email' => $externalUser->email,
+                'name' => $externalUser->name,
+                'type' => User::TYPE_PRIVATE_PERSON,
+            ]);
+            if (!$user->save()) {
+                throw new UserApiException('', UserApiException::VALIDATION_ERROR, $ex);
+            }
+
+            // прикрепить к пользователю все неавторизованные его объявления
+            /* @var $advertApi PartsApi */
+            $advertApi = Yii::$app->getModule('advert')->parts;
+            // прикрепить к пользователю все его неавторизованные объявления
+            $advertApi->attachNotAuthAdvertsToUser($user);
+            $transaction->commit();
+
+            $ret = $user;
+        }
+        catch (Exception $ex) {
+            $transaction->rollBack();
+            $ret = null;
+            throw new UserApiException('', UserApiException::REGISTRATION_ERROR, $ex);
+        }
+
+        return $ret;
+    }
+
+    /**
      * Регистрация пользователя. На вход передается заполненная форма регистрации.
      *
      * @param Register $form
@@ -138,7 +235,6 @@ class UserApi extends Component
                     'email' => $form->email,
                     'name' => $form->name,
                     'new_password' => $form->password,
-                    'phone' => $form->phone,
                     'type' => $form->type,
                 ]);
                 if (!$user->save()) {
@@ -175,7 +271,7 @@ class UserApi extends Component
             catch (Exception $ex) {
                 $transaction->rollBack();
                 $ret = null;
-                UserApiException::throwUp($ex);
+                throw new UserApiException('', UserApiException::REGISTRATION_ERROR, $ex);
             }
         }
 
@@ -406,14 +502,95 @@ class UserApi extends Component
         try {
             $user->setAttributes([
                 'name' => $profile->name,
-                'phone' => $profile->phone,
             ]);
-            $ret = $user->save(true, ['name', 'phone', 'phone_canonical']);
+            $ret = $user->save(true, ['name']);
         }
         catch (Exception $ex) {
             $ret = false;
         }
 
         return $ret;
+    }
+
+    /**
+     * Получить данные авторизованного пользователя из сети Google+.
+     *
+     * @param VKontakte $client OAuth-клиент для связи с Google+
+     * @param string $authCode код авторизации
+     * @return ExternalUser
+     */
+    public function fetchGoogleUserData(\yii\authclient\clients\GoogleOAuth $client, $authCode)
+    {
+        $client->fetchAccessToken($authCode);
+        $userData = $client->getUserAttributes();
+
+        return new ExternalUser([
+            'code' => 'google',
+            'id' => $userData['id'],
+            'name' => $userData['name']['givenName'],
+            'email' => !empty($userData['emails'][0]['value']) ? $userData['emails'][0]['value'] : null,
+            'external_name' => $userData['displayName'],
+            'external_page' => !empty($userData['url']) ? $userData['url'] : null,
+        ]);
+    }
+
+    /**
+     * Получить данные авторизованного пользователя из сети Facebook.
+     *
+     * @param VKontakte $client OAuth-клиент для связи с Facebook
+     * @param string $authCode код авторизации
+     * @return ExternalUser
+     */
+    public function fetchFacebookUserData(\yii\authclient\clients\Facebook $client, $authCode)
+    {
+        $client->fetchAccessToken($authCode);// получить общую информацию пользователя
+        $userData = $client->api('/me', 'GET', [
+            'fields' => implode(',', [
+                'id', 'first_name', 'name', 'email', 'link',
+            ]),
+        ]);
+
+        return new ExternalUser([
+            'code' => 'facebook',
+            'id' => $userData['id'],
+            'name' => $userData['first_name'],
+            'email' => !empty($userData['email']) ? $userData['email'] : null,
+            'external_name' => !empty($userData['name']) ? $userData['name'] : $userData['first_name'],
+            'external_page' => !empty($userData['link']) ? $userData['link'] : null,
+        ]);
+    }
+
+    /**
+     * Получить данные авторизованного пользователя из сети VKontakte.
+     *
+     * @param VKontakte $client OAuth-клиент для связи с Vkontakte
+     * @param string $authCode код авторизации
+     * @return ExternalUser
+     */
+    public function fetchVkontakteUserData(VKontakte $client, $authCode)
+    {
+        $client->fetchAccessToken($authCode);
+        $userData = $client->getUserAttributes();
+
+        // внешнее имя
+        $externalName = $userData['first_name'];
+        if (!empty($userData['screen_name'])) {
+            $externalName = $userData['screen_name'];
+        }
+        else if (!empty($userData['last_name'])) {
+            $externalName .= ' ' . $userData['last_name'];
+        }
+        else if (!empty($userData['domain'])) {
+            $externalName = $userData['domain'];
+        }
+
+        return new ExternalUser([
+            'code' => 'vkontakte',
+            'id' => $userData['id'],
+            'email' => !empty($userData['email']) ? $userData['email'] : null,
+            'name' => $userData['first_name'],
+            'external_name' => $externalName,
+            'external_page' => 'http://vk.com/' . $userData['domain'],
+        ]);
     }
 }

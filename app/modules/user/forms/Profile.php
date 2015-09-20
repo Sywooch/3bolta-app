@@ -1,51 +1,38 @@
 <?php
 namespace user\forms;
 
-use Yii;
-
-use user\models\User;
-use app\components\PhoneValidator;
 use user\forms\Register;
+use user\models\User;
+use Yii;
+use yii\base\Model;
+use yii\db\ActiveQuery;
 
 /**
  * Профиль пользователя
  */
-class Profile extends \yii\base\Model
+class Profile extends Model
 {
     public $email;
     public $name;
-    public $phone;
-    public $phone_canonical;
 
     /**
      * Правила валидации
-     * @return []
+     * @return array
      */
     public function rules()
     {
         return [
-            [['email', 'name', 'phone'], 'required'],
+            [['email', 'name'], 'required'],
             ['email', 'filter', 'filter' => 'strtolower'],
             ['email', 'email'],
             ['email', 'unique',
                 'targetClass' => User::className(),
                 'targetAttribute' => 'email',
                 'filter' => function($query) {
-                    /* @var $query \yii\db\ActiveQuery */
+                    /* @var $query ActiveQuery */
                     $query->andWhere(['<>', 'id', Yii::$app->user->getIdentity()->id]);
                 },
                 'message' => Yii::t('frontend/user', 'This e-mail already exists'),
-            ],
-            [['phone'],
-                PhoneValidator::className(),
-                'canonicalAttribute' => 'phone_canonical',
-                'targetClass' => User::className(),
-                'targetAttribute' => 'phone_canonical',
-                'filter' => function($query) {
-                    /* @var $query \yii\db\ActiveQuery */
-                    $query->andWhere(['<>', 'id', Yii::$app->user->getIdentity()->id]);
-                },
-                'message' => Yii::t('frontend/user', 'This phone already exists'),
             ],
             ['email', 'string', 'max' => Register::MAX_EMAIL_LENGTH],
             ['name', 'string', 'max' => Register::MAX_NAME_LENGTH],
@@ -54,14 +41,13 @@ class Profile extends \yii\base\Model
 
     /**
      * Подписи атрибутов
-     * @return []
+     * @return array
      */
     public function attributeLabels()
     {
         return [
             'email' => Yii::t('frontend/user', 'New e-mail'),
             'name' => Yii::t('frontend/user', 'Name'),
-            'phone' => Yii::t('frontend/user', 'Phone'),
         ];
     }
 
@@ -76,7 +62,6 @@ class Profile extends \yii\base\Model
         $model = new self();
         $model->setAttributes([
             'email' => $user->email,
-            'phone' => $user->phone,
             'name' => $user->name,
         ]);
         return $model;

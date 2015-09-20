@@ -17,11 +17,8 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'Remove' => 'Удалить',
-    'Remove file' => 'Удалить файл',
     'Address not found' => 'Адрес не найден: выберите адрес из списка',
     'Can\'t create advert to this e-mail. <a href="{url}">Details...</a>' => 'Для публикации объявления на этот e-mail необходимо зарегистрироваться. <a href="{url}">Подробнее</a>',
-    'Can\'t create advert to this phone. <a href="{url}">Details...</a>' => 'Для публикации объявления на этот телефон необходимо зарегистрироваться. <a href="{url}">Подробнее</a>',
     'Created' => 'Создано',
     'Drag & drop files here for upload' => 'Для загрузки перетащите файлы в это окно',
     'Edited' => 'Отредактировано',
@@ -29,7 +26,8 @@ return [
     'No' => 'Нет',
     'No suggestions' => 'Ничего не найдено',
     'Parts for automobiles' => 'Запчасти для автомобилей',
-    'Phone already exists' => 'Телефон уже используется',
+    'Remove' => 'Удалить',
+    'Remove file' => 'Удалить файл',
     'Submit' => 'Отправить',
     'Type or click here' => 'Введите текст или выберите из списка',
     'Wrong phone format' => 'Неверный формат телефона',

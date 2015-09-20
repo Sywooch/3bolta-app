@@ -22,7 +22,11 @@ return [
     // работа с пользователями
     '/registration' => '/user/user/register',
     '/registration/confirmation/<code:(\w+)>' => '/user/user/confirmation',
+
+    // авторизация через соц. сети
     '/login' => '/user/user/login',
+    '/login/<key:(vkontakte|facebook|google|yandex)>/<action:(redirect|response)>' => '/user/external-auth/<action>',
+
     '/logout' => '/user/user/logout',
     '/restore/lost-password' => '/user/user/lost-password',
     '/restore/change-password/<code:(\w+)>' => '/user/user/change-password',

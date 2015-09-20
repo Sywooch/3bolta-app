@@ -7,7 +7,6 @@ use advert\models\Part;
 use advert\models\PartCategory;
 use advert\models\PartParam;
 use app\components\AdvertEmailValidator;
-use app\components\AdvertPhoneValidator;
 use app\components\PhoneValidator;
 use auto\models\Mark;
 use auto\models\Model;
@@ -127,7 +126,8 @@ class PartForm extends BaseModel
             ['catalogue_number', 'string', 'max' => PartParam::CATALOGUE_NUMBER_MAX_LENGTH],
             ['name', 'string', 'max' => Part::NAME_MAX_LENGTH],
             ['description', 'string', 'max' => Part::DESCRIPTION_MAX_LENGTH],
-            [['user_name', 'user_phone', 'user_email'], 'required', 'when' => function($model) {
+            [['user_name', 'user_phone'], 'required'],
+            ['user_email', 'required', 'when' => function($model) {
                 /* @var $model PartForm */
                 return !$model->getUserId();
             }],
@@ -147,13 +147,7 @@ class PartForm extends BaseModel
             ['user_email', 'string', 'max' => Contact::MAX_EMAIL_LENGTH],
             ['user_phone_canonical', 'string', 'max' => Contact::MAX_PHONE_CANONICAL_LENGTH],
             ['user_phone', 'string', 'max' => Contact::MAX_PHONE_LENGTH],
-            ['user_phone', AdvertPhoneValidator::className()],
-            ['user_phone', PhoneValidator::className(),
-                'canonicalAttribute' => 'user_phone_canonical',
-                'targetClass' => Contact::className(), 'targetAttribute' => 'user_phone_canonical', 'when' => function($model) {
-                    return !$model->getUserId();
-                }
-            ],
+            ['user_phone', PhoneValidator::className(), 'canonicalAttribute' => 'user_phone_canonical'],
             ['user_email', 'filter', 'filter' => 'strtolower'],
             ['user_email', AdvertEmailValidator::className(), 'when' => function($model) {
                 return !$model->getUserId();
@@ -584,6 +578,24 @@ class PartForm extends BaseModel
     {
         $ret = new self();
         $ret->_user_id = $user->id;
+
+        // получить последний контакт пользователя
+        $contact = Contact::find()
+            ->joinWith('advert')
+            ->andWhere([Advert::tableName() . '.user_id' => $user->id])
+            ->groupBy(Contact::tableName() .'.advert_id, ' . Advert::tableName() . '.edited')
+            ->orderBy(Advert::tableName() . '.edited DESC')
+            ->one();
+
+        if ($contact instanceof Contact) {
+            $ret->user_phone = $contact->user_phone;
+            $ret->user_name = $contact->user_name;
+        }
+
+        if (!$ret->user_name) {
+            $ret->user_name = $user->name;
+        }
+
         return $ret;
     }
 

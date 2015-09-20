@@ -3,7 +3,6 @@
  * Форма регистрации
  */
 
-use app\components\PhoneValidator;
 use app\widgets\JS;
 use app\widgets\MagicSuggestDefaults;
 use auto\models\Mark;
@@ -15,13 +14,11 @@ use yii\bootstrap\ActiveForm;
 use app\widgets\Modal;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
-use yii\widgets\ActiveForm as ActiveForm2;
-use yii\widgets\MaskedInput;
 
 /* @var $this View */
 /* @var $model Register */
 /* @var $registeredUser User */
-/* @var $form ActiveForm2 */
+/* @var $form ActiveForm */
 ?>
 <div class="col-sm-1 col-lg-3"></div>
 <div class="col-sm-10 col-lg-6">
@@ -60,9 +57,6 @@ use yii\widgets\MaskedInput;
     ]);
     print $form->field($model, 'email')->textInput([
         'maxlength' => Register::MAX_EMAIL_LENGTH,
-    ]);
-    print $form->field($model, 'phone')->widget(MaskedInput::className(), [
-        'mask' => PhoneValidator::PHONE_MASK,
     ]);
     print $form->field($model, 'password')->passwordInput();
     print $form->field($model, 'password_confirmation')->passwordInput();

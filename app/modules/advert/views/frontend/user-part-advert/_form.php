@@ -16,6 +16,8 @@ use yii\base\View;
 use yii\bootstrap\ActiveForm;
 use yii\helpers\Html;
 use yii\helpers\Url;
+use yii\widgets\MaskedInput;
+use app\components\PhoneValidator;
 
 $frontendAssets = new FrontendAssets();
 $assetsUrl = Yii::$app->assetManager->getPublishedUrl($frontendAssets->sourcePath);
@@ -162,17 +164,29 @@ $form = ActiveForm::begin([
                     <?=Html::tag('h3', Yii::t('frontend/advert', 'Contacts'))?>
                 </div>
 
-                <div class="col-md-12">
-                    <div class="form-group">
-                        В объявлении будет отображаться следующая контактная информация:<br /><br />
+                <div class="col-sm-12 col-md-6">
+                    <?=$form->field($model, 'user_name', [
+                        'parts' => ['{icon}' => '<span class="form-control-icon icon-user"></span>'],
+                        'inputOptions' => [
+                            'class' => 'form-control form-control-with-icon',
+                            'placeholder' => Yii::t('frontend/advert', 'Contact face'),
+                        ],
+                    ])->textInput()?>
+                </div>
 
-                        <strong><?=$model->getAttributeLabel('user_name')?></strong><br />
-                        <?=Html::encode($user->name)?><br /><br />
-                        <strong><?=$model->getAttributeLabel('user_phone')?></strong><br />
-                        <?=Html::encode($user->phone)?><br /><br />
-
-                        Для редактирования контактной информации используйте <a href="<?=Url::toRoute(['/user/profile/index'])?>">профиль</a>.
-                    </div>
+                <div class="col-sm-12 col-md-6">
+                    <?=$form->field($model, 'user_phone', [
+                        'errorOptions' => [
+                            'encode' => false,
+                        ],
+                        'parts' => ['{icon}' => '<span class="form-control-icon icon-phone"></span>'],
+                    ])->widget(MaskedInput::className(), [
+                        'mask' => PhoneValidator::PHONE_MASK,
+                        'options' => [
+                            'class' => 'form-control form-control-with-icon',
+                            'placeholder' => Yii::t('frontend/advert', 'Contact phone'),
+                        ]
+                    ])?>
                 </div>
             <?php else:?>
                 <div class="col-md-12">

@@ -15,6 +15,9 @@ Modal::begin([
     'id' => 'loginModal',
     'title' => Yii::t('frontend/user', 'Authorize'),
 ]);
+?>
+<div class="login-row">
+<?php
 $form = ActiveForm::begin([
     'id' => 'loginForm',
     'action' => Url::toRoute(['/user/user/login']),
@@ -23,21 +26,17 @@ $form = ActiveForm::begin([
     'validateOnChange' => false,
     'validateOnSubmit' => true,
 ]);
-    print Html::beginTag('div', [
-        'class' => ''
-    ]);
-    ?>
-        <div class="account-wait-confirmation block-info block-info-error" style="display:none;">
-            Вы не подтвердили ваш e-mail.<br />
-            На ваш e-mail <strong class="email"></strong> повторно выслана ссылка для подтверждения.<br />
-            Пожалуйста, пройдите по этой ссылке чтобы активировать ваш аккаунт.
-        </div>
-        <div class="account-locked block-info block-info-error" style="display:none;">
-            Ваш аккаунт заблокирован.<br />
-            Пожалуйста, обратитесь в <a href="mailto:support@3bolta.com">службу поддержки</a> для выяснения причин блокировки аккаунта.<br />
-        </div>
-    <?php
-    print Html::endTag('div');
+?>
+    <div class="account-wait-confirmation block-info block-info-error" style="display:none;">
+        Вы не подтвердили ваш e-mail.<br />
+        На ваш e-mail <strong class="email"></strong> повторно выслана ссылка для подтверждения.<br />
+        Пожалуйста, пройдите по этой ссылке чтобы активировать ваш аккаунт.
+    </div>
+    <div class="account-locked block-info block-info-error" style="display:none;">
+        Ваш аккаунт заблокирован.<br />
+        Пожалуйста, обратитесь в <a href="mailto:support@3bolta.com">службу поддержки</a> для выяснения причин блокировки аккаунта.<br />
+    </div>
+<?php
 print $form->field($model, 'username')->textInput([
     'class' => 'form-control username',
 ]);
@@ -56,6 +55,19 @@ print Html::beginTag('div', ['class' => 'pull-right']);
     ]);
 print Html::endTag('div');
 ActiveForm::end();
+?>
+</div>
+<div class="login-row">
+    <h3><?=Yii::t('frontend/user', 'Use social accounts')?>:</h3>
+    <a class="btn btn-social-login btn-vk" href="<?=Url::to(['/user/external-auth/redirect', 'key' => 'vkontakte'])?>"><i class="fa fa-vk"></i>&nbsp;&nbsp;&nbsp;<?=Yii::t('frontend/user', 'VKontakte')?></a>
+    <a class="btn btn-social-login btn-facebook" href="<?=Url::to(['/user/external-auth/redirect', 'key' => 'facebook'])?>"><i class="fa fa-facebook"></i>&nbsp;&nbsp;&nbsp;<?=Yii::t('frontend/user', 'Facebook')?></a>
+    <a class="btn btn-social-login btn-google" href="<?=Url::to(['/user/external-auth/redirect', 'key' => 'google'])?>"><i class="fa fa-google-plus"></i>&nbsp;&nbsp;&nbsp;<?=Yii::t('frontend/user', 'Google+')?></a>
+</div>
+<div class="login-row">
+    <h3 class="inline"><?=Yii::t('frontend/user', 'Have not account?')?></h3>
+    <strong><a href="<?=Url::to(['/user/user/register'])?>"><?=Yii::t('frontend/user', 'Register')?></a></strong>
+</div>
+<?php
 Modal::end();
 
 JS::begin();

@@ -2,6 +2,7 @@
 namespace user\controllers\frontend;
 
 use app\components\Controller;
+use user\components\ExternalUser;
 use user\components\UserApi;
 use user\exception\UserApiException;
 use user\forms\ChangePassword as ChangePasswordForm;
@@ -23,6 +24,8 @@ class UserController extends Controller
     /**
      * Разделение прав доступа для авторизованных и неавторизованных пользователей.
      * В случае недоступности - редирект на главную страницу.
+     *
+     * @return array
      */
     public function behaviors()
     {
@@ -83,6 +86,15 @@ class UserController extends Controller
     {
         $model = new RegisterForm();
 
+        // если была авторизация через соц. сети
+        $externalUser = ExternalUser::createFromSession();
+        if ($externalUser instanceof ExternalUser) {
+            $model->setAttributes([
+                'name' => $externalUser->name,
+                'email' => $externalUser->email,
+            ]);
+        }
+
         if (!empty($_POST['ajax']) && Yii::$app->request->isAjax && $model->load($_POST)) {
             Yii::$app->response->format = Response::FORMAT_JSON;
             return ActiveForm::validate($model);
@@ -92,14 +104,21 @@ class UserController extends Controller
             /* @var $api UserApi */
             $api = Yii::$app->getModule('user')->api;
             try {
+                // регистрация пользователя
                 $user = $api->registerUser($model);
+                if ($externalUser instanceof ExternalUser) {
+                    // прикрепить к пользователю соц. сеть
+                    $api->attachUserServiceAccount($user, $externalUser);
+                }
+                // очистить данные соц. сети
+                ExternalUser::removeAttributesFromSession();
                 Yii::$app->session->setFlash('user_success_registered', $user->id);
                 return $this->refresh();
             }
             catch (UserApiException $ex) {
                 Yii::$app->serviceMessage->setMessage(
                     'danger',
-                    'При регистрации произошла ошибка (код ошибки: ' . $ex->getCode() . '<br />'
+                    'При регистрации произошла ошибка (код ошибки: ' . $ex->getCode() . ')<br />'
                     . 'Пожалуйста, обратитесь в службу поддержки',
                     Yii::t('frontend/user', 'Register')
                 );

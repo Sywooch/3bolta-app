@@ -1,13 +1,9 @@
 <?php
 namespace app\components;
 
-use advert\models\Contact;
-use partner\models\TradePoint;
-use user\models\User;
 use Yii;
 use yii\base\Model;
-use yii\db\ActiveQuery;
-use yii\validators\UniqueValidator;
+use yii\validators\Validator;
 
 /**
  * Валидатор телефона.
@@ -18,7 +14,7 @@ use yii\validators\UniqueValidator;
  *
  * Проверяет уникальность телефона вокруг всех классов, передаваемых функцией getUnqiueClasses.
  */
-class PhoneValidator extends UniqueValidator
+class PhoneValidator extends Validator
 {
     /**
      * Атрибут для канонической записи телефона
@@ -35,24 +31,6 @@ class PhoneValidator extends UniqueValidator
      * Маска для ввода телефона
      */
     const PHONE_MASK = '+7 (999) 999-99-99';
-
-    /**
-     * Возвращает классы и поля для валидации уникальности.
-     * @return array
-     */
-    protected function getUniqueClasses()
-    {
-        return [
-            User::className() => [
-                'attribute' => 'phone',
-                'canonicalAttribute' => 'phone_canonical',
-            ],
-            TradePoint::className() => [
-                'attribute' => 'phone',
-                'canonicalAttribute' => 'phone_canonical',
-            ],
-        ];
-    }
 
     /**
      * Валидация телефона
@@ -72,23 +50,6 @@ class PhoneValidator extends UniqueValidator
             $canonicalAttribute = $this->canonicalAttribute;
             $canonicalPhone = self::getCanonicalPhone($model->$attribute);
             $model->$canonicalAttribute = $canonicalPhone;
-            $classes = $this->getUniqueClasses();
-            foreach ($classes as $className => $attributes) {
-                if ($className != $model->className() && $className != $this->targetClass) {
-                    /* @var $res ActiveQuery */
-                    $res = $className::find();
-                    $res->andWhere([$attributes['canonicalAttribute'] => $model->$canonicalAttribute]);
-                    if ($res->exists()) {
-                        $this->addError($model, $attribute, Yii::t('main', 'Phone already exists'));
-                        return;
-                    }
-                }
-            }
-            parent::validateAttribute($model, $canonicalAttribute);
-            if ($errors = $model->getErrors($canonicalAttribute)) {
-                $this->addError($model, $attribute, Yii::t('main', 'Phone already exists'));
-                return;
-            }
         }
     }
 

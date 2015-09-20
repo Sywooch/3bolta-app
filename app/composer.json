@@ -27,7 +27,8 @@
         "yiisoft/yii2-imagine": "*",
         "bootstrap-select/bootstrap-select": "1.7.2",
         "wayhood/yii2-widgets-magicsuggest": "dev-master",
-        "sammaye/yii2-solr": "dev-master"
+        "sammaye/yii2-solr": "dev-master",
+        "yiisoft/yii2-authclient": "^2.0"
     },
     "require-dev": {
         "yiisoft/yii2-codeception": "*",

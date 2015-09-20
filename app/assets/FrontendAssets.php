@@ -11,6 +11,7 @@ class FrontendAssets extends AssetBundle
     public $sourcePath = '@app/_assets';
     public $baseUrl = '@web';
     public $css = [
+        'http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css',
         'css/styles.css',
         'css/sidebar.simple.css',
     ];

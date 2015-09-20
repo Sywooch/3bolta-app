@@ -280,10 +280,7 @@ class Advert extends ActiveRecord
      */
     public function getUserPhone()
     {
-        if ($this->user_id && $user = $this->getUser()) {
-            return $user->phone;
-        }
-        else if ($this->contact instanceof Contact) {
+        if ($this->contact instanceof Contact) {
             return $this->contact->user_phone;
         }
         return '';
@@ -295,11 +292,11 @@ class Advert extends ActiveRecord
      */
     public function getUserName()
     {
-        if ($this->user_id && $user = $this->getUser()) {
-            return $user->name;
-        }
-        else if ($this->contact instanceof Contact) {
+        if ($this->contact instanceof Contact && !empty($this->contact->user_name)) {
             return $this->contact->user_name;
+        }
+        else if ($this->user_id && $user = $this->getUser()) {
+            return $user->name;
         }
         return '';
     }

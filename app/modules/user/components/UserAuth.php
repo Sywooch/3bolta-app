@@ -13,6 +13,7 @@ class UserAuth extends \yii\web\User
     const DEFAULT_LOGIN_DURATION = 2592000;
     const ERROR_USER_LOCKED = 1;
     const ERROR_USER_NOT_CONFIRMED = 2;
+    const ERROR_UNKNOWN = 3;
 
     /**
      * @var int код ошибки авторизации пользователя
@@ -70,6 +71,9 @@ class UserAuth extends \yii\web\User
                 case User::STATUS_WAIT_CONFIRMATION:
                     $this->loginError = self::ERROR_USER_NOT_CONFIRMED;
                     break;
+            }
+            if (!$identity->canLogin()) {
+                $this->loginError = self::ERROR_UNKNOWN;
             }
             if ($this->loginError !== null) {
                 // была ошибка

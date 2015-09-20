@@ -4,7 +4,6 @@ namespace user\forms;
 use Yii;
 use user\models\User;
 use partner\models\Partner;
-use app\components\PhoneValidator;
 
 /**
  * Форма регистрации пользователя.
@@ -76,16 +75,6 @@ class Register extends \yii\base\Model
     public $email;
 
     /**
-     * @var string телефон пользователя
-     */
-    public $phone;
-
-    /**
-     * @var string телефон в каноническом виде (производное от поля phone)
-     */
-    public $phone_canonical;
-
-    /**
      * @var string пароль
      */
     public $password;
@@ -102,11 +91,7 @@ class Register extends \yii\base\Model
     public function rules()
     {
         return [
-            [['name', 'email', 'phone', 'password', 'password_confirmation'], 'required'],
-            [['phone'], PhoneValidator::className(),
-                'canonicalAttribute' => 'phone_canonical',
-                'targetClass' => User::className(), 'targetAttribute' => 'phone_canonical'
-            ],
+            [['name', 'email', 'password', 'password_confirmation'], 'required'],
             [['email'], 'email'],
             [['password', 'password_confirmation'], 'string', 'min' => self::MIN_PASSWORD_LENGTH],
             [['password_confirmation'], 'compare', 'compareAttribute' => 'password', 'message' => Yii::t('frontend/user', 'Password not equal')],
@@ -138,8 +123,6 @@ class Register extends \yii\base\Model
             'partnerType' => Yii::t('frontend/user', 'Company type'),
             'name' => Yii::t('frontend/user', 'Your name'),
             'email' => Yii::t('frontend/user', 'Your email'),
-            'phone' => Yii::t('frontend/user', 'Your phone'),
-            'phone_canonical' => Yii::t('frontend/user', 'Your phone'),
             'password' => Yii::t('frontend/user', 'Password'),
             'password_confirmation' => Yii::t('frontend/user', 'Password confirmation'),
             'partnerSpecialization' => Yii::t('frontend/user', 'Specialization'),
