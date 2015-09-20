@@ -65,6 +65,10 @@ return ArrayHelper::merge(include __DIR__ . '/common.php', [
                 'google' => [
                     'class' => 'yii\authclient\clients\GoogleOAuth',
                 ],
+                // Yandex
+                'yandex' => [
+                    'class' => 'yii\authclient\clients\YandexOAuth',
+                ]
             ]
         ],
         'serviceMessage' => [

@@ -18,7 +18,7 @@ class ExternalUser extends Object
     /**
      * @var string код социальной сети: facebook, google, vkontakte etc
      */
-    protected $code;
+    public $code;
 
     /**
      * @var string идентификатор пользователя внутри социальной сети
@@ -44,35 +44,6 @@ class ExternalUser extends Object
      * @var string URL страницы пользователя в соц.сеть
      */
     public $external_page;
-
-    /**
-     * Установить код социальной сети
-     *
-     * @param string $code
-     * @throws Exception генерирует Exception, сети с таким кодом нет
-     */
-    public function setCode($code)
-    {
-        switch ($code) {
-            case 'facebook':
-            case 'google':
-            case 'vkontakte';
-                $this->code = $code;
-                break;
-            default:
-                throw new Exception('Unknown social');
-        }
-    }
-
-    /**
-     * Получить код соц. сети
-     *
-     * @return string
-     */
-    public function getCode()
-    {
-        return $this->code;
-    }
 
     /**
      * Установить данные социального пользователя в сесиию

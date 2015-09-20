@@ -17,10 +17,12 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'Enter or Registration' => 'Вход / Регистрация',
+    'Attached social services' => 'Аккаунты',
+    'Connect' => 'Прикрепить',
+    'Disconnect' => 'Открепить',
     'Account locked' => 'Аккаунт заблокирован',
     'Authorize' => 'Авторизация',
-    'Change contact name' => 'Изменить контактное имя',
+    'Change contact name' => 'Изменить имя',
     'Change e-mail' => 'Изменить e-mail',
     'Change e-mail error' => 'Ошибка изменения e-mail',
     'Change password' => 'Изменить пароль',
@@ -34,6 +36,7 @@ return [
     'E-mail has no changes' => 'Нет изменений в e-mail',
     'E-mail success changed' => 'E-mail успешно изменен',
     'Enter' => 'Войти',
+    'Enter or Registration' => 'Вход / Регистрация',
     'Error change e-mail' => 'Ошибка изменения e-mail',
     'Exit' => 'Выход',
     'Facebook' => 'Facebook',
@@ -69,6 +72,7 @@ return [
     'User not found' => 'Аккаунт не найден',
     'VKontakte' => 'ВКонтакте',
     'Wrong confirmation code' => 'Ошибочный код подтверждения',
+    'Yandex' => 'Яндекс',
     'You enter as:' => 'Вы вошли как:',
     'Your email' => 'E-mail',
     'Your name' => 'Имя',

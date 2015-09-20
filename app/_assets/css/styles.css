@@ -664,7 +664,8 @@ h2, h3, h4, h5, h6 {
 }
 .btn-social-login {
     position: relative;
-    padding: 9px 20px 9px 20px;
+    width: 130px;
+    margin-bottom: 4px;
 }
 .btn-google, .btn-google:hover, .btn-google:visited, .btn-google:active {
     background: #e74b37;
@@ -680,11 +681,17 @@ h2, h3, h4, h5, h6 {
 }
 .btn-yandex {
     background: #dadada;
-    color: #fff;
+    color: #000;
+}
+.btn-yandex i {
+    color: #ff0000;
 }
 .btn-mailru {
     background: #2e5f90;
 }
 .btn-ok {
     background: #ec7914;
+}
+.social-button {
+    margin-bottom: 20px;
 }

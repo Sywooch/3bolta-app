@@ -100,13 +100,20 @@ class ExternalAuthController extends Controller
             /* @var $existsUser User */
             $existsUser = $externalUser->getInternalUser();
 
+            if (!Yii::$app->user->isGuest) {
+                // в данный момент пользователь уже авторизован на сайте
+                // привязываем к нему новую соц. сеть и возвращаемся в профиль
+                $this->userApi->attachUserServiceAccount(Yii::$app->user->identity, $externalUser);
+                return $this->redirect(['/user/profile/index']);
+            }
+
+            // пользователя не существует, регистрируем
             if (!($existsUser instanceof User)) {
-                // попробовать зарегистрировать пользователя
                 $existsUser = $this->userApi->registerSocialUser($externalUser);
             }
 
+            // требуется активация аккаунта, автоматически активируем, если есть e-mail
             if ($existsUser && $externalUser->email && $existsUser->needConfirmation()) {
-                // требуется активация аккаунта, автоматически активируем
                 $existsUser = $this->userApi->trustUserConfirmation($existsUser);
             }
 
@@ -161,6 +168,9 @@ class ExternalAuthController extends Controller
         }
         else if ($client instanceof GoogleOAuth) {
             return $this->userApi->fetchGoogleUserData($client, $authCode);
+        }
+        else if ($client instanceof \yii\authclient\clients\YandexOAuth) {
+            return $this->userApi->fetchYandexUserData($client, $authCode);
         }
 
         throw new InvalidParamException();

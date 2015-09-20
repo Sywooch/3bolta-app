@@ -59,9 +59,10 @@ ActiveForm::end();
 </div>
 <div class="login-row">
     <h3><?=Yii::t('frontend/user', 'Use social accounts')?>:</h3>
-    <a class="btn btn-social-login btn-vk" href="<?=Url::to(['/user/external-auth/redirect', 'key' => 'vkontakte'])?>"><i class="fa fa-vk"></i>&nbsp;&nbsp;&nbsp;<?=Yii::t('frontend/user', 'VKontakte')?></a>
-    <a class="btn btn-social-login btn-facebook" href="<?=Url::to(['/user/external-auth/redirect', 'key' => 'facebook'])?>"><i class="fa fa-facebook"></i>&nbsp;&nbsp;&nbsp;<?=Yii::t('frontend/user', 'Facebook')?></a>
-    <a class="btn btn-social-login btn-google" href="<?=Url::to(['/user/external-auth/redirect', 'key' => 'google'])?>"><i class="fa fa-google-plus"></i>&nbsp;&nbsp;&nbsp;<?=Yii::t('frontend/user', 'Google+')?></a>
+    <a class="btn btn-social-login btn-vk" href="<?=Url::to(['/user/external-auth/redirect', 'key' => 'vkontakte'])?>"><i class="icon icon-vkontakte"></i>&nbsp;&nbsp;&nbsp;<?=Yii::t('frontend/user', 'VKontakte')?></a>
+    <a class="btn btn-social-login btn-facebook" href="<?=Url::to(['/user/external-auth/redirect', 'key' => 'facebook'])?>"><i class="icon icon-facebook"></i>&nbsp;&nbsp;&nbsp;<?=Yii::t('frontend/user', 'Facebook')?></a>
+    <a class="btn btn-social-login btn-google" href="<?=Url::to(['/user/external-auth/redirect', 'key' => 'google'])?>"><i class="icon icon-google"></i>&nbsp;&nbsp;&nbsp;<?=Yii::t('frontend/user', 'Google+')?></a>
+    <a class="btn btn-social-login btn-yandex" href="<?=Url::to(['/user/external-auth/redirect', 'key' => 'yandex'])?>"><i class="icon icon-yandex"></i>&nbsp;&nbsp;&nbsp;<?=Yii::t('frontend/user', 'Yandex')?></a>
 </div>
 <div class="login-row">
     <h3 class="inline"><?=Yii::t('frontend/user', 'Have not account?')?></h3>

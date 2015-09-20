@@ -24,6 +24,11 @@ return [
                     'clientId' => '',
                     'clientSecret' => '',
                 ],
+                // Yandex
+                'yandex' => [
+                    'clientId' => '',
+                    'clientSecret' => '',
+                ],
             ],
         ],
     ],

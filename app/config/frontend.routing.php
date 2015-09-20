@@ -26,6 +26,7 @@ return [
     // авторизация через соц. сети
     '/login' => '/user/user/login',
     '/login/<key:(vkontakte|facebook|google|yandex)>/<action:(redirect|response)>' => '/user/external-auth/<action>',
+    '/profile/disconnect/<key:(facebook|vkontakte|google|yandex)>' => '/user/profile/disconnect-social',
 
     '/logout' => '/user/user/logout',
     '/restore/lost-password' => '/user/user/lost-password',

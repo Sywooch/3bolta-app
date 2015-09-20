@@ -10,15 +10,80 @@ use user\models\User;
 use yii\base\View;
 use yii\bootstrap\ActiveForm;
 use yii\helpers\Html;
+use yii\helpers\Url;
 
 /* @var $this View */
 /* @var $changePassword ChangePassword */
 /* @var $form ActiveForm */
 /* @var $profile Profile */
 /* @var $user User */
+
+$socials = [
+    'vkontakte' => [
+        'name' => Yii::t('frontend/user', 'VKontakte'),
+        'btn' => 'btn-vk',
+        'icon' => 'icon-vkontakte',
+        'link' => '',
+        'user_name' => '',
+        'attached' => false,
+    ],
+    'facebook' => [
+        'name' => Yii::t('frontend/user', 'Facebook'),
+        'btn' => 'btn-facebook',
+        'icon' => 'icon-facebook',
+        'link' => '',
+        'user_name' => '',
+        'attached' => false,
+    ],
+    'google' => [
+        'name' => Yii::t('frontend/user', 'Google+'),
+        'btn' => 'btn-google',
+        'icon' => 'icon-google',
+        'link' => '',
+        'user_name' => '',
+        'attached' => false,
+    ],
+    'yandex' => [
+        'name' => Yii::t('frontend/user', 'Yandex'),
+        'btn' => 'btn-yandex',
+        'icon' => 'icon-yandex',
+        'link' => '',
+        'user_name' => '',
+        'attached' => false,
+    ],
+];
+$attachedServices = [];
+foreach ($user->socialAccounts as $socialAccount) {
+    /* @var $socialAccount \user\models\SocialAccount */
+    $socials[$socialAccount->code]['link'] = $socialAccount->external_page;
+    $socials[$socialAccount->code]['user_name'] = $socialAccount->external_name;
+    $socials[$socialAccount->code]['attached'] = true;
+}
 ?>
 <div class="col-md-4 col-sm-12"></div>
 <div class="col-md-5 col-sm-12 profile">
+    <a name="socials"></a>
+    <div class="profile-row col-md-12">
+        <h2><?=Yii::t('frontend/user', 'Attached social services')?></h2>
+        <?php foreach ($socials as $code => $params):?>
+            <div class="col-md-12 social-button">
+                <a class="btn <?=$params['btn']?>"><i class="icon <?=$params['icon']?>"></i>&nbsp;</a>
+                <?=$params['name']?>
+                <?php if ($params['attached'] && $params['link']):?>
+                    (<a href="<?=$params['link']?>" target="_blank"><?=Html::encode($params['user_name'])?></a>)
+                <?php elseif($params['attached']):?>
+                    (<?=Html::encode($params['user_name'])?>)
+                <?php endif;?>
+                <small>
+                    <?php if ($params['attached']):?>
+                        <a href="<?=Url::to(['disconnect-social', 'key' => $code])?>"><?=Yii::t('frontend/user', 'Disconnect')?></a>
+                    <?php else:?>
+                        <a href="<?=Url::to(['/user/external-auth/redirect', 'key' => $code])?>"><?=Yii::t('frontend/user', 'Connect')?></a>
+                    <?php endif;?>
+                </small>
+            </div>
+        <?php endforeach;?>
+    </div>
     <a name="profile"></a>
     <div class="profile-row col-md-12">
         <h2><?=Yii::t('frontend/user', 'Change contact name')?></h2>

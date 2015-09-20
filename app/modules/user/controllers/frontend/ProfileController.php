@@ -75,6 +75,25 @@ class ProfileController extends Controller
     }
 
     /**
+     * Отключить соц. сеть
+     *
+     * @param string $code vkontakte, facebook, google etc
+     */
+    public function actionDisconnectSocial($key)
+    {
+        /* @var $user User */
+        $user = Yii::$app->user->identity;
+        foreach ($user->socialAccounts as $account) {
+            /* @var $account \user\models\SocialAccount */
+            if ($account->code == $key) {
+                $account->delete();
+            }
+        }
+
+        return $this->redirect(['index']);
+    }
+
+    /**
      * изменить e-mail пользователя по коду подтверждения,
      * пришедшему в письме
      */

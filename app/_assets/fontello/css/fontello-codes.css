@@ -13,3 +13,9 @@
 .icon-mail-alt:before { content: '\e80b'; } /* '' */
 .icon-comment:before { content: '\e80c'; } /* '' */
 .icon-help-circled:before { content: '\e80d'; } /* '' */
+.icon-google:before { content: '\e80e'; } /* '' */
+.icon-vkontakte:before { content: '\e80f'; } /* '' */
+.icon-facebook:before { content: '\e810'; } /* '' */
+.icon-yandex:before { content: '\e811'; } /* '' */
+.icon-odnoklassniki:before { content: '\e812'; } /* '' */
+.icon-gplus:before { content: '\e813'; } /* '' */

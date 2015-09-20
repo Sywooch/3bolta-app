@@ -13,7 +13,10 @@ use user\models\SocialAccount;
 use user\models\User;
 use user\models\UserConfirmation;
 use Yii;
+use yii\authclient\clients\Facebook;
+use yii\authclient\clients\GoogleOAuth;
 use yii\authclient\clients\VKontakte;
+use yii\authclient\clients\YandexOAuth;
 use yii\base\Component;
 use yii\helpers\Url;
 use yii\web\NotFoundHttpException;
@@ -145,7 +148,7 @@ class UserApi extends Component
     {
         foreach ($user->socialAccounts as $account) {
             /* @var $account SocialAccount */
-            if ($account->code == $externalUser->getCode()) {
+            if ($account->code == $externalUser->code) {
                 // у пользователя уже есть такая соц. сеть
                 // выходим из метода
                 return;
@@ -156,7 +159,7 @@ class UserApi extends Component
         $socialAccount = new SocialAccount();
         $socialAccount->setAttributes([
             'user_id' => $user->id,
-            'code' => (string) $externalUser->getCode(),
+            'code' => (string) $externalUser->code,
             'external_uid' => (string) $externalUser->id,
             'external_name' => (string) $externalUser->external_name,
             'external_page' => (string) $externalUser->external_page,
@@ -515,11 +518,11 @@ class UserApi extends Component
     /**
      * Получить данные авторизованного пользователя из сети Google+.
      *
-     * @param VKontakte $client OAuth-клиент для связи с Google+
+     * @param GoogleOAuth $client OAuth-клиент для связи с Google+
      * @param string $authCode код авторизации
      * @return ExternalUser
      */
-    public function fetchGoogleUserData(\yii\authclient\clients\GoogleOAuth $client, $authCode)
+    public function fetchGoogleUserData(GoogleOAuth $client, $authCode)
     {
         $client->fetchAccessToken($authCode);
         $userData = $client->getUserAttributes();
@@ -537,7 +540,7 @@ class UserApi extends Component
     /**
      * Получить данные авторизованного пользователя из сети Facebook.
      *
-     * @param VKontakte $client OAuth-клиент для связи с Facebook
+     * @param Facebook $client OAuth-клиент для связи с Facebook
      * @param string $authCode код авторизации
      * @return ExternalUser
      */
@@ -557,6 +560,30 @@ class UserApi extends Component
             'email' => !empty($userData['email']) ? $userData['email'] : null,
             'external_name' => !empty($userData['name']) ? $userData['name'] : $userData['first_name'],
             'external_page' => !empty($userData['link']) ? $userData['link'] : null,
+        ]);
+    }
+
+    /**
+     * Получить данные авторизованного пользователя из сети Yandex.
+     *
+     * @param YandexOAuth $client OAuth-клиент для связи с Yandex
+     * @param string $authCode код авторизации
+     * @return ExternalUser
+     */
+    public function fetchYandexUserData(YandexOAuth $client, $authCode)
+    {
+        $client->fetchAccessToken($authCode);
+        $userData = $client->getUserAttributes();
+
+        return new ExternalUser([
+            'code' => 'yandex',
+            'id' => $userData['id'],
+            'email' => !empty($userData['default_email']) ? $userData['default_email'] :
+                (!empty($userData['emails'][0]) ? $userData['emails'][0] : null),
+            'name' => $userData['first_name'],
+            'external_name' => $userData['display_name'],
+            // сети ya.ru больше нет
+            'external_page' => '',
         ]);
     }
 
