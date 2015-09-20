@@ -40,6 +40,10 @@ $model->resetOutputValues();
 <?php
 $form = ActiveForm::begin([
     'id' => 'create-advert',
+    'validateOnSubmit' => true,
+    'validateOnChange' => false,
+    'validateOnType' => false,
+    'validateOnBlur' => false,
     'enableClientValidation' => false,
     'enableAjaxValidation' => true,
     'options' => [
@@ -73,6 +77,7 @@ $form = ActiveForm::begin([
                     ],
                 ])->textInput()?>
             </div>
+            <div class="clearfix"></div>
             <div class="col-sm-12 col-md-6">
                 <?=$form->field($model, 'category_id', [
                     'parts' => ['{icon}' => '<span class="form-control-icon icon-tag"></span>'],

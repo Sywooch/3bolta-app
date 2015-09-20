@@ -649,3 +649,6 @@ h2, h3, h4, h5, h6 {
 .modal-dialog .loader {
     border-radius: 10px;
 }
+.has-success .help-block, .has-success .control-label, .has-success .radio, .has-success .checkbox, .has-success .radio-inline, .has-success .checkbox-inline, .has-success.radio label, .has-success.checkbox label, .has-success.radio-inline label, .has-success.checkbox-inline label {
+    color: inherit;
+}
