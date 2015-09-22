@@ -98,11 +98,11 @@ button.selected-default span {
 /** HEAD **/
 .logo-head {
     width: 100%;
-    height: 76px;
-    background-color: #993333;
+    height: 61px;
+    background-color: #fff;
 }
 .logo-head .logo {
-    width: 239px;
+    width: 258px;
     height: 100%;
     background-image: url(../img/logo.png);
     float: left;
@@ -110,9 +110,12 @@ button.selected-default span {
 @media (max-width: 767px) {
     .logo-head {
         height: 46px;
+        border-bottom: 1px solid #000;
+        box-shadow: 1px 1px 10px rgba(226, 226, 226, 10);
+        -webkit-box-shadow: 1px 1px 10px rgba(226, 226, 226, 10);
     }
     .logo-head .logo {
-        width: 149px;
+        width: 79px;
         height: 100%;
         background-image: url(../img/logo-small.png);
         float: left;
@@ -121,17 +124,17 @@ button.selected-default span {
 .logo-head .region {
     width: 243px;
     height: 100%;
-    line-height: 76px;
+    line-height: 61px;
     margin-left: 15px;
     font-size: 17px;
-    color: #f0ede4;
+    color: #f86536;
     float: left;
     font-weight: normal;
 }
 .logo-head .region a {
-    color: #f0ede4;
+    color: #000;
     text-decoration: none;
-    border-bottom: 1px dashed #f0ede4;
+    border-bottom: 1px dashed #000;
 }
 .logo-head .region a:hover, .logo-head .region a:visited,
 .logo-head .region a:active, .logo-head .region a:focus {
@@ -144,7 +147,7 @@ button.selected-default span {
     width: 100%;
     height: 100%;
 }
-.logo-head .btn-top-add-advert {
+.logo-head .top-logo-button a {
     padding: 10px 15px;
     cursor: pointer;
 }
@@ -152,26 +155,12 @@ button.selected-default span {
     float: right;
     height: 100%;
 }
-.logo-head .top-logo-search, .logo-head .top-logo-add-advert {
+.logo-head .top-logo-button {
     float: right;
 }
-.logo-head .top-logo-search {
+.logo-head .top-logo-button {
     height: 100%;
-    width: 68px;
-    background-color: #8e3333;
-    color: #cc6666;
-}
-.logo-head .top-logo-search a {
-    color: #cf6464;
-    font-size: 28px;
-    display: block;
-    text-align: center;
-    line-height: 76px;
-}
-.logo-head .top-logo-add-advert {
-    height: 100%;
-    min-width: 200px;
-    line-height: 76px;
+    line-height: 60px;
     margin-right: 30px;
 }
 .navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav>.active>a {
@@ -201,20 +190,7 @@ button.selected-default span {
     .logo-head .region {
         display: none;
     }
-    .logo-head .top-logo-search {
-        height: 100%;
-        width: 46px;
-        font-size: 20px;
-        line-height: 46px;
-        background: none;
-        float: left;
-    }
-    .logo-head .top-logo-search a {
-        color: #fff;
-        font-size: inherit;
-        line-height: inherit;
-    }
-    .logo-head .top-logo-add-advert {
+    .logo-head .top-logo-button {
         display: block;
         width: 46px;
         font-size: 20px;
@@ -226,8 +202,8 @@ button.selected-default span {
         padding: 0px;
         text-align: center;
     }
-    .logo-head .top-logo-add-advert a {
-        color: #fff;
+    .logo-head .top-logo-button a {
+        color: #f86536;
         font-size: inherit;
         line-height: inherit;
         border-radius: 0;
@@ -238,7 +214,7 @@ button.selected-default span {
         margin: 0px;
         display: block;
     }
-    .logo-head .top-logo-add-advert a .text {
+    .logo-head .top-logo-button a .text {
         display: none;
     }
     /** MOBILE MENU **/
@@ -252,10 +228,10 @@ button.selected-default span {
     }
     .top-logo-menu .navbar-default {
         min-height: 46px;
-        background-color: #993333;
+        background-color: #fff;
     }
     .top-logo-menu .navbar-toggle .icon-bar {
-        background-color: #FFF;
+        background-color: #f86536;
     }
     .top-logo-menu .navbar-toggle {
         margin-top: 5px;
@@ -306,7 +282,7 @@ body {
 .wrap {
     min-height: 100%;
     height: auto;
-    margin: 0 auto -60px;
+    margin: 0 auto -50px;
     padding: 0 0 60px;
 }
 
@@ -525,8 +501,8 @@ a.desc:after {
     color: #3f3f3f;
     border: 0px;
     padding-top: 0px;
-    height: 62px;
-    line-height: 62px;
+    height: 50px;
+    line-height: 50px;
     font-size: 13px;
 }
 .footer p {
@@ -534,18 +510,6 @@ a.desc:after {
 }
 .footer .pull-left {
     margin-left: 15px;
-}
-.footer .logo {
-    width: 193px;
-    height: 62px;
-    background-image: url(../img/logo-footer.png);
-    float: left;
-}
-.footer .logo a {
-    display: block;
-    line-height: 62px;
-    border: 0px;
-    text-decoration: none;
 }
 .list-pager .pagination li>a {
     text-decoration: underline;

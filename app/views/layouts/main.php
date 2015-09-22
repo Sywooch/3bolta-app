@@ -36,11 +36,14 @@ FrontendAssets::register($this);
             <div class="logo"><a href="/">&nbsp;&nbsp;</a></div>
             <?=UserRegion::widget()?>
             <div class="logo-buttons">
-                <div class="top-logo-search">
-                    <a href="<?=Url::toRoute(['/advert/part-catalog/search'])?>" id="toggleTopSearch" class="top-logo-search-btn"><span class="glyphicon glyphicon-search"></span></a>
+                <div class="top-logo-button">
+                    <a href="<?=Url::toRoute(['/advert/part-catalog/search'])?>" id="toggleTopSearch" class="btn btn-primary">
+                        <span class="glyphicon glyphicon-search"></span>
+                        <span class="text">&nbsp;&nbsp;<?=Yii::t('frontend/menu', 'Search parts')?></span>
+                    </a>
                 </div>
-                <div class="top-logo-add-advert">
-                    <a href="<?=Url::toRoute(['/advert/part-advert/append'])?>" class="btn btn-primary btn-top-add-advert">
+                <div class="top-logo-button">
+                    <a href="<?=Url::toRoute(['/advert/part-advert/append'])?>" class="btn btn-primary">
                         <span class="glyphicon glyphicon-plus"></span>
                         <span class="text">&nbsp;&nbsp;<?=Yii::t('frontend/menu', 'Place an advert')?></span>
                     </a>
@@ -107,9 +110,6 @@ FrontendAssets::register($this);
     </div>
 
     <footer class="footer page-wrap">
-        <div class="logo">
-            <a href="/"></a>
-        </div>
         <p class="pull-left">&copy; <?=Yii::$app->params['siteName']?> <?= date('Y') ?></p>
         <?=Nav::widget([
             'options' => ['class' => 'navbar-nav navbar-right bottom-menu'],
