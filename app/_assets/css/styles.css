@@ -170,7 +170,8 @@ button.selected-default span {
 }
 .navbar-default {
     background-image: none;
-    background-color: #e2e2e2;
+    background-color: #000;
+    color: #fff;
     min-height: 40px;
 }
 .logo-main-navbar {
@@ -283,7 +284,7 @@ body {
     min-height: 100%;
     height: auto;
     margin: 0 auto -50px;
-    padding: 0 0 60px;
+    padding: 0 0 50px;
 }
 
 .wrap > .container {
@@ -294,13 +295,6 @@ body {
         padding: 15px 0px;
     }
 }
-.footer {
-    height: 60px;
-    background-color: #e2e2e2;
-    border-top: 1px solid #ddd;
-    padding-top: 15px;
-}
-
 .jumbotron {
     text-align: center;
     background-color: transparent;
@@ -468,6 +462,15 @@ a.desc:after {
     margin: 0px;
     padding-left: 0px;
 }
+.navbar-default .navbar-nav>li>a {
+    color: #fff;
+}
+.navbar-default .navbar-nav>li.active>a {
+    color: #fff;
+}
+.user-dropdown-menu > a.dropdown-toggle {
+    color: #fff;
+}
 .navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav>.active>a {
     background-image: none;
 }
@@ -498,6 +501,8 @@ a.desc:after {
     text-decoration: none;
 }
 .footer {
+    background-color: #e2e2e2;
+    border-top: 1px solid #ddd;
     color: #3f3f3f;
     border: 0px;
     padding-top: 0px;
@@ -658,4 +663,9 @@ h2, h3, h4, h5, h6 {
 }
 .social-button {
     margin-bottom: 20px;
+}
+.label-primary {
+    color: #f86536;
+    border: 2px solid #f86536;
+    background: transparent;
 }

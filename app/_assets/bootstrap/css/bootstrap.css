@@ -5,8 +5,8 @@
  */
 
 /*!
- * Generated using the Bootstrap Customizer (http://getbootstrap.com/customize/?id=6c684031eb77a695332c)
- * Config saved to config.json and https://gist.github.com/6c684031eb77a695332c
+ * Generated using the Bootstrap Customizer (http://getbootstrap.com/customize/?id=52778e2f9525ca32a692)
+ * Config saved to config.json and https://gist.github.com/52778e2f9525ca32a692
  */
 /*!
  * Bootstrap v3.3.5 (http://getbootstrap.com)
@@ -1103,12 +1103,12 @@ textarea {
   line-height: inherit;
 }
 a {
-  color: #e56139;
+  color: #1683c6;
   text-decoration: none;
 }
 a:hover,
 a:focus {
-  color: #b93e18;
+  color: #0e5581;
   text-decoration: underline;
 }
 a:focus {
@@ -3458,7 +3458,7 @@ fieldset[disabled] .btn-danger.active {
   background-color: #ffffff;
 }
 .btn-link {
-  color: #e56139;
+  color: #1683c6;
   font-weight: normal;
   border-radius: 0;
 }
@@ -3479,7 +3479,7 @@ fieldset[disabled] .btn-link {
 }
 .btn-link:hover,
 .btn-link:focus {
-  color: #b93e18;
+  color: #0e5581;
   text-decoration: underline;
   background-color: transparent;
 }
@@ -4058,7 +4058,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 .nav .open > a:hover,
 .nav .open > a:focus {
   background-color: transparent;
-  border-color: #e56139;
+  border-color: #1683c6;
 }
 .nav .nav-divider {
   height: 1px;
@@ -4997,7 +4997,7 @@ a.badge:focus {
 }
 .list-group-item.active > .badge,
 .nav-pills > .active > a > .badge {
-  color: #e56139;
+  color: #1683c6;
   background-color: #ffffff;
 }
 .list-group-item > .badge {
@@ -5070,7 +5070,7 @@ a.badge:focus {
 a.thumbnail:hover,
 a.thumbnail:focus,
 a.thumbnail.active {
-  border-color: #e56139;
+  border-color: #1683c6;
 }
 .thumbnail .caption {
   padding: 9px;
