@@ -426,6 +426,8 @@ class PartsSearchApi extends Component
             $this->makeCategoryQuery($select, $partParam->category_id);
         }
 
+        $this->appendQuery($select, '(*:* NOT id:' . $advert->id . ')');
+
         // установить лимиты
         $select->setStart(0)->setRows($limit);
 

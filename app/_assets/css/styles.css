@@ -109,13 +109,13 @@ button.selected-default span {
 }
 @media (max-width: 767px) {
     .logo-head {
-        height: 46px;
+        height: 52px;
         border-bottom: 1px solid #000;
-        box-shadow: 1px 1px 10px rgba(226, 226, 226, 10);
-        -webkit-box-shadow: 1px 1px 10px rgba(226, 226, 226, 10);
+        box-shadow: 1px 1px 10px rgba(0, 0, 0, 10);
+        -webkit-box-shadow: 1px 1px 10px rgba(0, 0, 0, 10);
     }
     .logo-head .logo {
-        width: 79px;
+        width: 195px;
         height: 100%;
         background-image: url(../img/logo-small.png);
         float: left;
@@ -191,14 +191,17 @@ button.selected-default span {
     .logo-head .region {
         display: none;
     }
+    .logo-head {
+        background-color: #000;
+    }
     .logo-head .top-logo-button {
         display: block;
-        width: 46px;
+        width: 36px;
         font-size: 20px;
-        line-height: 46px;
+        line-height: 55px;
         background: none;
         float: left;
-        min-width: 46px;
+        min-width: 36px;
         margin: 0px;
         padding: 0px;
         text-align: center;
@@ -223,9 +226,10 @@ button.selected-default span {
         display: none;
     }
     .top-logo-menu .navbar-header {
-        height: 46px;
+        height: 100%;
         width: 100%;
         float: right;
+        margin-top: 5px;
     }
     .top-logo-menu .navbar-default {
         min-height: 46px;
@@ -425,7 +429,7 @@ a.desc:after {
 .collapse.in .user-panel .user-dropdown-menu .dropdown-menu {
     position: relative;
 }
-.user-panel .dropdown-toggle {
+.user-panel a {
     text-decoration: none;
 }
 .profile .profile-row {
@@ -462,13 +466,16 @@ a.desc:after {
     margin: 0px;
     padding-left: 0px;
 }
+.user-panel a {
+    color: #fff;
+}
+.user-panel a:hover, user-panel a:active {
+    color: #f86536;
+}
 .navbar-default .navbar-nav>li>a {
     color: #fff;
 }
 .navbar-default .navbar-nav>li.active>a {
-    color: #fff;
-}
-.user-dropdown-menu > a.dropdown-toggle {
     color: #fff;
 }
 .navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav>.active>a {
@@ -664,8 +671,9 @@ h2, h3, h4, h5, h6 {
 .social-button {
     margin-bottom: 20px;
 }
-.label-primary {
+.label-price {
     color: #f86536;
-    border: 2px solid #f86536;
+    border: none;
+    padding: 0;
     background: transparent;
 }

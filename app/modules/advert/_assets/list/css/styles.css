@@ -7,7 +7,13 @@
 }
 .list-item-price {
     font-size: 20px;
-    margin-bottom: 20px;
+    margin-bottom: 5px;
+}
+.list-item-seller-type {
+    margin-bottom: 5px;
+}
+.list-item-region {
+    margin-bottom: 5px;
 }
 .list-item-condition {
     font-size: 12px;
@@ -65,6 +71,11 @@
         display: block;
     }
     .list-item-internal h3 {
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+    }
+    .list-item-seller-type {
         white-space: nowrap;
         text-overflow: ellipsis;
         overflow: hidden;

@@ -74,8 +74,8 @@ $preview = $model->getPreview();
         <?php endif;?>
         <div class="col-lg-<?=$preview ? '8' : '12'?>">
             <div class="list-item-row list-item-price">
-                <span class="label label-primary">
-                    <span class="glyphicon glyphicon-ruble"></span>
+                <span class="label label-price">
+                    <span class="icon icon-rouble"></span>
                     <?=$model->getPriceFormated()?>
                 </span>
             </div>

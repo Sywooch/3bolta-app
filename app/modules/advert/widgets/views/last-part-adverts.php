@@ -33,15 +33,19 @@ use yii\web\View;
                                 <?=$model->getPublishedFormatted()?>
                             </i>
                         </div>
-                        <div class="list-item-row list-item-price">
-                            <span class="label label-primary">
-                                <span class="glyphicon glyphicon-ruble"></span>
-                                <?=$model->getPriceFormated()?>
-                            </span>
-                        </div>
                         <div class="list-item-row list-item-seller-type">
                             <i class="icon icon-user"></i>
                             <?=$model->getSeller()?>
+                        </div>
+                        <div class="list-item-row list-item-region">
+                            <i class="icon icon-location"></i>
+                            <?=Html::encode($model->region_name)?>
+                        </div>
+                        <div class="list-item-row list-item-price">
+                            <span class="label label-price">
+                                <span class="icon icon-rouble"></span>
+                                <?=$model->getPriceFormated()?>
+                            </span>
                         </div>
                     </div>
                     <?php if (!empty($model->preview_url)):?>
