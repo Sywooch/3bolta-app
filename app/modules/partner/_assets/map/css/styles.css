@@ -61,7 +61,7 @@
     border-bottom: 1px solid #ccc;
     padding: 15px;
     width: 100%;
-    color: #000;
+    color: #2e2e2b;
     cursor: pointer;
     background-color: #fff;
 }
@@ -72,7 +72,7 @@
     background-color: #ddd;
 }
 .trade-point-list-item h4, .trade-point-map-infowindow h4 {
-    color: #000;
+    color: #2e2e2b;
     margin-top: 0px;
     margin-bottom: 5px;
 }

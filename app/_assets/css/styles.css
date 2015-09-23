@@ -110,7 +110,7 @@ button.selected-default span {
 @media (max-width: 767px) {
     .logo-head {
         height: 52px;
-        border-bottom: 1px solid #000;
+        border-bottom: 1px solid #2e2e2b;
         box-shadow: 1px 1px 10px rgba(0, 0, 0, 10);
         -webkit-box-shadow: 1px 1px 10px rgba(0, 0, 0, 10);
     }
@@ -132,9 +132,9 @@ button.selected-default span {
     font-weight: normal;
 }
 .logo-head .region a {
-    color: #000;
+    color: #2e2e2b;
     text-decoration: none;
-    border-bottom: 1px dashed #000;
+    border-bottom: 1px dashed #2e2e2b;
 }
 .logo-head .region a:hover, .logo-head .region a:visited,
 .logo-head .region a:active, .logo-head .region a:focus {
@@ -170,7 +170,7 @@ button.selected-default span {
 }
 .navbar-default {
     background-image: none;
-    background-color: #000;
+    background-color: #2e2e2b;
     color: #fff;
     min-height: 40px;
 }
@@ -192,7 +192,7 @@ button.selected-default span {
         display: none;
     }
     .logo-head {
-        background-color: #000;
+        background-color: #2e2e2b;
     }
     .logo-head .top-logo-button {
         display: block;
@@ -567,7 +567,7 @@ a.desc:after {
     }
 }
 h2, h3, h4, h5, h6 {
-    color: #000;
+    color: #2e2e2b;
 }
 .has-success .control-label, .has-error .control-label {
     color: inherit;
@@ -657,7 +657,7 @@ h2, h3, h4, h5, h6 {
 }
 .btn-yandex {
     background: #dadada;
-    color: #000;
+    color: #2e2e2b;
 }
 .btn-yandex i {
     color: #ff0000;

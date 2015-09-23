@@ -1,6 +1,6 @@
 {
   "vars": {
-    "@gray-base": "#000",
+    "@gray-base": "#2e2e2b",
     "@gray-darker": "lighten(@gray-base, 13.5%)",
     "@gray-dark": "#3a4858",
     "@gray": "#9da4ac",
@@ -114,7 +114,7 @@
     "@dropdown-link-active-bg": "@component-active-bg",
     "@dropdown-link-disabled-color": "@gray-light",
     "@dropdown-header-color": "@gray-light",
-    "@dropdown-caret-color": "#000",
+    "@dropdown-caret-color": "#2e2e2b",
     "@screen-xs": "480px",
     "@screen-xs-min": "@screen-xs",
     "@screen-phone": "@screen-xs-min",
@@ -231,7 +231,7 @@
     "@state-danger-border": "darken(spin(@state-danger-bg, -10), 5%)",
     "@tooltip-max-width": "200px",
     "@tooltip-color": "#fff",
-    "@tooltip-bg": "#000",
+    "@tooltip-bg": "#2e2e2b",
     "@tooltip-opacity": ".9",
     "@tooltip-arrow-width": "5px",
     "@tooltip-arrow-color": "@tooltip-bg",
@@ -259,7 +259,7 @@
     "@modal-content-bg": "#fff",
     "@modal-content-border-color": "rgba(0,0,0,.2)",
     "@modal-content-fallback-border-color": "#999",
-    "@modal-backdrop-bg": "#000",
+    "@modal-backdrop-bg": "#2e2e2b",
     "@modal-backdrop-opacity": ".5",
     "@modal-header-border-color": "#e5e5e5",
     "@modal-footer-border-color": "@modal-header-border-color",
@@ -359,7 +359,7 @@
     "@carousel-indicator-border-color": "#fff",
     "@carousel-caption-color": "#fff",
     "@close-font-weight": "bold",
-    "@close-color": "#000",
+    "@close-color": "#2e2e2b",
     "@close-text-shadow": "0 1px 0 #fff",
     "@code-color": "#c7254e",
     "@code-bg": "#f9f2f4",
@@ -430,5 +430,5 @@
     "scrollspy.js",
     "transition.js"
   ],
-  "customizerUrl": "http://getbootstrap.com/customize/?id=52778e2f9525ca32a692"
+  "customizerUrl": "http://getbootstrap.com/customize/?id=683117c01f3ee2bac9c8"
 }
