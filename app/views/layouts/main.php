@@ -1,7 +1,4 @@
 <?php
-/* @var $this View */
-/* @var $content string */
-
 use app\assets\FrontendAssets;
 use app\widgets\ServiceMessage;
 use geo\widgets\SelectRegionModal;
@@ -13,7 +10,10 @@ use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
 use yii\helpers\Html;
 use yii\helpers\Url;
-use yii\web\View;
+use app\widgets\View;
+
+/* @var $this View */
+/* @var $content string */
 
 FrontendAssets::register($this);
 ?>
@@ -86,6 +86,12 @@ FrontendAssets::register($this);
         NavBar::end();
         ?>
         <div class="container content-container" id="page-content-wrapper">
+            <?php if (!empty($this->pageH1)):?>
+                <div class="page-title">
+                    <h1><?=(string) $this->pageH1?></h1>
+                    <?=$this->pageH1Extend?>
+                </div>
+            <?php endif;?>
             <?= $content ?>
         </div>
         <div id="sidebar-wrapper">

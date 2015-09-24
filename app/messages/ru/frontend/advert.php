@@ -17,8 +17,8 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'Maximum marks is {n}' => 'Марок может быть не более {n}',
-    'Maximum models is {n}' => 'Моделей может быть не более {n}',
+    'Parts search' => 'Поиск запчастей',
+    'Search params' => 'Параметры',
     'Address' => 'Адрес',
     'Advert description' => 'Описание',
     'Advert was created' => 'Объявление создано',
@@ -41,7 +41,6 @@ return [
     'Choose modification' => 'Выберите модификацию',
     'Choose one or more automobiles' => 'Выберите один или более автомобилей',
     'Choose serie' => 'Выберите серию',
-    'Collapse extended search params' => 'Скрыть расширенные параметры',
     'Complete publication' => 'Завершена публикация',
     'Condition' => 'Состояние',
     'Contact email' => 'E-mail (не публикуется)',
@@ -53,10 +52,11 @@ return [
     'E-mail' => 'E-mail',
     'Edit' => 'Редактировать',
     'Edit advert' => 'Редактирование объявления',
-    'Extend search params' => 'Расширенный поиск',
     'Images' => 'Изображения',
     'Mark' => 'Марка',
     'Max files is: {n}' => 'Можно загрузить максимум {n} файлов',
+    'Maximum marks is {n}' => 'Марок может быть не более {n}',
+    'Maximum models is {n}' => 'Моделей может быть не более {n}',
     'Model' => 'Модель',
     'Modification' => 'Модификация',
     'My adverts' => 'Мои объявления',
@@ -69,7 +69,6 @@ return [
     'Phone' => 'Телефон',
     'Place an advert' => 'Разместить объявление',
     'Please contact support.' => 'Пожалуйста, обратитесь в поддержку.',
-    'Price' => 'Цена',
     'Price from' => 'Цена от',
     'Price to' => 'Цена до',
     'Publish to {date}' => 'Опубликовать до {date}',
@@ -102,7 +101,6 @@ return [
     'Your question' => 'Ваш вопрос',
     'Your reply is successfully sended to user.' => 'Ваш ответ успешно отправлен пользователю.',
     'and {n, plural, =0{automobiles} =1{automobile} one{# automobile} few{# few automobiles} many{# automobiles} other{# automobiles}}' => 'и еще {n, plural, =0{автомобилей} =1{автомобиля} one{# автомобиля} few{# few автомобилей} many{# автомобилей} other{# автомобилей}}',
-    'from' => 'от',
     'private person' => 'частное лицо',
     'to' => 'до',
 ];

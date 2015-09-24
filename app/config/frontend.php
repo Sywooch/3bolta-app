@@ -73,7 +73,10 @@ return ArrayHelper::merge(include __DIR__ . '/common.php', [
         ],
         'serviceMessage' => [
             'class' => 'app\components\ServiceMessage',
-        ]
+        ],
+        'view' => [
+            'class' => 'app\widgets\View',
+        ],
     ],
 ], include __DIR__ . '/frontend.local.php');
 

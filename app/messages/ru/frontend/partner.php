@@ -17,7 +17,7 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'Region' => 'Регион',
+    'Organization search' => 'Поиск организаций',
     'Address' => 'Адрес',
     'Can\'t send request: system error' => 'Невозможно отправить запрос: системная ошибка',
     'Company data' => 'Данные о компании',
@@ -31,6 +31,7 @@ return [
     'Longitude' => 'Долгота',
     'Phone' => 'Телефон',
     'Phone from profile' => 'Использовать телефон из профиля',
+    'Region' => 'Регион',
     'Search by address' => 'Поиск по адресу',
     'Search by auto mark' => 'Поиск по марке автомобиля',
     'Search by latitude' => 'Поиск по широте',

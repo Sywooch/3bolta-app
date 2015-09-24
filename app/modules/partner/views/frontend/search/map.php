@@ -10,12 +10,15 @@ use partner\forms\TradePointMap;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\jui\AutoComplete;
-use yii\web\View;
+use app\widgets\View;
 use yii\widgets\ActiveForm;
 
 /* @var $this View */
 /* @var $searchForm TradePointMap */
+
 TradePointMapAssets::register($this);
+
+$this->pageH1 = Yii::t('frontend/partner', 'Organization search');
 ?>
 
 <?php JS::begin(); ?>

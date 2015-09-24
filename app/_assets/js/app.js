@@ -50,4 +50,21 @@ $(document).ready(function() {
     $('.sidebar-toggle').on('click', function(e) {
         $('#wrapper').toggleClass('toggled');
     });
+
+    /**
+     * включение и выключение верхнего поиска
+     */
+    $('.js-top-search-toggle').click(function(e) {
+        e.preventDefault();
+        if (!$(this).is('.js-expand')) {
+            $(this).addClass('js-expand');
+            $(this).find('i').removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
+            $('.js-top-search').show();
+        }
+        else {
+            $(this).removeClass('js-expand');
+            $(this).find('i').addClass('glyphicon-chevron-down').removeClass('glyphicon-chevron-up');
+            $('.js-top-search').hide();
+        }
+    });
 });

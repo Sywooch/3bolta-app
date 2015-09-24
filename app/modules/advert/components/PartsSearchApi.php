@@ -242,13 +242,11 @@ class PartsSearchApi extends Component
 
     /**
      * Получить результат поиска
-     * @param array $queryParams массив из $_REQUEST
+     * @param PartSearch $form заполненная форма поиска
      * @return SolrDataProvider
      */
-    public function searchItems($queryParams = [])
+    public function searchItems(PartSearch $form)
     {
-        $form = new PartSearch();
-
         /* @var $geoApi GeoApi */
         $geoApi = \Yii::$app->getModule('geo')->api;
 
@@ -259,7 +257,7 @@ class PartsSearchApi extends Component
         /* @var $select SelectQuery */
         $select = $this->createSelectQuery();
 
-        if ($form->load($queryParams) && $form->validate()) {
+        if ($form->validate()) {
             if ($form->r) {
                 // указан регион
                 $region = Region::find()->andWhere(['id' => (int) $form->r])->one();
