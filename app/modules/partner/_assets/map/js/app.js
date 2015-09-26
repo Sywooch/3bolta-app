@@ -68,7 +68,16 @@ $(document).ready(function() {
 
     // определить высоту враппера
     var resizeMapWrapper = function() {
-        $mapWrapper.height($('footer').offset().top - $mapWrapper.offset().top);
+        var height = $(window).height() - $('footer').outerHeight();
+        if (!$('.js-top-search').is(':visible')) {
+            height -= $('.page-title').offset().top;
+            height -= $('.page-title').outerHeight();
+        }
+        else {
+            height -= $('.js-top-search').outerHeight();
+            height -= $('.js-top-search').offset().top;
+        }
+        $mapWrapper.height(height);
     };
     resizeMapWrapper();
     $(window).resize(resizeMapWrapper);
@@ -305,4 +314,7 @@ $(document).ready(function() {
         searchTradePoints();
         return false;
     });
+
+    // переключение поиска
+    $(document).on('top-search-toggled', resizeMapWrapper);
 });

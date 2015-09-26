@@ -17,7 +17,7 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'Organization search' => 'Поиск организаций',
+    'Search params' => 'Параметры',
     'Address' => 'Адрес',
     'Can\'t send request: system error' => 'Невозможно отправить запрос: системная ошибка',
     'Company data' => 'Данные о компании',
@@ -29,6 +29,7 @@ return [
     'Create trade point' => 'Создать торговую точку',
     'Latitude' => 'Широта',
     'Longitude' => 'Долгота',
+    'Organization search' => 'Поиск организаций',
     'Phone' => 'Телефон',
     'Phone from profile' => 'Использовать телефон из профиля',
     'Region' => 'Регион',

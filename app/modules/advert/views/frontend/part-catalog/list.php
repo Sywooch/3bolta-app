@@ -9,7 +9,7 @@ use advert\forms\PartSearch;
 use sammaye\solr\SolrDataProvider;
 use app\widgets\View;
 use yii\helpers\Html;
-use yii\widgets\LinkPager;
+use app\widgets\LinkPager;
 
 /* @var $this View */
 /* @var $dataProvider SolrDataProvider */
@@ -42,7 +42,7 @@ $models = $dataProvider->getModels();
 foreach ($models as $model) {
     /* @var $model PartIndex */
     print Html::beginTag('div', [
-        'class' => 'col-lg-6 col-sm-12 col-md-6 list-item'
+        'class' => 'col-lg-6 col-xs-12 col-md-6 list-item'
     ]);
         print $this->render('_list_item', [
             'model' => $model,

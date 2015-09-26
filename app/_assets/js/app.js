@@ -66,5 +66,6 @@ $(document).ready(function() {
             $(this).find('i').addClass('glyphicon-chevron-down').removeClass('glyphicon-chevron-up');
             $('.js-top-search').hide();
         }
+        $(document).trigger('top-search-toggled');
     });
 });

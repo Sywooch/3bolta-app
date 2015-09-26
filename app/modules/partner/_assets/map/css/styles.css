@@ -70,7 +70,19 @@
 .trade-point-list-item.disabled h4 {
     color: #ccc;
 }
+.page-title {
+    margin-bottom: 0px;
+}
+.top-search {
+    padding-top: 15px;
+}
 @media (max-width: 767px) {
+    .page-title {
+        margin-bottom: 0px;
+    }
+    .top-search {
+        padding-top: 15px;
+    }
     .trade-point-map, .trade-point-map-wrapper.toggled .trade-point-map {
         width: 100%;
     }

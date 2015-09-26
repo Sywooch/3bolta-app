@@ -1,4 +1,3 @@
-
 .list-group-item {
     border:0;
 }
@@ -24,17 +23,19 @@
     margin-bottom: 0px; 
     font-size: 20px;
 }
+.list-item {
+    padding-top: 15px;
+    margin-bottom: 15px;
+}
+.list-item-internal-desc, .list-item-internal-preview {
+    padding-left: 0px;
+    padding-right: 0px;
+}
 .list-item-image {
     height: 200px;
 }
 .list-item-date {
     padding-top: 0px;
-}
-.list-item-hover {
-    display: none;
-}
-.list-item-internal {
-    display: block;
 }
 .list-item-internal-preview img {
     max-width: 123px;
@@ -47,30 +48,7 @@
     font-style: italic;
 }
 @media (min-width: 1200px) {
-    .list-item-hover {
-        display: none;
-        position: absolute;
-        top: 0px;
-        left: 0px;
-        z-index: 999;
-        max-width: 100%;
-        margin-left: 15px;
-        margin-right: 15px;
-        width: 100%;
-        padding-right: 30px;
-    }
-    .list-item-hover .panel-body {
-        box-shadow:5px 5px 12px #c3c3c3;
-        -moz-box-shadow:5px 5px 12px #c3c3c3;
-        -webkit-box-shadow:5px 5px 12px #c3c3c3;
-    }
-    .list-item:hover .list-item-hover {
-        display: block;
-    }
-    .list-item-internal {
-        display: block;
-    }
-    .list-item-internal h3 {
+    .list-item h3 {
         white-space: nowrap;
         text-overflow: ellipsis;
         overflow: hidden;
@@ -84,9 +62,6 @@
 .top-search {
     margin-bottom: 15px;
 }
-.list-item-internal-desc {
-    padding-left: 15px;
-}
 @media (max-width: 767px) {
     .top-search {
         margin-bottom: 0px;
@@ -94,15 +69,10 @@
     .list-item {
         padding-left: 0px;
         padding-right: 0px;
+        border-top: 1px solid #e2e2e2;
     }
-    .list-item .panel-body {
-        padding-left: 0px;
-        padding-right: 0px;
-        padding-bottom: 0px;
-    }
-    .list-item-internal {
-        margin-bottom: 0px;
-        border-bottom: none;
+    .list-item-internal-desc {
+        border-top: none;
     }
     .list-item-price {
         margin-bottom: 10px;

@@ -744,9 +744,12 @@ h2, h3, h4, h5, h6 {
 }
 .top-search a.toggle {
     cursor: pointer;
-    color: #ff5757;
+    color: #F86536;
     font-weight: normal;
     text-decoration: none;
+}
+.top-search a.toggle:hover, .top-search a.toggle:focus {
+    text-decoration: underline;
 }
 .top-search-price .form-control {
     display: inline;

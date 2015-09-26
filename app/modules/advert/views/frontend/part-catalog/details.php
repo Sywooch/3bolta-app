@@ -171,7 +171,6 @@ endif;?>
                 <?=$this->render('_list_item', [
                     'model' => $advert,
                     'dataProvider' => $related,
-                    'hideDropDown' => true,
                 ])?>
             </div>
         <?php endforeach;?>

@@ -68,7 +68,7 @@ $preview = $model->getPreview();
             <?php endif;?>
         </div>
         <?php if ($preview):?>
-            <div class="col-lg-4 col-sm-12 col-xs-12 list-item-image">
+            <div class="col-lg-4 col-xs-12 list-item-image">
                 <?=Html::img($preview->getUrl())?>
             </div>
         <?php endif;?>

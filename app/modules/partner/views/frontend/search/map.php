@@ -19,6 +19,14 @@ use yii\widgets\ActiveForm;
 TradePointMapAssets::register($this);
 
 $this->pageH1 = Yii::t('frontend/partner', 'Organization search');
+// ссылка переключающая параметры поиска
+$this->pageH1Extend = Html::tag('a',
+    '<i class="glyphicon glyphicon-chevron-up"></i>&nbsp;&nbsp;' . Html::tag('span', Yii::t('frontend/partner', 'Search params')),
+    [
+        'href' => '#',
+        'class' => 'top-toggle-search-link js-top-search-toggle js-expand',
+    ]
+);
 ?>
 
 <?php JS::begin(); ?>
@@ -30,7 +38,7 @@ $this->pageH1 = Yii::t('frontend/partner', 'Organization search');
 </script>
 <?php JS::end(); ?>
 
-<div class="top-search">
+<div class="top-search js-top-search">
     <div class="row">
         <?php $form = ActiveForm::begin([
             'action' => ['search'],

@@ -27,9 +27,6 @@
 .list-item-hover {
     display: none;
 }
-.list-item-internal {
-    display: block;
-}
 .list-item-internal-preview img {
     max-width: 123px;
     max-height: 123px;
@@ -54,10 +51,7 @@
     .list-item:hover .list-item-hover {
         display: block;
     }
-    .list-item-internal {
-        display: block;
-    }
-    .list-item-internal h3 {
+    .list-item h3 {
         white-space: nowrap;
         text-overflow: ellipsis;
         overflow: hidden;
