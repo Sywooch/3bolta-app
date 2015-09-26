@@ -68,7 +68,10 @@ $(document).ready(function() {
 
     // определить высоту враппера
     var resizeMapWrapper = function() {
-        var height = $(window).height() - $('footer').outerHeight();
+        var height = $(window).height();
+        if ($('footer').is(':visible')) {
+            height -= $('footer').height();
+        }
         if (!$('.js-top-search').is(':visible')) {
             height -= $('.page-title').offset().top;
             height -= $('.page-title').outerHeight();
