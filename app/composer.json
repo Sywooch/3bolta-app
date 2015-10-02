@@ -28,7 +28,8 @@
         "bootstrap-select/bootstrap-select": "1.7.2",
         "wayhood/yii2-widgets-magicsuggest": "dev-master",
         "sammaye/yii2-solr": "dev-master",
-        "yiisoft/yii2-authclient": "^2.0"
+        "yiisoft/yii2-authclient": "^2.0",
+        "kalyabin/yii2-select-google-map-location": "dev-master"
     },
     "require-dev": {
         "yiisoft/yii2-codeception": "*",

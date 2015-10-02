@@ -18,7 +18,7 @@ class TradePointMapAssets extends AssetBundle
         'js/app.js',
     ];
     public $depends = [
-        'app\assets\GoogleMapAssets',
+        'kalyabin\maplocation\GoogleMapAssets',
         'app\assets\FrontendAssets',
     ];
 }

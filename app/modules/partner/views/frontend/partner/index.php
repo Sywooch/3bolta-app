@@ -5,7 +5,7 @@
 
 use app\widgets\JS;
 use app\widgets\MagicSuggestDefaults;
-use app\widgets\SelectMapLocation;
+use kalyabin\maplocation\SelectMapLocationWidget;
 use auto\models\Mark;
 use partner\assets\TradePointListAssets;
 use partner\forms\MyTradePointSearch;
@@ -91,7 +91,7 @@ $form = ActiveForm::begin([
         'enableAjaxValidation' => false,
         'enableClientValidation' => false,
     ]);
-    print $form->field($formModel, 'address')->widget(SelectMapLocation::className(), [
+    print $form->field($formModel, 'address')->widget(SelectMapLocationWidget::className(), [
         'attributeLatitude' => 'latitude',
         'attributeLongitude' => 'longitude',
         'wrapperOptions' => [

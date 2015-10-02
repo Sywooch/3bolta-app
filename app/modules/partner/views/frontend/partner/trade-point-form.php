@@ -4,7 +4,7 @@
  */
 
 use app\components\PhoneValidator;
-use app\widgets\SelectMapLocation;
+use kalyabin\maplocation\SelectMapLocationWidget;
 use partner\assets\TradePointFormAssets;
 use partner\forms\TradePoint;
 use user\models\User;
@@ -46,7 +46,7 @@ print $form->field($model, 'region_id')->dropDownList(TradePoint::getRegionsDrop
     'class' => 'form-control js-select-region-dropdown',
     'data-live-search' => 'true',
 ]);
-print $form->field($model, 'address')->widget(SelectMapLocation::className(), [
+print $form->field($model, 'address')->widget(SelectMapLocationWidget::className(), [
     'wrapperOptions' => [
         'id' => 'tradePointLocation' . $model->getExistsId() . uniqid(),
     ],

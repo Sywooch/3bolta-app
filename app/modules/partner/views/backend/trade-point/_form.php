@@ -4,7 +4,7 @@ use yii\bootstrap\ActiveForm;
 use yii\widgets\DetailView;
 use yii\widgets\MaskedInput;
 use app\components\PhoneValidator;
-use app\widgets\SelectMapLocation;
+use kalyabin\maplocation\SelectMapLocationWidget;
 
 /* @var $this yii\web\View */
 /* @var $model partner\models\TradePoint */
@@ -30,7 +30,7 @@ use app\widgets\SelectMapLocation;
             ]);
         }
         print $form->field($model, 'partner_id')->textInput();
-        print $form->field($model, 'address')->widget(SelectMapLocation::className(), [
+        print $form->field($model, 'address')->widget(SelectMapLocationWidget::className(), [
             'wrapperOptions'        => [
                 'class' => 'form-control',
             ],
